@@ -26,7 +26,7 @@ a {
 }
 
 /* CONTENTS */
-.homeContents #listBox {
+.homeContents #panelPrincipal {
     font-size: 13px;
     background-color: beige;
     text-align: center;
@@ -34,10 +34,10 @@ a {
 .homeContents table tr{
     height: 30px;
 }
-.editorBox {
+.panelSecond {
     background: rgba(57, 57, 57, 0.6) none repeat scroll 0 0;
 }
-.editorContent {
+#panelContent {
     background-color: #ffffff;
 }
 
@@ -57,7 +57,7 @@ a {
 #closeAssetOverlay {
 	color: #fff;
 }
-#assetMain_header {
+#assetHeader {
 	background-color: green;
 }
 .assetTitle {

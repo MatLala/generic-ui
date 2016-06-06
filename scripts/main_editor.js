@@ -1,3 +1,22 @@
+require.config({
+    paths:{
+        'damas':"damas",
+        'ui_components':"uiComponents/ui_components"
+    },
+    urlArgs: "v=" + (new Date()).getTime()
+});
+
+require(["damas", "ui_components"], function(damas){
+    loadCss("scripts/uiComponents/ui.css");
+    loadCss("scripts/uiComponents/ui_design.css");
+    window.damas = damas;
+    damas.server = '/api/';
+    
+    ui.header();
+    ui.contentsHome();
+    process_hash();
+});
+
 /**
 * @Define Routing for user interface
 */
@@ -8,56 +27,45 @@
 process_hash = function(){
     var hash = window.location.hash;
     console.log(hash);
-    switch(hash){
-        case '':
-            if (document.querySelector('.profileBox')){
-                var profileBox = document.querySelector('.profileBox');
-                profileBox.remove();
-            }
-            if (document.querySelector('.modalOverlay')){
-                var modalOverlay = document.querySelector('.modalOverlay');
-                modalOverlay.remove();
-            }
-            if (document.querySelector('.resultsTable')){
-                document.querySelector('.resultsTable').remove();
-                ui.log();
-            }
-            if (document.querySelector('.editorBox')){
-                document.querySelector('.editorBox').remove();
-            }
-            return ;
-//        case '#profile':
-////            var headerMenu = document.querySelector('.headerMenu');
-//            document.body.appendChild(ui.profile());
-//            return ;
-//        case '#settings':
-//            if (document.querySelector('.modalOverlay')){
-//                ui.settings();
-//            }
-//            else {
-//                document.body.appendChild(ui.settings());
-//            }
-//            return ;
-//        case '#upload':
-//            ui.upload();
-//            return ;
-        case '#edit':
-            return ;
+    if (hash === ''){
+        if (document.querySelector('.modalOverlay')){
+            var modalOverlay = document.querySelector('.modalOverlay');
+            modalOverlay.remove();
+        }
+        if (document.querySelector('.panelSecond')){
+            document.querySelector('.panelSecond').remove();
+        }
+        if (document.querySelector('.showAssetOverlay')){
+            var assetOverlay = document.getElementById('assetOverlay');
+            assetOverlay.classList.remove('showAssetOverlay');
+            assetOverlay.classList.add('hideAssetOverlay');
+        }
+        if (document.querySelector('.resultsTable')){
+            document.querySelector('.resultsTable').remove();
+            ui.contentsHome();
+        }
     }
     if (/#edit=/.test(hash)){
-        if (!document.getElementById('editorBox'))
-           ui.editor();
+        if (!document.querySelector('.panelSecond'))
+           ui.secondPanel();
     }
     if (/#profile/.test(hash)){
-        if (!document.querySelector('.profileBox')){
-           ui.profile();
+        if (!document.querySelector('#profileContent')){
+           ui.modal(ui.profile());
         }
     }
     if (/#settings/.test(hash)){
-        ui.settings();
+        if (document.querySelector('#modalContent')){
+            var modalContent = document.querySelector('#modalContent');
+            modalContent.innerHTML = '';
+            modalContent.appendChild(ui.settings());
+        }
+        else {
+            ui.modal(ui.settings());
+        }
     }
     if (/#upload/.test(hash)){
-        ui.upload();
+        ui.modal(ui.upload());
     }
     if (/view=/.test(hash)){
         ui.assetOverlay();
@@ -73,15 +81,15 @@ process_hash = function(){
 //        });
     }
     if (/#search=/.test(hash)){
-//        if (document.querySelector('.showAssetOverlay')){
-//            var overlayDiv = document.querySelector('#assetOverlay');
-//            overlayDiv.classList.remove('showAssetOverlay');
-//            overlayDiv.classList.add('hideAssetOverlay');
-//        }
+        if (document.querySelector('.showAssetOverlay')){
+            var overlayDiv = document.querySelector('#assetOverlay');
+            overlayDiv.classList.remove('showAssetOverlay');
+            overlayDiv.classList.add('hideAssetOverlay');
+        }
         var searchTerms = hash.replace('#search=','');
-        var out = document.querySelector('#listBox');
+        var out = document.querySelector('#panelPrincipal');
         out.innerHTML = '';
-        ui.results();
+        ui.contentsResults();
     }
 }
 
@@ -134,5 +142,3 @@ function loadCss(url) {
 }
 
 window.loadCss = loadCss;
-
-
