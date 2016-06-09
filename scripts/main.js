@@ -1,19 +1,20 @@
 require.config({
     paths:{
         'damas':"damas",
+        'ui_layout':"uiLayout/ui_layout",
         'ui_components':"uiComponents/ui_components"
     },
     urlArgs: "v=" + (new Date()).getTime()
 });
 
-require(["damas", "ui_components"], function(damas){
-    loadCss("scripts/uiComponents/ui.css");
-    loadCss("scripts/uiComponents/ui_design.css");
+require(["damas", "ui_layout", "ui_components"], function(damas){
+    loadCss("scripts/uiLayout/ui_layout.css");
+    loadCss("scripts/uiLayout/ui_design.css");
     window.damas = damas;
     damas.server = '/api/';
     
     ui.header();
-    ui.contentsHome();
+    ui.contents();
     process_hash();
 });
 
@@ -42,31 +43,35 @@ process_hash = function(){
         }
         if (document.querySelector('.resultsTable')){
             document.querySelector('.resultsTable').remove();
-            ui.contentsHome();
         }
+        //Default View
+        var container = document.querySelector('#panelPrincipal');
+        comp.log(container);
     }
     if (/#profile/.test(hash)){
         if (!document.querySelector('#profileContent')){
-           ui.modal(ui.profile());
+            ui.profile();
         }
     }
     if (/#settings/.test(hash)){
         if (document.querySelector('#modalContent')){
-            var modalContent = document.querySelector('#modalContent');
-            modalContent.innerHTML = '';
-            modalContent.appendChild(ui.settings());
+            var container = document.querySelector('#modalContent');
+            container.innerHTML = '';
         }
         else {
-            ui.modal(ui.settings());
+            var container = ui.modal();
         }
+        container.appendChild(ui.settings());
     }
     if (/#upload/.test(hash)){
-        ui.modal(ui.upload());
+        var container = ui.modal();
+        comp.upload(container);
     }
     if (/view=/.test(hash)){
         ui.assetOverlay();
         var filepath = viewHashNode();
         console.log(filepath);
+        //To do : add parameter 'filepath' to viewer and connect assetViewerSelector with
 //        damas.search('file:'+filepath, function(index){
 //            damas.read(index, function(node){
 //                var newObject = JSON.parse(JSON.stringify(node[0]));
@@ -83,9 +88,14 @@ process_hash = function(){
             overlayDiv.classList.add('hideAssetOverlay');
         }
         var searchTerms = hash.replace('#search=','');
-        var out = document.querySelector('#panelPrincipal');
-        out.innerHTML = '';
-        ui.contentsResults();
+        
+        var container = document.querySelector('#panelPrincipal');
+        container.innerHTML = '';
+        comp.search(container, searchTerms);
+    }
+    if (/#edit=/.test(hash)){
+        if (!document.querySelector('.panelSecond'))
+           ui.secondPanel();
     }
 }
 

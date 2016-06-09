@@ -29,7 +29,7 @@ a {
 .homeContents #panelPrincipal {
     font-size: 13px;
     background-color: beige;
-    text-align: center;
+    text-align: left;
 }
 .homeContents table tr{
     height: 30px;
@@ -37,7 +37,7 @@ a {
 .panelSecond {
     background: rgba(57, 57, 57, 0.6) none repeat scroll 0 0;
 }
-#panelContent {
+.panelContent {
     background-color: #ffffff;
 }
 
@@ -72,15 +72,15 @@ a {
 	width: 30px;
 	height: 30px;
 }
-#assetMain {
+.assetMain {
     padding: 10px;
     background-color: rgb(198, 198, 198);
 }
-#assetPanel {
+.assetPanel {
 	background-color: rgb(198, 198, 198);
 	color: white;
 }
-#assetMain_viewer {
+.assetMain_viewer {
 	text-align: center;
 	transition: all 0.3s ease;
 	background-color: lightblue;
