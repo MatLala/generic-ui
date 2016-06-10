@@ -1,0 +1,116 @@
+
+/* HEADER */
+/* Logo */
+/*
+.headerLogo {
+    display: table-cell;
+    width: 90px;
+}
+*/
+/* Search */
+/*
+.headerSearch {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+*/
+.searchForm {
+    position: relative;
+    display: inline-block;
+    width: 80%;
+    display: none;
+}
+.searchInput {
+    height: 24px;
+    width: 100%;
+}
+.searchReset {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    line-height: 24px;
+}
+
+/* Menu */
+/*
+.headerMenu {
+    display: table-cell;
+    vertical-align: middle;
+    width: 90px;
+}
+*/
+/* Buttons */
+.uploadBt, .profileBt, .searchBt {
+    position: relative;
+    display: inline-block;
+    margin-left: 9px;
+}
+.searchBt {
+    float: right;
+}
+.uploadBt, .profileBt {
+    float: left;
+}
+
+/* CONTENTS */
+.homeContents table {
+    width: 100%;
+}
+
+/**
+* PROFILE
+*/
+.profileContent {
+    height: 100%;
+}
+.profileResume {
+    height: 80%;
+}
+.profileBoxBt {
+    line-height: 20px;
+    display: block;
+}
+
+.testdrop {
+    width: 100%;
+    height: 100%;
+}
+
+/**
+* OVERLAY
+*/
+.assetTitle {
+	display: table-cell;
+/*	width: 100%;*/
+	padding-left: 9px;
+    vertical-align: top;
+}
+.assetLabel {
+    line-height: 36px;
+}
+.assetBts {
+    display: table-cell;
+    vertical-align: middle;
+	width: 120px;
+}
+.btDl, .btUp {
+	display: inline-block;
+    vertical-align: middle;
+/*
+	background: url('icons/download.svg') no-repeat center center;
+	background-size: contain;
+*/
+    margin-left: 9px;
+}
+
+@media screen and (min-width: 800px) {
+     /* Search */
+    .searchForm {
+        display: inline-block;
+    }
+    .searchBt {
+        display: none;
+    }
+    
+}

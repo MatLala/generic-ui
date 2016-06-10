@@ -1,97 +1,23 @@
 /**
-* @namespace for UI Components
+* HTML rendering methods for UI Elements inside Layout
+* requires main.js
+* call by process_hash function
+* @return HTML element as container for components
 */
+
+
+
+/** 
+ * @namespace for UI Elements
+ */
 if(window['ui']===undefined) ui = {};
 
-ui.header = function(){
-    var header = document.querySelector('#header');
-    header.classList.add = 'homeHeader';
-    var headerLogo = document.createElement('div');
-    headerLogo.className = 'headerLogo clickable';
-    
-    var searchBox = document.createElement('div');
-    searchBox.className = 'headerSearch';
-    
-    var searchForm = document.createElement('form');
-    searchForm.className = 'searchForm';
-    var searchInput = document.createElement('input');
-    searchInput.className = 'searchInput';
-    var searchReset = document.createElement('div');
-    searchReset.className = 'searchReset clickable';
-    searchReset.innerHTML = 'X';
-    searchReset.addEventListener('click', function(){
-        searchInput.value = '';
-        document.location.hash = '';
-    });
-    searchForm.appendChild(searchInput);
-    searchForm.appendChild(searchReset);
-    
-    var searchBt = document.createElement('a');
-    searchBt.className = 'searchBt clickable';
-//    searchBt.setAttribute('href', '#search=');
-    searchBt.setAttribute('title', 'Search');
-    
-    searchBox.appendChild(searchForm);
-    searchBox.appendChild(searchBt);
-    
-    var menuBts = document.createElement('div');
-    menuBts.className = 'headerMenu';
-    
-    var uploadBt = document.createElement('a');
-    uploadBt.className = 'uploadBt clickable';
-    uploadBt.setAttribute('title', 'Upload');
-    
-    var profileBt = document.createElement('a');
-    profileBt.className = 'profileBt clickable';
-//    profileBt.setAttribute('href', '#profile');
-    profileBt.setAttribute('title', 'Profile');
-    menuBts.appendChild(uploadBt);
-    menuBts.appendChild(profileBt);
-    
-    uploadBt.addEventListener('click', function(event) {
-        window.location.hash = '#upload';
-//        addHash('upload');
-    });
-    profileBt.addEventListener('click', function(event) {
-        window.location.hash = '#profile';
-//        addHash('profile');
-    });
-    headerLogo.addEventListener('click', function(event) {
-        document.location.hash = '';
-    });
-    searchForm.addEventListener('submit', function(event) {
-        if (searchInput.value.length > 0){
-            addHash('search='+searchInput.value);
-        }
-        else {
-            document.location.hash = '';
-        }
-    });
-    searchBt.addEventListener('click', function(){
-        searchForm.style.display = 'inline-block';
-        searchBt.style.display = 'none';
-        menuBts.style.display = 'none';
-        searchReset.addEventListener('click', function(){
-            searchForm.style.display = 'none';
-            searchBt.style.display = 'block';
-            menuBts.style.display = 'table-cell';
-        });
-    });
 
-    header.appendChild(headerLogo);
-    header.appendChild(searchBox);
-    header.appendChild(menuBts);
-}
-
-ui.contents = function(){
-    var panel = document.createElement('div');
-    panel.id = 'panelPrincipal';
-    panel.className = 'panelPrincipal';
-    
-    var out = document.querySelector('#contents');
-    out.appendChild(panel);
-}
-
+/**
+* 
+* Lateral panel or overlay view in contents div
+* 
+*/
 ui.secondPanel = function(){
     var panel = document.createElement('div');
     panel.className = 'panelSecond';
@@ -110,8 +36,14 @@ ui.secondPanel = function(){
     panel.appendChild(panelContent);
     var out = document.querySelector('#contents');
     out.appendChild(panel);
+    return panelContent;
 };
 
+/**
+* 
+* Modal Element - overlay view
+* @ return {object} html Element
+*/
 ui.modal = function(){
     var modalOverlay = document.createElement('div');
     modalOverlay.className = 'modalOverlay';
@@ -130,10 +62,7 @@ ui.modal = function(){
         modalOverlay.remove();
         previousHash();
     });
-    
-//    if (contentFt)
-//        modalContent.appendChild(contentFt);
-    
+
     modalBox.appendChild(modalContent);
     modalOverlay.appendChild(modalBox);
     
@@ -141,45 +70,11 @@ ui.modal = function(){
     return modalContent;
 };
 
-ui.profile = function(){
-    var modal = ui.modal();
-    var profileContent = document.createElement('div');
-    profileContent.id = 'profileContent';
-    profileContent.className = 'profileContent';
-    
-    var profileResume = document.createElement('div');
-    profileResume.className = 'profileResume';
-    profileResume.innerHTML = 'profileResume';
-    
-    var settingsBt = document.createElement('div');
-    settingsBt.className = 'profileBoxBt';
-    settingsBt.innerHTML = 'settings';
-    
-    var signOutBt = document.createElement('div');
-    signOutBt.className = 'profileBoxBt';
-    signOutBt.innerHTML = 'signOut';
-    
-    profileContent.appendChild(profileResume);
-    profileContent.appendChild(settingsBt);
-    profileContent.appendChild(signOutBt);
-    
-    settingsBt.addEventListener('click', function(event){
-        window.location.hash = '#settings';
-//        addHash('settings');
-    });
-
-    modal.appendChild(profileContent);
-};
-
-
-ui.settings = function(){
-    var settingsContent = document.createElement('div');
-    settingsContent.className = 'settingsContent';
-    settingsContent.innerHTML = 'settings';
-    
-    return settingsContent;
-};
-
+/**
+* 
+* Overlay Element
+* 
+*/
 ui.assetOverlay = function(){
     require([], function(assetOverlay){
     if(!document.getElementById('assetOverlay'))

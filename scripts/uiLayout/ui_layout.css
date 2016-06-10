@@ -41,51 +41,15 @@ body {
     display: table;
     width: 100%;
 }
-/* Logo */
-.headerLogo {
+.headerLeft, .headerRight {
     display: table-cell;
+    vertical-align: middle;
     width: 90px;
 }
-/* Search */
-.headerSearch {
+.headerCentral {
     display: table-cell;
     vertical-align: middle;
     text-align: center;
-}
-.searchForm {
-    position: relative;
-    display: inline-block;
-    width: 80%;
-    display: none;
-}
-.searchInput {
-    height: 24px;
-    width: 100%;
-}
-.searchReset {
-    position: absolute;
-    top: 0;
-    right: 5px;
-    line-height: 24px;
-}
-
-/* Menu */
-.headerMenu {
-    display: table-cell;
-    vertical-align: middle;
-    width: 90px;
-}
-/* Buttons */
-.uploadBt, .profileBt, .searchBt {
-    position: relative;
-    display: inline-block;
-    margin-left: 9px;
-}
-.searchBt {
-    float: right;
-}
-.uploadBt, .profileBt {
-    float: left;
 }
 
 /* CONTENTS */
@@ -100,7 +64,7 @@ body {
 	display: -webkit-flex;
 	display: flex;
 }
-.homeContents #panelPrincipal {
+.homeContents .panelPrincipal {
     position: relative;
 	-webkit-box-flex: 1 1 auto;
 	-moz-box-flex: 1 1 auto;
@@ -115,9 +79,6 @@ body {
 	order: 1;
 	overflow-y: auto;
 	overflow-x: hidden;
-}
-.homeContents table {
-    width: 100%;
 }
 .panelSecond {
     display: flex;
@@ -135,23 +96,8 @@ body {
     height: 90%;
 }
 
-/**
-* PROFILE
-*/
-.profileContent {
-    height: 100%;
-}
-.profileResume {
-    height: 80%;
-}
-.profileBoxBt {
-    line-height: 20px;
-    display: block;
-}
 
-/**
-* MODAL
-*/
+/* MODAL */
 .modalOverlay {
     display: flex;
     height: 100%;
@@ -176,14 +122,9 @@ body {
     width: 100%;
     height: 100%;
 }
-.testdrop {
-    width: 100%;
-    height: 100%;
-}
 
-/**
-* OVERLAY
-*/
+
+/* OVERLAY */
 #assetOverlay {
 	position: fixed;
 	z-index: 100;
@@ -195,7 +136,6 @@ body {
 .hideAssetOverlay {
 	display: none;
 }
-
 .showAssetOverlay {
 	display: block;
 }
@@ -214,29 +154,6 @@ body {
     display: table;
 	min-height: 36px;
 	width: 100%;
-}
-.assetTitle {
-	display: table-cell;
-/*	width: 100%;*/
-	padding-left: 9px;
-    vertical-align: top;
-}
-.assetLabel {
-    line-height: 36px;
-}
-.assetBts {
-    display: table-cell;
-    vertical-align: middle;
-	width: 120px;
-}
-.btDl, .btUp {
-	display: inline-block;
-    vertical-align: middle;
-/*
-	background: url('icons/download.svg') no-repeat center center;
-	background-size: contain;
-*/
-    margin-left: 9px;
 }
 .assetContent {
 	display: box;
@@ -292,7 +209,6 @@ body {
 	overflow-y: auto;
 	overflow-x: hidden;
 }
-
 .assetMain_viewer {
     height: 100%;
 /*	overflow: auto;*/
@@ -302,6 +218,7 @@ body {
 }
 
 @media screen and (min-width: 800px) {
+    /* CONTENTS */
     .panelSecond {
         display: inline-block;
         position: relative;
@@ -324,18 +241,14 @@ body {
         width: 100%;
         height: 100%;
     }
-    /* Search */
-
-    .searchForm {
-        display: inline-block;
-    }
-    .searchBt {
-        display: none;
-    }
+    
+    /* MODAL */
     .modalBox {
         width: 600px;
         height: 300px;
     }
+    
+    /* OVERLAY */
     .assetContent {
         -webkit-flex-flow: row;
         -moz-flex-flow: row;

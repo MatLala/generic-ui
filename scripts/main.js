@@ -2,19 +2,22 @@ require.config({
     paths:{
         'damas':"damas",
         'ui_layout':"uiLayout/ui_layout",
-        'ui_components':"uiComponents/ui_components"
+        'log':"uiComponents/ui_log",
+        'search':"uiComponents/ui_search",
+        'upload':"uiComponents/ui_upload",
+        'profile':"uiComponents/ui_profile",
+        'editor':"uiComponents/ui_editor"
     },
     urlArgs: "v=" + (new Date()).getTime()
 });
 
-require(["damas", "ui_layout", "ui_components"], function(damas){
+require(["damas", "ui_layout", "log", "search", "upload", "profile", "editor"], function(damas){
     loadCss("scripts/uiLayout/ui_layout.css");
     loadCss("scripts/uiLayout/ui_design.css");
+    loadCss("scripts/uiComponents/ui_components.css");
     window.damas = damas;
     damas.server = '/api/';
     
-    ui.header();
-    ui.contents();
     process_hash();
 });
 
@@ -46,11 +49,12 @@ process_hash = function(){
         }
         //Default View
         var container = document.querySelector('#panelPrincipal');
-        comp.log(container);
+        compLog(container);
     }
     if (/#profile/.test(hash)){
         if (!document.querySelector('#profileContent')){
-            ui.profile();
+            var container = ui.modal();
+            compProfile(container);
         }
     }
     if (/#settings/.test(hash)){
@@ -61,11 +65,12 @@ process_hash = function(){
         else {
             var container = ui.modal();
         }
-        container.appendChild(ui.settings());
+        compSettings(container);
+//        container.appendChild(ui.settings());
     }
     if (/#upload/.test(hash)){
         var container = ui.modal();
-        comp.upload(container);
+        compUpload(container);
     }
     if (/view=/.test(hash)){
         ui.assetOverlay();
@@ -91,11 +96,13 @@ process_hash = function(){
         
         var container = document.querySelector('#panelPrincipal');
         container.innerHTML = '';
-        comp.search(container, searchTerms);
+        compSearch(container, searchTerms);
     }
-    if (/#edit=/.test(hash)){
-        if (!document.querySelector('.panelSecond'))
-           ui.secondPanel();
+    if (/edit=/.test(hash)){
+        if (!document.querySelector('.panelSecond')) {
+            var container = ui.secondPanel();
+            compEditor(container);
+        }   
     }
 }
 
