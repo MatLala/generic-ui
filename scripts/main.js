@@ -2,6 +2,7 @@ require.config({
     paths:{
         'damas':"damas",
         'ui_layout':"uiLayout/ui_layout",
+        'ui_common':"uiComponents/ui_common",
         'log':"uiComponents/ui_log",
         'search':"uiComponents/ui_search",
         'upload':"uiComponents/ui_upload",
@@ -11,7 +12,7 @@ require.config({
     urlArgs: "v=" + (new Date()).getTime()
 });
 
-require(["damas", "ui_layout", "log", "search", "upload", "profile", "editor"], function(damas){
+require(["damas", "ui_layout", "ui_common", "log", "search", "upload", "profile", "editor"], function(damas){
     loadCss("scripts/uiLayout/ui_layout.css");
     loadCss("scripts/uiLayout/ui_design.css");
     loadCss("scripts/uiComponents/ui_components.css");
@@ -73,18 +74,18 @@ process_hash = function(){
         compUpload(container);
     }
     if (/view=/.test(hash)){
-        ui.assetOverlay();
+        
+        // require assetViewer Repository
         var filepath = viewHashNode();
         console.log(filepath);
-        //To do : add parameter 'filepath' to viewer and connect assetViewerSelector with
-//        damas.search('file:'+filepath, function(index){
-//            damas.read(index, function(node){
-//                var newObject = JSON.parse(JSON.stringify(node[0]));
-//                newObject.file = "/file/"+newObject.file;
-//                console.log(node);
-//                assetOverlay(newObject);
-//            });
-//        });
+        damas.search('file:'+filepath, function(index){
+            damas.read(index, function(node){
+                var newObject = JSON.parse(JSON.stringify(node[0]));
+                newObject.file = "/file/"+newObject.file;
+                console.log(node);
+                ui.assetOverlay(newObject);
+            });
+        });
     }
     if (/#search=/.test(hash)){
         if (document.querySelector('.showAssetOverlay')){
@@ -96,6 +97,7 @@ process_hash = function(){
         
         var container = document.querySelector('#panelPrincipal');
         container.innerHTML = '';
+        console.log(searchTerms);
         compSearch(container, searchTerms);
     }
     if (/edit=/.test(hash)){

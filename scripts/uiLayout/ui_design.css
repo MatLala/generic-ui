@@ -97,5 +97,7 @@ a {
 }
 
 @media screen and (min-width: 800px) {
-
+    .assetMain {
+        padding: 0;
+    }
 }

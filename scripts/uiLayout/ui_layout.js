@@ -49,8 +49,13 @@ ui.modal = function(){
     modalOverlay.className = 'modalOverlay';
     var modalBox = document.createElement('div');
     modalBox.className = 'modalBox';
+    
+    var modalHeader = document.createElement('div');
+    modalHeader.id = 'modalHeader';
     var modalContent = document.createElement('div');
     modalContent.id = 'modalContent';
+    var modalFooter = document.createElement('div');
+    modalFooter.id = 'modalFooter';
     
     var btClose = document.createElement('div');
     btClose.className = 'btClose clickable';
@@ -62,8 +67,10 @@ ui.modal = function(){
         modalOverlay.remove();
         previousHash();
     });
-
+    
+    modalBox.appendChild(modalHeader);
     modalBox.appendChild(modalContent);
+    modalBox.appendChild(modalFooter);
     modalOverlay.appendChild(modalBox);
     
     document.body.appendChild(modalOverlay);
@@ -73,10 +80,11 @@ ui.modal = function(){
 /**
 * 
 * Overlay Element
+* require assetViewer Repository - Calling assetViewerSelector function
 * 
 */
-ui.assetOverlay = function(){
-    require([], function(assetOverlay){
+ui.assetOverlay = function(json){
+    require(["scripts/assetViewer/assetViewerSelector.js"], function(assetOverlay){
     if(!document.getElementById('assetOverlay'))
 		{
 			ui.assetOverlayDraw();
@@ -122,7 +130,7 @@ ui.assetOverlay = function(){
 			//Asset URL
 			//Asset initialize selector
 //			spinner(assetMain_viewer);
-//			assetViewerSelector(json.file, assetMain_viewer);
+			assetViewerSelector(json.file, assetMain_viewer);
 //		}
 //		else
 //		{

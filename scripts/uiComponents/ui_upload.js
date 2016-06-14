@@ -161,9 +161,9 @@ damasflow_ondrop = function ( e, container )
             var id = parseInt(text.replace(r, ''));
             console.log('Dropped node #' +id);
             //var elem = damas.read_rest(parseInt(id));
-            damas.utils.command_a( {cmd: 'graph', id: id }, function(res){
-                graph.load( JSON.parse( res.text ));
-            });
+//            damas.utils.command_a( {cmd: 'graph', id: id }, function(res){
+//                graph.load( JSON.parse( res.text ));
+//            });
             return;
         }
     }
@@ -172,46 +172,47 @@ damasflow_ondrop = function ( e, container )
 
     if(!newPath){
         newPath=path;
-        var alertTxt = document.createElement('div');
-        alertTxt.innerHTML = "This file doesn't appear to be held in a defined local work directory, thus we cannot extract a relative path from its absolute path:<br>"+path+"<br>You can set a workdir now:<br>";
-        var wdTxt = document.createElement('div');
-        var wdInput = document.createElement('input');
-        wdInput.value = path.replace(/\/[^\/]*$/,"");
-        wdTxt.appendChild(wdInput);
-        container.appendChild(alertTxt);
-        container.appendChild(wdTxt);
-        
-        var btCancel = document.createElement('button');
-        btCancel.setAttribute('class','modal-bt');
-        btCancel.innerHTML = 'Cancel';
-        var btOk = document.createElement('button');
-        btOk.setAttribute('class','modal-bt');
-        btOk.innerHTML = 'Ok';
-//        var modalFooter = document.getElementById('modal-footer');
-        
-        container.appendChild(btOk);
-        container.appendChild(btCancel);
-        
-        btOk.addEventListener('click', function(){
-            addWorkdirs(wdInput.value);
-            newPath= path.replace(new RegExp("^"+ wdInput.value +"/?"), '');
-            container.innerHTML = '';
-        });
-        btCancel.addEventListener('click', function(){
-            var modalOverlay = document.querySelector('.modalOverlay');
-            modalOverlay.remove();
-            return;
-        });
-        
-//        var newWd=prompt("This file doesn't appear to be held in a defined local work directory, thus we cannot extract a relative path from its absolute path:\n"+path+"\nYou can set a workdir now:",path.replace(/\/[^\/]*$/,""));
-//        if(newWd){
-//            addWorkdirs(newWd);
-//            newPath= path.replace(new RegExp("^"+newWd+"/?"), '');
-//        }
-//        else
-//        {
+//        var alertTxt = document.createElement('div');
+//        alertTxt.innerHTML = "This file doesn't appear to be held in a defined local work directory, thus we cannot extract a relative path from its absolute path:<br>"+path+"<br>You can set a workdir now:<br>";
+//        var wdTxt = document.createElement('div');
+//        var wdInput = document.createElement('input');
+//        wdInput.value = path.replace(/\/[^\/]*$/,"");
+//        wdTxt.appendChild(wdInput);
+//        container.appendChild(alertTxt);
+//        container.appendChild(wdTxt);
+//        
+//        var btCancel = document.createElement('button');
+//        btCancel.setAttribute('class','modal-bt');
+//        btCancel.innerHTML = 'Cancel';
+//        var btOk = document.createElement('button');
+//        btOk.setAttribute('class','modal-bt');
+//        btOk.innerHTML = 'Ok';
+////        var modalFooter = document.getElementById('modal-footer');
+//        
+//        container.appendChild(btOk);
+//        container.appendChild(btCancel);
+//        
+//        btOk.addEventListener('click', function(){
+//            addWorkdirs(wdInput.value);
+//            newPath= path.replace(new RegExp("^"+ wdInput.value +"/?"), '');
+//            container.innerHTML = '';
+//        });
+//        btCancel.addEventListener('click', function(){
+//            var modalOverlay = document.querySelector('.modalOverlay');
+//            modalOverlay.remove();
+//            previousHash();
 //            return;
-//        }
+//        });
+        
+        var newWd=prompt("This file doesn't appear to be held in a defined local work directory, thus we cannot extract a relative path from its absolute path:\n"+path+"\nYou can set a workdir now:",path.replace(/\/[^\/]*$/,""));
+        if(newWd){
+            addWorkdirs(newWd);
+            newPath= path.replace(new RegExp("^"+newWd+"/?"), '');
+        }
+        else
+        {
+            return;
+        }
     }
     if(newPath.indexOf("/")!=0)
         newPath= "/"+newPath;
@@ -240,43 +241,46 @@ damasflow_ondrop = function ( e, container )
         }
         else
         {
-            var alertTxt = document.createElement('div');
-            alertTxt.innerHTML = "Publish as : <br>";
-            var newPathTxt = document.createElement('div');
-            newPathTxt.innerHTML = newPath;
-            container.appendChild(alertTxt);
-            container.appendChild(newPathTxt);
-            
-            var btCancel = document.createElement('button');
-            btCancel.setAttribute('class','modal-bt');
-            btCancel.innerHTML = 'Cancel';
-            var btOk = document.createElement('button');
-            btOk.setAttribute('class','modal-bt');
-            btOk.innerHTML = 'Ok';
-    //        var modalFooter = document.getElementById('modal-footer');
-
-            container.appendChild(btOk);
-            container.appendChild(btCancel);
-
-            btOk.addEventListener('click', function(){
-                upload_rest(e.dataTransfer.files[0],newPath, null, function(node){
-                    container.innerHTML='';
-//                    graph.newNode(node);
-                });
-                
-            });
-            btCancel.addEventListener('click', function(){
-                var modalOverlay = document.querySelector('.modalOverlay');
-                modalOverlay.remove();
-                return;
-            });
-            
-//            if( newPath = prompt('Publish as', newPath))
-//            {
+//            var alertTxt = document.createElement('div');
+//            alertTxt.innerHTML = "Publish as : <br>";
+//            var newPathTxt = document.createElement('div');
+//            newPathTxt.innerHTML = newPath;
+//            container.appendChild(alertTxt);
+//            container.appendChild(newPathTxt);
+//            
+//            var btCancel = document.createElement('button');
+//            btCancel.setAttribute('class','modal-bt');
+//            btCancel.innerHTML = 'Cancel';
+//            var btOk = document.createElement('button');
+//            btOk.setAttribute('class','modal-bt');
+//            btOk.innerHTML = 'Ok';
+//    //        var modalFooter = document.getElementById('modal-footer');
+//
+//            container.appendChild(btOk);
+//            container.appendChild(btCancel);
+//
+//            btOk.addEventListener('click', function(){
 //                upload_rest(e.dataTransfer.files[0],newPath, null, function(node){
+//                    container.innerHTML='';
+//                    var logDiv = document.querySelector('#panelPrincipal');
+//                    compLog(logDiv);
 ////                    graph.newNode(node);
 //                });
-//            }
+//                
+//            });
+//            btCancel.addEventListener('click', function(){
+//                var modalOverlay = document.querySelector('.modalOverlay');
+//                modalOverlay.remove();
+//                previousHash();
+//                return;
+//            });
+            
+            if( newPath = prompt('Publish as', newPath))
+            {
+                upload_rest(e.dataTransfer.files[0],newPath, null, function(node){
+//                    graph.newNode(node);
+                });
+            }
         }
     });
     return;
@@ -327,9 +331,9 @@ upload_rest = function ( file, path, id, callback )
   /*req.upload.addEventListener("progress",progressHandler, false);
   req.addEventListener("load", completeHandler, false);*/
   if(id)
-    req.open("PUT", damas.server + "upload", callback !== undefined);
+    req.open("PUT", damas.server + "upload/", callback !== undefined);
   else
-    req.open("POST", damas.server + "upload", callback !== undefined);
+    req.open("POST", damas.server + "upload/", callback !== undefined);
   cancel.addEventListener("click",function(e){
     if(req.readyState<4){
       req.abort();
@@ -358,7 +362,8 @@ upload_rest = function ( file, path, id, callback )
         var delta_time = d.getTime() - starttime;
         speed.innerHTML= human_size( progress.max * 1000 / delta_time ) + '/s' ;
         //setTimeout("500",function({upload_div.remove();}));
-        callback(JSON.parse(req.responseText));
+//        callback(JSON.parse(req.responseText));
+          alert('ok!');
       }
     }
   }
