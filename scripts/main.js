@@ -107,7 +107,7 @@ process_hash = function(){
             });
         });
     }
-    if (/#search=/.test(hash)){
+    if (/search=/.test(hash)){
         if (document.querySelector('.showAssetOverlay')){
             var overlayDiv = document.querySelector('#assetOverlay');
             overlayDiv.classList.remove('showAssetOverlay');
@@ -124,7 +124,7 @@ process_hash = function(){
         if (!document.querySelector('.panelSecond')) {
             var container = ui.secondPanel();
             compEditor(container);
-        }   
+        }
     }
 }
 
