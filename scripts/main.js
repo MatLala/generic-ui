@@ -3,23 +3,27 @@ require.config({
         'damas':"damas",
         'ui_layout':"uiLayout/ui_layout",
         'ui_common':"uiComponents/ui_common",
+        'signin':"uiComponents/ui_signin",
         'log':"uiComponents/ui_log",
         'search':"uiComponents/ui_search",
         'upload':"uiComponents/ui_upload",
         'profile':"uiComponents/ui_profile",
-        'editor':"uiComponents/ui_editor"
+        'editor':"uiComponents/ui_editor",
+        'ao':"uiComponents/ui_overlay",
+        'avs':"assetViewer/assetViewerSelector"
     },
     urlArgs: "v=" + (new Date()).getTime()
 });
 
-require(["damas", "ui_layout", "ui_common", "log", "search", "upload", "profile", "editor"], function(damas){
+require(["damas", "ui_layout", "ui_common", "signin", "log", "search", "upload", "profile", "editor", "ao", "avs"], function(damas){
     loadCss("scripts/uiLayout/ui_layout.css");
     loadCss("scripts/uiLayout/ui_design.css");
     loadCss("scripts/uiComponents/ui_components.css");
     window.damas = damas;
     damas.server = '/api/';
-    
+    window.location.hash = '#login';
     process_hash();
+    
 });
 
 /**
@@ -32,6 +36,10 @@ require(["damas", "ui_layout", "ui_common", "log", "search", "upload", "profile"
 process_hash = function(){
     var hash = window.location.hash;
     console.log(hash);
+    if (/#login/.test(hash)){
+        var container = ui.modal();
+        compSignin(container);
+    }
     if (hash === ''){
         if (document.querySelector('.modalOverlay')){
             var modalOverlay = document.querySelector('.modalOverlay');
@@ -81,9 +89,13 @@ process_hash = function(){
         damas.search('file:'+filepath, function(index){
             damas.read(index, function(node){
                 var newObject = JSON.parse(JSON.stringify(node[0]));
-                newObject.file = "/file/"+newObject.file;
-                console.log(node);
-                ui.assetOverlay(newObject);
+                newObject.file = newObject.file;
+                var viewerContainer = ui.assetOverlay();
+                ui.assetPanelDetails();
+                compAssetHeader(node[0]);
+                ui.assetCard(compAssetInfos(node[0]));
+//                spinner(assetMain_viewer);
+                assetViewerSelector(newObject.file, viewerContainer);
             });
         });
     }

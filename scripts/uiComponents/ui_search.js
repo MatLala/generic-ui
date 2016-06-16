@@ -33,10 +33,14 @@ document.getElementById('headerCentral').appendChild(searchForm);
 document.getElementById('headerCentral').appendChild(searchBt);
 
 searchForm.addEventListener('submit', function(event) {
-    if (searchInput.value.length > 0){
+    var val = new RegExp(searchInput.value);
+    
+    if (searchInput.value.length > 0 && val.test(window.location.hash) === false){
         addHash('search='+searchInput.value);
     }
-    else {
+    if (val.test(window.location.hash) === true){
+    }
+    if (searchInput.value.length === 0) {
         document.location.hash = '';
     }
 });
@@ -61,6 +65,7 @@ compSearch = (function(container, terms){
         console.log(res);
         damas.read(res, function(assets){
             container.appendChild(table(assets));
+            checkFt();
         });
     });
 });

@@ -83,60 +83,17 @@ ui.modal = function(){
 * require assetViewer Repository - Calling assetViewerSelector function
 * 
 */
-ui.assetOverlay = function(json){
-    require(["scripts/assetViewer/assetViewerSelector.js"], function(assetOverlay){
+ui.assetOverlay = function(){
     if(!document.getElementById('assetOverlay'))
 		{
 			ui.assetOverlayDraw();
 		}
 		//Div to integrate before (in .html file ?)
 		var assetOverlay = document.getElementById('assetOverlay');
-		var assetHeader = document.getElementById('assetHeader');
 		var assetMain_viewer = document.getElementById('assetMain_viewer');
-		var assetTitle = assetHeader.querySelector('.assetTitle');
-		var assetBts = assetHeader.querySelector('.assetBts');
 		assetOverlay.classList.remove('hideAssetOverlay');
 		assetOverlay.classList.add('showAssetOverlay');
-        
-        assetTitle.innerHTML = '';
-        assetBts.innerHTML = '';
-        assetMain_viewer.innerHTML = '';
-
-		var assetLabel = document.createElement('div');
-		assetLabel.setAttribute('class', 'assetLabel');
-		assetTitle.appendChild(assetLabel);
-
-		//Adapt Asset Viewer
-//		var mapsize = window.innerHeight - assetHeader.offsetHeight;
-//		assetMain_viewer.style.height = mapsize + "px";
-		ui.assetPanelDetails();
-//		if(json.file)
-//		{
-			// COMMON PART (NAME, DOWNLOAD, ETC)
-//				assetLabel.innerHTML = json.file.split('/').pop();
-//			assetLabel.innerHTML = json.file;
-            assetLabel.innerHTML = 'nodeId';
-
-			var btDl = document.createElement('a');
-			btDl.setAttribute('class', 'headBt btDl clickable');
-//			btDl.setAttribute('href', json.file );
-            btDl.setAttribute('title', 'Download');
-            var btUp = document.createElement('a');
-			btUp.setAttribute('class', 'headBt btUp clickable');
-			btUp.setAttribute('title', 'Upload Version');
-			assetBts.appendChild(btDl);
-            assetBts.appendChild(btUp);
-
-			//Asset URL
-			//Asset initialize selector
-//			spinner(assetMain_viewer);
-			assetViewerSelector(json.file, assetMain_viewer);
-//		}
-//		else
-//		{
-//			assetLabel.innerHTML = json._id;
-//		}
-	});
+    return assetMain_viewer;
 }
 
 ui.assetOverlayDraw = function(){
@@ -197,24 +154,27 @@ ui.assetOverlayDraw = function(){
 	document.body.appendChild(assetOverlay);
 }
 
-ui.assetCard = function(htmlElement, title, color, contentFt){
+//ui.assetCard = function(htmlElement, title, color, contentFt){
+ui.assetCard = function(content){
+    var assetList = document.getElementById('assetAccordion');
     var card = document.createElement('li');
     card.setAttribute('class', 'open assetCard');
     var cardTitle = document.createElement('a');
     cardTitle.setAttribute('class', 'assetAccTitle clickable');
-    cardTitle.appendChild(document.createTextNode(title));
+//    cardTitle.appendChild(document.createTextNode(title));
     var cardCont = document.createElement('li');
     cardCont.setAttribute('class', 'submenu');
     card.appendChild(cardTitle);
     card.appendChild(cardCont);
     
-    card.style.backgroundColor = color;
+//    card.style.backgroundColor = color;
     
     // Insert card content with a function 
-    if (contentFt)
-        cardCont.appendChild(contentFt);
+    if (content)
+        cardCont.appendChild(content);
     
-    htmlElement.appendChild(card);
+    assetList.appendChild(card);
+    return card;
 }
 
 ui.assetPanelDetails = function(){
@@ -226,9 +186,10 @@ ui.assetPanelDetails = function(){
 	assetList.setAttribute('class', 'accordion');
 	assetPanel.appendChild(assetList);
     
-    ui.assetCard(assetList, 'Informations', '#f29494');
-    ui.assetCard(assetList, 'Versions', '#ffffa5');
-    ui.assetCard(assetList, 'Comments', '#6565ff');
+//    ui.assetCard(assetList, 'Informations', '#f29494');
+//    ui.assetCard(assetList, 'Versions', '#ffffa5');
+//    ui.assetCard(assetList, 'Comments', '#6565ff');
+    return assetPanel;
 }
 
 var closeEvent = new CustomEvent( "assetOverlay:close");

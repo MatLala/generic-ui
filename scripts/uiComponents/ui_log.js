@@ -13,6 +13,7 @@
 compLog = (function(container){
     damas.search_mongo({'time': {$exists:true}}, {"time":-1},200,0, function(res){
         damas.read(res, function(assets){
+            container.innerHTML = '';
             container.appendChild(table(assets));
             checkFt();
         });
