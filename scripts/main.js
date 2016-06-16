@@ -10,18 +10,26 @@ require.config({
         'profile':"uiComponents/ui_profile",
         'editor':"uiComponents/ui_editor",
         'ao':"uiComponents/ui_overlay",
-        'avs':"assetViewer/assetViewerSelector"
     },
     urlArgs: "v=" + (new Date()).getTime()
 });
 
-require(["damas", "ui_layout", "ui_common", "signin", "log", "search", "upload", "profile", "editor", "ao", "avs"], function(damas){
+require(["damas", "ui_layout", "ui_common", "signin", "log", "search", "upload", "profile", "editor", "ao"], function(damas){
     loadCss("scripts/uiLayout/ui_layout.css");
     loadCss("scripts/uiLayout/ui_design.css");
     loadCss("scripts/uiComponents/ui_components.css");
     window.damas = damas;
     damas.server = '/api/';
-    window.location.hash = '#login';
+
+    if (localStorage) {
+        damas.token = localStorage.getItem("token");
+        damas.user = JSON.parse(localStorage.getItem("user"));
+    }
+    damas.verify(function(res) {
+        if (!res) {
+            window.location.hash = '#login';
+        }
+    });
     process_hash();
     
 });
