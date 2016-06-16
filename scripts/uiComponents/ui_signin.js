@@ -19,6 +19,7 @@ compSignin = function(container){
     var inputLogin = document.createElement('input');
     inputLogin.id = 'signinLogin';
     inputLogin.className = 'signinInput';
+    inputLogin.name = 'login';
     inputLogin.setAttribute('type', 'text');
     inputLogin.setAttribute('placeholder', 'Username');
     inputLogin.setAttribute('autofocus', 'autofocus');
@@ -26,6 +27,7 @@ compSignin = function(container){
     var inputPassword = document.createElement('input');
     inputPassword.id = 'signinPassword';
     inputPassword.className = 'signinInput';
+    inputPassword.name = 'password'
     inputPassword.setAttribute('type', 'password');
     inputPassword.setAttribute('placeholder', 'Password');
     
@@ -42,7 +44,20 @@ compSignin = function(container){
     signinForm.appendChild(signinBt);
     
     signinForm.addEventListener('submit', function(event){
-        
+        event.preventDefault();
+        var res = damas.signIn(signinForm.elements['login'].value, signinForm.elements['password'].value, function( res ) {
+            if (!res) {
+                //say to user username or password is wrong
+                return;
+            }
+            if (localStorage) {
+                localStorage.setItem("token", damas.token);
+                damas.user.token = undefined;
+                localStorage.setItem("user", JSON.stringify(damas.user));
+            }
+            document.location.replace('/');
+        });
+        return false;
     });
     
     container.style.textAlign = "center";
