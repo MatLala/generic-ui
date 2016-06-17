@@ -113,17 +113,22 @@ process_hash = function(){
             overlayDiv.classList.remove('showAssetOverlay');
             overlayDiv.classList.add('hideAssetOverlay');
         }
-        var searchTerms = hash.replace('#search=','');
+        var searchTerms = hash.replace(/#search=([^&]*).*/,'$1');
         
         var container = document.querySelector('#panelPrincipal');
         container.innerHTML = '';
         console.log(searchTerms);
         compSearch(container, searchTerms);
     }
-    if (/edit=/.test(hash)){
+    if (/edit=/.test(hash)) {
         if (!document.querySelector('.panelSecond')) {
-            var container = ui.secondPanel();
-            compEditor(container);
+            var filepath = viewHashNode();
+            console.log(filepath);
+            damas.search('file:' + filepath, function(index) {
+                damas.read(index, function(node) {
+                    compEditor(ui.secondPanel(), node);
+                });
+            });
         }
     }
 }
@@ -153,8 +158,8 @@ function viewHashNode(){
     var nHash = currentHash.substr(1);
     var splitHash = nHash.split('&');
     for (var i=0; i<splitHash.length; i++){
-        if (/view=/.test(splitHash[i])){
-            var filepath = splitHash[i].replace('view=','');
+        if (/(view|edit)=/.test(splitHash[i])){
+            var filepath = splitHash[i].replace(/.*=/,'');
             return filepath;
         }
     }
