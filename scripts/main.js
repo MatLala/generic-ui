@@ -10,11 +10,12 @@ require.config({
         'profile':"uiComponents/ui_profile",
         'editor':"uiComponents/ui_editor",
         'ao':"uiComponents/ui_overlay",
+        'avs':"assetViewer/assetViewerSelector"
     },
     urlArgs: "v=" + (new Date()).getTime()
 });
 
-require(["damas", "ui_layout", "ui_common", "signin", "log", "search", "upload", "profile", "editor", "ao"], function(damas){
+require(["damas", "ui_layout", "ui_common", "signin", "log", "search", "upload", "profile", "editor", "ao", "avs"], function(damas){
     loadCss("scripts/uiLayout/ui_layout.css");
     loadCss("scripts/uiLayout/ui_design.css");
     loadCss("scripts/uiComponents/ui_components.css");
@@ -96,14 +97,12 @@ process_hash = function(){
         console.log(filepath);
         damas.search('file:'+filepath, function(index){
             damas.read(index, function(node){
-                var newObject = JSON.parse(JSON.stringify(node[0]));
-                newObject.file = newObject.file;
                 var viewerContainer = ui.assetOverlay();
                 ui.assetPanelDetails();
                 compAssetHeader(node[0]);
                 ui.assetCard(compAssetInfos(node[0]));
 //                spinner(assetMain_viewer);
-                assetViewerSelector(newObject.file, viewerContainer);
+                assetViewerSelector(node[0].file, viewerContainer);
             });
         });
     }
