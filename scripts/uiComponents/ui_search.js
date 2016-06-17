@@ -33,12 +33,9 @@ document.getElementById('headerCentral').appendChild(searchForm);
 document.getElementById('headerCentral').appendChild(searchBt);
 
 searchForm.addEventListener('submit', function(event) {
-    var val = new RegExp(searchInput.value);
-    
-    if (searchInput.value.length > 0 && val.test(window.location.hash) === false){
-        addHash('search='+searchInput.value);
-    }
-    if (val.test(window.location.hash) === true){
+    event.preventDefault();
+    if (searchInput.value.length > 0 && window.location.hash !== searchInput.value) {
+        window.location.hash = '#search='+searchInput.value;
     }
     if (searchInput.value.length === 0) {
         document.location.hash = '';
