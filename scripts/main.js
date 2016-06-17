@@ -125,7 +125,7 @@ process_hash = function(){
             var filepath = viewHashNode();
             console.log(filepath);
             damas.search('file:' + filepath, function(index) {
-                damas.read(index, function(node) {
+                damas.read(index[0], function(node) {
                     compEditor(ui.secondPanel(), node);
                 });
             });
