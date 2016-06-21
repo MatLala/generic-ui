@@ -66,6 +66,16 @@
     width: 100%;
 }
 
+/* EDITOR */
+.editorForm {
+    height: 95%;
+}
+.editorForm textarea {
+    display: block;
+    min-height: 90%;
+    max-height: 90%;
+}
+
 /**
 * PROFILE
 */
