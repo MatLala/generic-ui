@@ -77,7 +77,8 @@ function table(assets) {
         });
 
         td5.addEventListener('click', function(){
-            addHash('edit='+this.file);
+//            addHash('edit='+this.file);
+            window.location.hash = 'edit='+this.file;
         });
     }
     return table;
@@ -112,4 +113,16 @@ function checkFt() {
             }
         }
     });
+}
+
+function AutoGrowTextArea(textField) {
+    if (textField.clientHeight < textField.scrollHeight)
+    {
+        textField.style.height = textField.scrollHeight + "px";
+        if (textField.clientHeight < textField.scrollHeight)
+        {
+            textField.style.height = 
+            (textField.scrollHeight * 2 - textField.clientHeight) + "px";
+        }
+    }
 }

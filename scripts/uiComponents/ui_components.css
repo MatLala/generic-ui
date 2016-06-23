@@ -1,3 +1,19 @@
+/**
+* GENERAL
+*/
+button {
+    border: 1px solid #d4d4d4;
+    border-radius: 3px;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+button:hover {
+    color: #ffffff;
+    background-color: #dedede;
+}
+
+
 /* LOGIN */
 
 #signinForm {
@@ -67,13 +83,55 @@
 }
 
 /* EDITOR */
-.editorForm {
-    height: 95%;
+.editorTitle {
+    height: 30px;
+    font-size: 14px;
+    line-height: 30px;
+    text-align: center;
+    background-color: #dedede;
+}
+.editorContent {
+    height: calc(100% - 60px);
+    padding: 0 10px;
+}
+.editorContentHeader {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 13px;
+}
+.editorContentHeader div:first-child {
+    padding-bottom: 10px;
 }
 .editorForm textarea {
     display: block;
-    min-height: 90%;
-    max-height: 90%;
+    width: 100%;
+    resize: vertical;
+    border-radius: 2px;
+    border: 1px solid #dedede;
+    font: inherit;
+    font-size: 13px;
+}
+.editorForm button {
+    margin-top: 10px;
+    float: right;
+}
+.editorInputs {
+    display: table;
+    padding-bottom: 5px;
+    width: 100%;
+}
+.editorInputs input {
+    display: table-cell;
+    border: 1px solid #dedede;
+    border-radius: 2px;
+}
+.editorInputs input:first-of-type {
+    width: 30%;
+}
+.editorInputs input:last-of-type {
+    margin-left: 5px;
+    width: calc(70% - 5px);
 }
 
 /**

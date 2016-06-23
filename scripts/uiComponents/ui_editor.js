@@ -11,20 +11,35 @@
 * 
 */
 compEditor = function(container, json){
+    container.innerHTML = '';
+    var editorTitle = document.createElement('div');
+    editorTitle.className = 'editorTitle';
+    editorTitle.innerHTML = 'Attribute Editor';
+    
     var editorContent = document.createElement('div');
     editorContent.id = 'editorContent';
     editorContent.className = 'editorContent';
-    editorContent.innerHTML = 'Attribute Editor';
+    
+    var editorContentHeader = document.createElement('div');
+    editorContentHeader.className = 'editorContentHeader';
+    editorContent.appendChild(editorContentHeader);
+    
+    var nodeName = document.createElement('div');
+    nodeName.innerHTML = 'Node : '+json._id;
+    editorContentHeader.appendChild(nodeName);
 
     var inputs = [];
 
     for(key in json) {
+        var inputDiv = document.createElement('div');
+        inputDiv.className = 'editorInputs';
         var inputKey = document.createElement('input');
         inputKey.value = key;
         var inputValue = document.createElement('input');
         inputValue.value = json[key];
-        inputs.push(inputKey);
-        inputs.push(inputValue);
+        inputDiv.appendChild(inputKey);
+        inputDiv.appendChild(inputValue);
+        inputs.push(inputDiv);
     }
 
     var area = document.createElement('textarea');
@@ -34,7 +49,7 @@ compEditor = function(container, json){
 
     var updateBt = document.createElement('button');
     updateBt.setAttribute('type', 'submit');
-    updateBt.innerHTML = 'Valider';
+    updateBt.innerHTML = 'Update';
 
     var form = document.createElement('form');
     form.className = 'editorForm';
@@ -49,23 +64,29 @@ compEditor = function(container, json){
         });
         return false;
     });
-
+    
     var displaySwitch = document.createElement('button');
     displaySwitch.advanced = false;
     displaySwitch.innerHTML = 'Advanced mode';
+    editorContentHeader.appendChild(displaySwitch);
 
     displaySwitch.addEventListener('click', function(event) {
         this.advanced ? switchMode(form, inputs) : switchMode(form, area);
         this.innerHTML = this.advanced ? 'Advanced mode' : 'Simple mode';
         this.advanced = !this.advanced;
+        
+        if (document.querySelector('.editorForm textarea')){
+            AutoGrowTextArea(document.querySelector('.editorForm textarea'));
+        }
     });
 
     switchMode(form, inputs);
 
-    container.appendChild(editorContent);
-    container.appendChild(displaySwitch);
     form.appendChild(updateBt);
-    container.appendChild(form);
+    container.appendChild(editorTitle);
+    container.appendChild(editorContent);
+
+    editorContent.appendChild(form);
 
 };
 

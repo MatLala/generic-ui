@@ -120,15 +120,18 @@ process_hash = function(){
         compSearch(container, searchTerms);
     }
     if (/edit=/.test(hash)) {
-        if (!document.querySelector('.panelSecond')) {
-            var filepath = viewHashNode();
-            console.log(filepath);
-            damas.search('file:' + filepath, function(index) {
-                damas.read(index[0], function(node) {
+        var filepath = viewHashNode();
+        console.log(filepath);
+        damas.search('file:' + filepath, function(index) {
+            damas.read(index[0], function(node) {
+                if (!document.querySelector('.panelSecond')) {
                     compEditor(ui.secondPanel(), node);
-                });
+                }
+                else {
+                    compEditor(document.querySelector('#panelContent'), node);
+                }
             });
-        }
+        });
     }
 }
 
