@@ -1,134 +1,146 @@
-/**
-* HTML rendering methods for UI Components inside Layout
-* require html container
-* require damas.js
-* call by process_hash function from main.js
-*/
-
-/**
-* Header for assetViewer Component
-* 
-*/
-compAssetHeader = function(json){
-    var assetTitle = assetHeader.querySelector('.assetTitle');
-    var assetBts = assetHeader.querySelector('.assetBts');
-
-    var assetLabel = document.createElement('div');
-    assetLabel.setAttribute('class', 'assetLabel');
-    assetTitle.appendChild(assetLabel);
-    if(json.file){
-    //    assetLabel.innerHTML = json.file.split('/').pop();
-        assetLabel.innerHTML = json.file;
-        var btDl = document.createElement('a');
-        btDl.setAttribute('class', 'headBt btDl clickable');
-        btDl.setAttribute('href', json.file );
-        btDl.setAttribute('title', 'Download');
-        var btUp = document.createElement('a');
-        btUp.setAttribute('class', 'headBt btUp clickable');
-        btUp.setAttribute('title', 'Upload Version');
-        assetBts.appendChild(btDl);
-        assetBts.appendChild(btUp);
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+		// AMD. Register as an anonymous module.
+		define([], factory);
+	} else {
+		// Browser globals
+		root.compLog = factory();
+	}
+}(this, function () {
+    loadCss('scripts/uiComponents/ui_overlay.css');
+    require(['domReady', 'scripts/assetViewer/assetViewerSelector.js'], function (domReady, assetViewerSelector) {
+        domReady(function () {
+            hashViewer();
+        });
+    });
+    window.addEventListener('hashchange', function(event){
+        hashViewer();
+    });
+    /**
+    * HTML rendering methods for UI Components inside Layout
+    * require html container
+    * require damas.js
+    * call by process_hash function from main.js
+    */
+    function hashViewer() {
+        var hash = window.location.hash;
+        if (/view=/.test(hash)){
+            // require assetViewer Repository
+            var filepath = viewHashNode();
+            console.log(filepath);
+            damas.search('file:'+filepath, function(index){
+                damas.read(index, function(node){
+                    var viewerContainer = assetOverlay();
+                    assetViewerHeader(node[0]);
+                    assetViewerSelector(node[0].file, viewerContainer);
+                });
+            });
+        }
     }
-    else
-    {
-        assetLabel.innerHTML = json._id;
+
+    assetOverlay = function(){
+        if(!document.getElementById('assetOverlay'))
+        {
+            assetOverlayDraw();
+        }
+        //Div to integrate before (in .html file ?)
+        var assetOverlay = document.getElementById('assetOverlay');
+        var assetMain_viewer = document.getElementById('assetMain_viewer');
+        assetOverlay.classList.remove('hideAssetOverlay');
+        assetOverlay.classList.add('showAssetOverlay');
+        return assetMain_viewer;
     }
-};
+
+    assetOverlayDraw = function(){
+        var assetOverlay = document.createElement('div');
+        assetOverlay.setAttribute('id', 'assetOverlay');
+        assetOverlay.setAttribute('class', 'hideAssetOverlay');
+        var assetContent = document.createElement('div');
+        assetContent.setAttribute('id', 'assetContent');
+        assetContent.setAttribute('class', 'assetContent');
+        var assetMain = document.createElement('div');
+        assetMain.setAttribute('id', 'assetMain');
+        assetMain.setAttribute('class', 'assetMain');
+        var assetHeader = document.createElement('div');
+        assetHeader.setAttribute('id', 'assetHeader');
+        var assetTitle = document.createElement('div');
+        assetTitle.setAttribute('class', 'assetTitle');
+        var assetMain_viewer = document.createElement('div');
+        assetMain_viewer.setAttribute('id', 'assetMain_viewer');
+        assetMain_viewer.setAttribute('class', 'assetMain_viewer');
+        var assetPanel = document.createElement('div');
+        assetPanel.setAttribute('id', 'assetPanel');
+        assetPanel.setAttribute('class', 'assetPanel');
+        var assetBts = document.createElement('div');
+        assetBts.setAttribute('class', 'assetBts');
 
 
-compAssetInfos = function(json){
-    var div = document.createElement('div');
-	div.setAttribute('class', 'stripInfos assetContent close');
-//	element.appendChild(div);
+        var closeAssetOverlay = document.createElement('div');
+        closeAssetOverlay.setAttribute('id', 'closeAssetOverlay');
+        closeAssetOverlay.setAttribute('class', 'clickable');
+        closeAssetOverlay.innerHTML = 'X';
+        assetHeader.appendChild(closeAssetOverlay);
 
-	var td1 = document.createElement('div');
-	td1.setAttribute('class', 'stripTable');
-	div.appendChild(td1);
-	var td1_a = document.createElement('div');
-	td1_a.setAttribute('class', 'stripCell thumbFile');
-	td1.appendChild(td1_a);
-	var td1_b = document.createElement('div');
-	td1_b.setAttribute('class', 'stripCell');
-	td1.appendChild(td1_b);
-//		var td2 = document.createElement('div');
-//		td2.setAttribute('class', '');
-//		div.appendChild(td2);
-	var td3 = document.createElement('div');
-	td3.setAttribute('class', 'showKeys');
-	div.appendChild(td3);
+        closeAssetOverlay.addEventListener( 'click', function(event){
+            var assetOverlay = document.getElementById('assetOverlay');
+            assetOverlay.classList.remove('showAssetOverlay');
+            assetOverlay.classList.add('hideAssetOverlay');
+            // to remove from here
+            if(window['map']) map.remove();
+            var assetHeader = document.getElementById('assetHeader');
+            var assetMain_viewer = document.getElementById('assetMain_viewer');
+            document.getElementById('assetHeader').querySelector('.assetTitle').innerHTML = '';
+            document.getElementById('assetHeader').querySelector('.assetBts').innerHTML = '';
+            assetMain_viewer.innerHTML = '';
+            assetMain_viewer.removeAttribute('class');
+            var closeEvent = new CustomEvent( "assetOverlay:close");
+            document.dispatchEvent(closeEvent);
 
-	//Profile
-	var a = document.createElement('div');
-	a.setAttribute('class', 'thumbFile');
-	td1_a.appendChild(a);
+            return;
+        });
 
-	var assetLabel = document.createElement('h3');
-	td1_b.appendChild(assetLabel);
-//	a.appendChild(icon(json));
+        assetHeader.appendChild(assetTitle);
+        assetHeader.appendChild(assetBts);
+        assetMain.appendChild(assetMain_viewer);
+        assetContent.appendChild(assetMain);
+        assetContent.appendChild(assetPanel);
+        assetOverlay.appendChild(assetHeader);
+        assetOverlay.appendChild(assetContent);
 
-	if (json.file) {
-		assetLabel.innerHTML = json.file.split('/').pop();
-	}
-	if (json.type === 'folder' || json.type === 'sequence') {
-		assetLabel.innerHTML = json._id;
-	}
-	if (json.type) {
-		var assetType = document.createElement('h4');
-		assetType.innerHTML = json.type;
-		td1_b.appendChild(assetType);
-	}
-	if (json.user) {
-		var assetUser = document.createElement('h4');
-		assetUser.innerHTML = json.user;
-		td1_b.appendChild(assetUser);
-	}
-	if (json.time) {
-		var assetTime = document.createElement('h4');
-		// moment.js require to add
-//			moment.locale('fr');
-		var getTime = json.time;
-//			var assetDate = moment.unix(getTime).format('LLL');
-//			assetTime.innerHTML = assetDate;
-		assetTime.innerHTML = getTime;
-		td1_b.appendChild(assetTime);
-	}
-	if (json.file) {
-		var  ext = json.file.split(".").pop().toLowerCase();
-		if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'tiff'){
-			var assetImageSize = document.createElement('h4');
-			var img = new Image();
-			img.src = json.file;
-			img.addEventListener( 'load', function(e){
-				assetImageSize.innerHTML = img.width + "x" + img.height + "pixels";
-				td1_b.appendChild(assetImageSize);
-			});
-		}
-	}
-	if (json.bytes) {
-		var assetSize = document.createElement('h4');
-		assetSize.innerHTML = human_size(json.bytes);
-		td1_b.appendChild(assetSize);
-	}
-    
-    return div;
-};
+        document.body.appendChild(assetOverlay);
+    }
+    document.addEventListener("assetOverlay:close", function(){
+        previousHash();
+    }, false);
 
 
-//var profileBt = document.createElement('a');
-//profileBt.className = 'profileBt clickable';
-////    profileBt.setAttribute('href', '#profile');
-//profileBt.setAttribute('title', 'Profile');
-//
-//document.getElementById('headerRight').appendChild(profileBt);
-//
-//profileBt.addEventListener('click', function(event) {
-//    window.location.hash = '#profile';
-////        addHash('profile');
-//});
+    /**
+    * Header for assetViewer Component
+    * 
+    */
+    assetViewerHeader = function(json){
+        var assetTitle = assetHeader.querySelector('.assetTitle');
+        var assetBts = assetHeader.querySelector('.assetBts');
 
-/**
-* Generate Component : Profile
-* 
-*/
-
-
+        var assetLabel = document.createElement('div');
+        assetLabel.setAttribute('class', 'assetLabel');
+        assetTitle.appendChild(assetLabel);
+        if(json.file){
+        //    assetLabel.innerHTML = json.file.split('/').pop();
+            assetLabel.innerHTML = json.file;
+            var btDl = document.createElement('a');
+            btDl.setAttribute('class', 'headBt btDl clickable');
+            btDl.setAttribute('href', json.file );
+            btDl.setAttribute('title', 'Download');
+            var btUp = document.createElement('a');
+            btUp.setAttribute('class', 'headBt btUp clickable');
+            btUp.setAttribute('title', 'Upload Version');
+            assetBts.appendChild(btDl);
+            assetBts.appendChild(btUp);
+        }
+        else
+        {
+            assetLabel.innerHTML = json._id;
+        }
+    };
+}));

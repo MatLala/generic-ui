@@ -1,7 +1,7 @@
 require.config({
     paths:{
         'damas':"damas",
-        'ui_layout':"uiLayout/ui_layout",
+        'ui_layout':"uiLayout/ui_layout_backO",
         'ui_common':"uiComponents/ui_common",
         'signin':"uiComponents/ui_signin",
         'log':"uiComponents/ui_log",
@@ -125,7 +125,8 @@ process_hash = function(){
         damas.search('file:' + filepath, function(index) {
             damas.read(index[0], function(node) {
                 if (!document.querySelector('.panelSecond')) {
-                    compEditor(ui.secondPanel(), node);
+                    var container = document.querySelector('#contents');
+                    compEditor(ui.secondPanel(container), node);
                 }
                 else {
                     compEditor(document.querySelector('#panelContent'), node);

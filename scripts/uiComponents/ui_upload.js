@@ -29,9 +29,20 @@ compUpload = (function(container){
 // In progress : Connect upload damas-flow functions 
     
     var zoneDrop = document.createElement('div');
-    zoneDrop.className = 'testdrop';
+    zoneDrop.className = 'dropZone';
+    
+    var zoneDropText = document.createElement('div');
+    zoneDropText.className = 'dropZoneText';
+    zoneDropText.innerHTML = 'Drag & Drop File<br>or Click to Upload';
+    
+    var zoneDropInput = document.createElement('input');
+    zoneDropInput.className = 'dropZoneInput clickable';
+    zoneDropInput.setAttribute('name', 'fileA[]');
+    zoneDropInput.setAttribute('type', 'file');
     
     container.appendChild(zoneDrop);
+    zoneDrop.appendChild(zoneDropText);
+    zoneDrop.appendChild(zoneDropInput);
     
     zoneDrop.ondragover = function(ev){
         ev.preventDefault();
@@ -48,6 +59,14 @@ compUpload = (function(container){
         container.style.textAlign = 'center';
         damasflow_ondrop(ev, container);
     }
+    
+//    zoneDropInput.addEventListener('change', function(ev){
+//        container.innerHTML = '';
+//        container.style.textAlign = 'center';
+//        uploadfile(zoneDropInput.files, container, 'input');
+//    });
+    
+//    document.getElementById('modalHeader').innerHTML = 'Upload';
 });
 
 /**
@@ -241,46 +260,53 @@ damasflow_ondrop = function ( e, container )
         }
         else
         {
-//            var alertTxt = document.createElement('div');
-//            alertTxt.innerHTML = "Publish as : <br>";
-//            var newPathTxt = document.createElement('div');
-//            newPathTxt.innerHTML = newPath;
-//            container.appendChild(alertTxt);
-//            container.appendChild(newPathTxt);
-//            
-//            var btCancel = document.createElement('button');
-//            btCancel.setAttribute('class','modal-bt');
-//            btCancel.innerHTML = 'Cancel';
-//            var btOk = document.createElement('button');
-//            btOk.setAttribute('class','modal-bt');
-//            btOk.innerHTML = 'Ok';
-//    //        var modalFooter = document.getElementById('modal-footer');
-//
-//            container.appendChild(btOk);
-//            container.appendChild(btCancel);
-//
-//            btOk.addEventListener('click', function(){
-//                upload_rest(e.dataTransfer.files[0],newPath, null, function(node){
-//                    container.innerHTML='';
+            var alertTxt = document.createElement('div');
+            alertTxt.innerHTML = "Publish as : <br>";
+            var newPathTxt = document.createElement('div');
+            newPathTxt.innerHTML = newPath;
+            container.appendChild(alertTxt);
+            container.appendChild(newPathTxt);
+            
+            var btCancel = document.createElement('button');
+            btCancel.setAttribute('class','modal-bt');
+            btCancel.innerHTML = 'Cancel';
+            var btOk = document.createElement('button');
+            btOk.setAttribute('class','modal-bt');
+            btOk.innerHTML = 'Ok';
+    //        var modalFooter = document.getElementById('modal-footer');
+
+            container.appendChild(btOk);
+            container.appendChild(btCancel);
+
+            btOk.addEventListener('click', function(){
+//                container.innerHTML='';
+//                var logDiv = document.querySelector('#panelPrincipal');
+//                compLog(logDiv);
+                var modalOverlay = document.querySelector('.modalOverlay');
+                modalOverlay.remove();
+                upload_rest(e.dataTransfer.files[0],newPath, null, function(node){
+                    alert('toto');
+//                    previousHash();
 //                    var logDiv = document.querySelector('#panelPrincipal');
 //                    compLog(logDiv);
-////                    graph.newNode(node);
-//                });
-//                
-//            });
-//            btCancel.addEventListener('click', function(){
-//                var modalOverlay = document.querySelector('.modalOverlay');
-//                modalOverlay.remove();
-//                previousHash();
-//                return;
-//            });
-            
-            if( newPath = prompt('Publish as', newPath))
-            {
-                upload_rest(e.dataTransfer.files[0],newPath, null, function(node){
 //                    graph.newNode(node);
                 });
-            }
+                
+            });
+            btCancel.addEventListener('click', function(){
+                var modalOverlay = document.querySelector('.modalOverlay');
+                modalOverlay.remove();
+                previousHash();
+                return;
+            });
+            
+            
+//            if( newPath = prompt('Publish as', newPath))
+//            {
+//                upload_rest(e.dataTransfer.files[0],newPath, null, function(node){
+////                    graph.newNode(node);
+//                });
+//            }
         }
     });
     return;
@@ -288,86 +314,97 @@ damasflow_ondrop = function ( e, container )
 
 upload_rest = function ( file, path, id, callback )
 {
-  var req = new XMLHttpRequest();
-  var fd= new FormData();
-  fd.append('path',path);
-  fd.append('id',id);
-  fd.append('file', file);
-  if(!document.getElementById('upload_div')){
-    var upload_div = document.createElement( 'div' );
-    var progress= document.createElement('progress');
-    var speed = document.createElement('span');
-    var stats= document.createElement('span');
-    var cancel= document.createElement('button');
-    var exit= document.createElement('button');
-    upload_div.appendChild(speed);
-    upload_div.appendChild(stats);
-    upload_div.appendChild(progress);
-    upload_div.appendChild(cancel);
-    upload_div.appendChild(exit);
-    upload_div.setAttribute("id","upload_div");
-    speed.setAttribute("id","speed");
-    progress.setAttribute("id",'progressBar');
-    stats.setAttribute("id",'stats');
-    exit.setAttribute("id",'exit');
-    cancel.setAttribute("id",'cancel');
-    cancel.innerHTML="Cancel";
-    exit.innerHTML="X";
+    var req = new XMLHttpRequest();
+    var fd= new FormData();
+    fd.append('path',path);
+    fd.append('id',id);
+    fd.append('file', file);
+    if(!document.getElementById('upload_div')){
+        var upload_div = document.createElement( 'div' );
+        
+        var uploadTitle = document.createElement( 'div' );
+        uploadTitle.className = '';
+        uploadTitle.innerHTML = 'Upload in progress';
+        
+        var progress= document.createElement('progress');
+        
+        var uploadInfos = document.createElement( 'div' );
+        var speed = document.createElement('span');
+        var stats= document.createElement('span');
+        var cancel= document.createElement('button');
+        var exit= document.createElement('button');
+        
+        uploadInfos.appendChild(speed);
+        uploadInfos.appendChild(stats);
+        upload_div.appendChild(uploadTitle);
+        upload_div.appendChild(uploadInfos);
+        upload_div.appendChild(progress);
+        upload_div.appendChild(cancel);
+        upload_div.appendChild(exit);
+        upload_div.setAttribute("id","upload_div");
+        speed.setAttribute("id","speed");
+        progress.setAttribute("id",'progressBar');
+        stats.setAttribute("id",'stats');
+        exit.setAttribute("id",'exit');
+        cancel.setAttribute("id",'cancel');
+        cancel.innerHTML="Cancel";
+        exit.innerHTML="X";
 
-    exit.addEventListener("click",function(e){
-      upload_div.remove();
-    });
-    document.getElementById('modalContent').appendChild(upload_div);
-  }
-  else {
-    var cancel= document.getElementById('cancel');
-    var progress=document.getElementById('progressBar');
-    var speed= document.getElementById('speed');
-    var stats= document.getElementById('stats');
-  }
-  var d = new Date();
-  var starttime = oldtime = d.getTime();
-  progress.value=0;
+        exit.addEventListener("click",function(e){
+            upload_div.remove();
+        });
+        document.body.appendChild(upload_div);
+    }
+    else {
+        var cancel= document.getElementById('cancel');
+        var progress=document.getElementById('progressBar');
+        var speed= document.getElementById('speed');
+        var stats= document.getElementById('stats');
+    }
+    var d = new Date();
+    var starttime = oldtime = d.getTime();
+    progress.value=0;
   /*req.upload.addEventListener("progress",progressHandler, false);
   req.addEventListener("load", completeHandler, false);*/
-  if(id)
-    req.open("PUT", damas.server + "upload/", callback !== undefined);
-  else
-    req.open("POST", damas.server + "upload/", callback !== undefined);
-  cancel.addEventListener("click",function(e){
-    if(req.readyState<4){
-      req.abort();
-      req=null;
-      speed.innerHTML="---";
-      stats.innerHTML="Aborted";
-    }
-  });
-  req.upload.onprogress = function(e) {
-    progress.max=e.total;
-    var delta_size = e.loaded - progress.value;
-    var d = new Date();
-    var delta_time = d.getTime() - oldtime;
-    oldtime = d.getTime();
-    var tempSpeed=(( delta_size * 1000 / delta_time )) * 100;
-    speed.innerHTML=human_size((tempSpeed) / 100) +'/s';
-    progress.value = e.loaded;
-    stats.innerHTML = e.loaded + ' / ' + e.total + ' (' + Math.ceil( e.loaded * 100 / e.total ) + '%)';
-  };
-  req.onreadystatechange = function(e){
-    if(req.readyState == 4)
-    {
-      if(req.status == 201)
-      {
+    if(id)
+        req.open("PUT", damas.server + "upload/", callback !== undefined);
+    else
+        req.open("POST", damas.server + "upload/", callback !== undefined);
+    cancel.addEventListener("click",function(e){
+        if(req.readyState<4){
+            req.abort();
+            req=null;
+            speed.innerHTML="---";
+            stats.innerHTML="Aborted";
+        }
+    });
+    req.upload.onprogress = function(e) {
+        progress.max=e.total;
+        var delta_size = e.loaded - progress.value;
         var d = new Date();
-        var delta_time = d.getTime() - starttime;
-        speed.innerHTML= human_size( progress.max * 1000 / delta_time ) + '/s' ;
-        //setTimeout("500",function({upload_div.remove();}));
-//        callback(JSON.parse(req.responseText));
-          alert('ok!');
-      }
+        var delta_time = d.getTime() - oldtime;
+        oldtime = d.getTime();
+        var tempSpeed=(( delta_size * 1000 / delta_time )) * 100;
+        speed.innerHTML=human_size((tempSpeed) / 100) +'/s';
+        progress.value = e.loaded;
+        stats.innerHTML = e.loaded + ' / ' + e.total + ' (' + Math.ceil( e.loaded * 100 / e.total ) + '%)';
+    };
+    req.onreadystatechange = function(e){
+        if(req.readyState == 4)
+        {
+            if(req.status == 201)
+            {
+                var d = new Date();
+                var delta_time = d.getTime() - starttime;
+                speed.innerHTML= human_size( progress.max * 1000 / delta_time ) + '/s' ;
+                //setTimeout("500",function({upload_div.remove();}));
+                //        callback(JSON.parse(req.responseText));
+//                alert('ok!');
+                document.getElementById('cancel').innerHTML = 'Done !';
+            }
+        }
     }
-  }
-  req.send(fd);
+    req.send(fd);
 }
 human_size = function ( filesize )
 {

@@ -1,101 +1,122 @@
-/**
-* HTML rendering methods for UI Components inside Layout
-* require html container
-* require damas.js
-* call by process_hash function from main.js
-*/
-
-
-/**
-* Generate Component : Editor
-* 
-*/
-compEditor = function(container, json){
-    container.innerHTML = '';
-    var editorTitle = document.createElement('div');
-    editorTitle.className = 'editorTitle';
-    editorTitle.innerHTML = 'Attribute Editor';
-    
-    var editorContent = document.createElement('div');
-    editorContent.id = 'editorContent';
-    editorContent.className = 'editorContent';
-    
-    var editorContentHeader = document.createElement('div');
-    editorContentHeader.className = 'editorContentHeader';
-    editorContent.appendChild(editorContentHeader);
-    
-    var nodeName = document.createElement('div');
-    nodeName.innerHTML = 'Node : '+json._id;
-    editorContentHeader.appendChild(nodeName);
-
-    var inputs = [];
-
-    for(key in json) {
-        var inputDiv = document.createElement('div');
-        inputDiv.className = 'editorInputs';
-        var inputKey = document.createElement('input');
-        inputKey.value = key;
-        var inputValue = document.createElement('input');
-        inputValue.value = json[key];
-        inputDiv.appendChild(inputKey);
-        inputDiv.appendChild(inputValue);
-        inputs.push(inputDiv);
-    }
-
-    var area = document.createElement('textarea');
-    area.name = 'editor';
-    area.innerHTML = JSON.stringify(json);
-    area = [area];
-
-    var updateBt = document.createElement('button');
-    updateBt.setAttribute('type', 'submit');
-    updateBt.innerHTML = 'Update';
-
-    var form = document.createElement('form');
-    form.className = 'editorForm';
-
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        damas.update(null, JSON.parse(form.elements['editor'].value), function( res ) {
-            if (!res) {
-                alert("something went wrong!");
-                return;
-            }
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+		// AMD. Register as an anonymous module.
+		define([], factory);
+	} else {
+		// Browser globals
+		root.compEditor = factory();
+	}
+}(this, function () {
+    loadCss('scripts/uiComponents/ui_editor.css');
+    require(['domReady'], function (domReady) {
+        domReady(function () {
+            hashEditor();
         });
-        return false;
+    });
+    /**
+    * Listen specific component Hash
+    */
+    window.addEventListener('hashchange', function(event){
+        hashEditor();
     });
     
-    var displaySwitch = document.createElement('button');
-    displaySwitch.advanced = false;
-    displaySwitch.innerHTML = 'Advanced mode';
-    editorContentHeader.appendChild(displaySwitch);
+    /**
+    * HTML rendering methods for UI Components inside Layout
+    * require html container
+    * require damas.js
+    * require main.js
+    * require ui_common.js
+    * call by process_hash function from main.js
+    */
+    function hashEditor() {
+        var hash = window.location.hash;
+        if (/edit=/.test(hash)) {
 
-    displaySwitch.addEventListener('click', function(event) {
-        this.advanced ? switchMode(form, inputs) : switchMode(form, area);
-        this.innerHTML = this.advanced ? 'Advanced mode' : 'Simple mode';
-        this.advanced = !this.advanced;
-        
-        if (document.querySelector('.editorForm textarea')){
-            AutoGrowTextArea(document.querySelector('.editorForm textarea'));
+            //Common function from main.js
+            var filepath = viewHashNode();
+
+            console.log(filepath);
+            damas.search('file:' + filepath, function(index) {
+                damas.read(index[0], function(node) {
+                    if (!document.querySelector('.panelSecond')) {
+                        var container = document.querySelector('#contents');
+                        compEditor(ui.secondPanel(container), node);
+                    }
+                    else {
+                        compEditor(document.querySelector('#panelContent'), node);
+                    }
+                });
+            });
         }
-    });
+    };
 
-    switchMode(form, inputs);
+    /**
+    * Generate Component : Editor
+    * 
+    */
+    compEditor = function(container, json){
 
-    form.appendChild(updateBt);
-    container.appendChild(editorTitle);
-    container.appendChild(editorContent);
+        document.addEventListener("secondPanel:close", function(e){
+            e.preventDefault();
+            var n = window.location.hash;
+            var splitH = n.split('edit=');
+            splitH.pop();
+            history.pushState({}, null, splitH);
+//            previousHash();
+            if (document.querySelector('.selected')){
+                document.querySelector('.selected').classList.remove('selected');
+            }
+        }, false);
 
-    editorContent.appendChild(form);
+        container.innerHTML = '';
+        var editorTitle = document.createElement('div');
+        editorTitle.className = 'editorTitle';
+        editorTitle.innerHTML = 'Attribute Editor';
 
-};
+        var editorContent = document.createElement('div');
+        editorContent.id = 'editorContent';
+        editorContent.className = 'editorContent';
 
-function switchMode(form, inputs) {
-    var len = form.childNodes.length - 1;
-    for (var i = 0; i < len; ++i) {
-        form.removeChild(form.childNodes[0]);
-    }
-    for (var i = inputs.length - 1; i >= 0; --i) {
-        form.insertBefore(inputs[i], form.childNodes[0]);
-    }
-}
+        var editorContentHeader = document.createElement('div');
+        editorContentHeader.className = 'editorContentHeader';
+        editorContent.appendChild(editorContentHeader);
+
+        var nodeName = document.createElement('div');
+        nodeName.innerHTML = 'Node : '+json._id;
+        editorContentHeader.appendChild(nodeName);
+
+        var area = document.createElement('textarea');
+        area.name = 'editor';
+        area.innerHTML = JSON.stringify(json).replace(/,/g, ',\n');
+
+        var updateBt = document.createElement('button');
+        updateBt.setAttribute('type', 'submit');
+        updateBt.innerHTML = 'Update';
+
+        var form = document.createElement('form');
+        form.className = 'editorForm';
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            damas.update(json._id, JSON.parse(form.elements['editor'].value), function( res ) {
+                if (!res) {
+                    alert("something went wrong!");
+                    return;
+                }
+                else {
+                    alert("update done!");
+                    return;
+                }
+            });
+            return false;
+        });
+
+        form.appendChild(area);
+        form.appendChild(updateBt);
+        container.appendChild(editorTitle);
+        container.appendChild(editorContent);
+
+        editorContent.appendChild(form);
+    };
+
+}));

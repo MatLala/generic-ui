@@ -12,27 +12,15 @@ a {
 .homeHeader {
     background-color: orange;
 }
-/* Search */
-.searchInput {
-    background-color: #ffffff;
-    border: none;
-    border-radius: 3px;
-}
-/* Buttons */
-.uploadBt, .profileBt, .searchBt {
-    width: 30px;
-    height: 30px;
-    background-color: #b4b4b4;
-}
 
 /* CONTENTS */
 .homeContents #panelPrincipal {
     font-size: 13px;
-    background-color: beige;
     text-align: left;
 }
 .homeContents table tr{
     height: 30px;
+    line-height: 30px;
 }
 .panelSecond {
     background: rgba(57, 57, 57, 0.6) none repeat scroll 0 0;
@@ -51,53 +39,6 @@ a {
     background-color: #ffffff;
 }
 
-/**
-* OVERLAY
-*/
-#closeAssetOverlay {
-	color: #fff;
-}
-#assetHeader {
-	background-color: green;
-}
-.assetTitle {
-	color: white;
-	font-size: 13px;
-}
-.assetLabel {
-    line-height: 36px;
-}
-.btDl, .btUp {
-    background-color: #b4b4b4;
-	width: 30px;
-	height: 30px;
-}
-.assetMain {
-    padding: 10px;
-    background-color: rgb(198, 198, 198);
-}
-.assetPanel {
-	background-color: rgb(198, 198, 198);
-	color: white;
-}
-.assetMain_viewer {
-	text-align: center;
-	transition: all 0.3s ease;
-	background-color: lightblue;
-	font-size: 14px;
-/*	overflow: auto;*/
-}
-.assetAccTitle {
-	font-size: 13px;
-    color: rgb(84, 84, 84);
-	height: 30px;
-	line-height: 30px;
-/*	border-bottom: 1px solid gray;*/
-/*	color: white;*/
-}
-
 @media screen and (min-width: 800px) {
-    .assetMain {
-        padding: 0;
-    }
+
 }

@@ -1,0 +1,153 @@
+/* OVERLAY */
+#assetOverlay {
+	position: fixed;
+	z-index: 100;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left:0;
+}
+.hideAssetOverlay {
+	display: none;
+}
+.showAssetOverlay {
+	display: block;
+}
+#closeAssetOverlay {
+	position: fixed;
+	right: 10px;
+	top: 0px;
+    line-height: 36px;
+}
+#assetOverlay ul, #assetOverlay li {
+    list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+#assetHeader {
+    display: table;
+	min-height: 36px;
+	width: 100%;
+}
+.assetContent {
+	display: box;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -moz-flex;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+    -webkit-flex-flow: column;
+    -moz-flex-flow: column;
+    flex-flow: column;
+    flex-direction: column;
+    
+    
+	-webkit-box-orient: horizontal;
+	-moz-box-orient: horizontal;
+    
+    height: calc(100% - 36px);
+    overflow: auto;
+}
+.assetMain {
+	position: relative;
+	-webkit-box-flex: 1 1 auto;
+	-moz-box-flex: 1 1 auto;
+	-webkit-flex:  1 1 auto;
+	-ms-flex:  1 1 auto;
+	box-flex: 1 1 auto;
+	flex: 1 1 auto;
+	-webkit-box-ordinal-group: 1;  
+	-moz-box-ordinal-group: 1;	 
+	-ms-flex-order: 1;	  
+	-webkit-order: 1;
+	order: 1;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	transition: all 0.3s ease; 
+    width: 100%;
+    min-height: 240px;
+}
+#assetPanel {
+	-webkit-box-flex: 0 0 auto;
+	-moz-box-flex: 0 0 auto;
+	-webkit-flex:  0 0 auto;
+	-ms-flex:  0 0 auto;
+	box-flex: 0 0 auto;
+	flex: 0 0 auto;
+	-webkit-box-ordinal-group: 2;  
+	-moz-box-ordinal-group: 2;	 
+	-ms-flex-order: 2;
+	-webkit-order: 2;
+	order: 2;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+#assetMain_viewer {
+    height: 100%;
+/*	overflow: auto;*/
+}
+.assetCard {
+    min-height: 150px;
+}
+
+
+/**
+* OVERLAY
+*/
+#closeAssetOverlay {
+	color: #fff;
+}
+#assetHeader {
+	background-color: green;
+}
+.assetTitle {
+	color: white;
+	font-size: 13px;
+}
+.assetLabel {
+    line-height: 36px;
+}
+.btDl, .btUp {
+    background-color: #b4b4b4;
+	width: 30px;
+	height: 30px;
+}
+.assetMain {
+    padding: 10px;
+    background-color: rgb(198, 198, 198);
+}
+.assetPanel {
+	background-color: rgb(198, 198, 198);
+	color: white;
+}
+.assetMain_viewer {
+	text-align: center;
+	transition: all 0.3s ease;
+	background-color: lightblue;
+	font-size: 14px;
+/*	overflow: auto;*/
+}
+.assetAccTitle {
+	font-size: 13px;
+    color: rgb(84, 84, 84);
+	height: 30px;
+	line-height: 30px;
+/*	border-bottom: 1px solid gray;*/
+/*	color: white;*/
+}
+
+@media screen and (min-width: 800px) {
+        .assetContent {
+        -webkit-flex-flow: row;
+        -moz-flex-flow: row;
+        flex-flow: row;
+        flex-direction: row;
+    }
+    .assetMain {
+        padding: 0;
+    }
+    .assetPanel {
+/*        width: 340px;*/
+    }
+}

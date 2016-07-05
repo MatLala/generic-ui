@@ -1,0 +1,51 @@
+/* HEADER */
+
+/* Search */
+.searchForm {
+    position: relative;
+    display: inline-block;
+    width: 80%;
+    display: none;
+}
+.searchInput {
+    height: 24px;
+    width: 100%;
+}
+.searchReset {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    line-height: 24px;
+}
+/* Buttons */
+.searchBt {
+    position: relative;
+    display: inline-block;
+    margin-left: 9px;
+}
+.searchBt {
+    float: right;
+    font-size: 30px;
+}
+
+/* CONTENTS */
+.homeContents table {
+    width: 100%;
+}
+.homeContents th {
+    cursor: pointer;
+}
+.homeContents th > span {
+    display: inline-block;
+    padding-left: 6px;
+}
+
+@media screen and (min-width: 800px) {
+     /* Search */
+    .searchForm {
+        display: inline-block;
+    }
+    .searchBt {
+        display: none;
+    } 
+}

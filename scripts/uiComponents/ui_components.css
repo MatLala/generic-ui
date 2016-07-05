@@ -12,7 +12,10 @@ button:hover {
     color: #ffffff;
     background-color: #dedede;
 }
-
+.spinner {
+	width: 50px;
+	height: 100%;
+}
 
 /* LOGIN */
 
@@ -47,32 +50,13 @@ button:hover {
 
 /* HEADER */
 
-/* Search */
-.searchForm {
-    position: relative;
-    display: inline-block;
-    width: 80%;
-    display: none;
-}
-.searchInput {
-    height: 24px;
-    width: 100%;
-}
-.searchReset {
-    position: absolute;
-    top: 0;
-    right: 5px;
-    line-height: 24px;
-}
 /* Buttons */
-.uploadBt, .profileBt, .searchBt {
+.uploadBt, .profileBt {
     position: relative;
     display: inline-block;
     margin-left: 9px;
 }
-.searchBt {
-    float: right;
-}
+
 .uploadBt, .profileBt {
     float: left;
 }
@@ -81,57 +65,12 @@ button:hover {
 .homeContents table {
     width: 100%;
 }
-
-/* EDITOR */
-.editorTitle {
-    height: 30px;
-    font-size: 14px;
-    line-height: 30px;
-    text-align: center;
-    background-color: #dedede;
+.homeContents th {
+    cursor: pointer;
 }
-.editorContent {
-    height: calc(100% - 60px);
-    padding: 0 10px;
-}
-.editorContentHeader {
-    width: 100%;
-    text-align: center;
-    padding: 10px 0;
-    font-size: 13px;
-}
-.editorContentHeader div:first-child {
-    padding-bottom: 10px;
-}
-.editorForm textarea {
-    display: block;
-    width: 100%;
-    resize: vertical;
-    border-radius: 2px;
-    border: 1px solid #dedede;
-    font: inherit;
-    font-size: 13px;
-}
-.editorForm button {
-    margin-top: 10px;
-    float: right;
-}
-.editorInputs {
-    display: table;
-    padding-bottom: 5px;
-    width: 100%;
-}
-.editorInputs input {
-    display: table-cell;
-    border: 1px solid #dedede;
-    border-radius: 2px;
-}
-.editorInputs input:first-of-type {
-    width: 30%;
-}
-.editorInputs input:last-of-type {
-    margin-left: 5px;
-    width: calc(70% - 5px);
+.homeContents th > span {
+    display: inline-block;
+    padding-left: 6px;
 }
 
 /**
@@ -148,18 +87,42 @@ button:hover {
     display: block;
 }
 
-.testdrop {
+/**
+* UPLOAD
+*/
+.dropZone {
     width: 90%;
     height: 100%;
     border: 1px dashed #646464;
     border-radius: 6px;
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
+    position: relative;
 }
-.testdrop.dragover {
+.dropZone.dragover {
     background-color: rgba(186, 186, 186, 0.7);
 }
-
+.dropZoneInput {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    opacity: 0;
+    width: 100%;
+}
+#upload_div {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 200px;
+    height: 100px;
+    z-index: 10;
+    text-align: center;
+    background-color: #ffffff;
+    font-size: 13px;
+}
 /**
 * OVERLAY
 */
@@ -188,12 +151,6 @@ button:hover {
 }
 
 @media screen and (min-width: 800px) {
-     /* Search */
-    .searchForm {
-        display: inline-block;
-    }
-    .searchBt {
-        display: none;
-    }
+
     
 }

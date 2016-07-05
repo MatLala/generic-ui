@@ -10,6 +10,8 @@
 * 
 */
 compSignin = function(container){
+//    document.querySelector('.modalOverlay').style.backgroundColor = 'white';
+    
     var signinForm = document.createElement('form');
     signinForm.id = 'signinForm';
     

@@ -1,0 +1,24 @@
+/* CONTENTS */
+.homeContents table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.homeContents th {
+    cursor: pointer;
+}
+.homeContents th > span {
+    display: inline-block;
+    padding-left: 6px;
+}
+#contents tr:hover, .selected {
+    background-color: #dedede;
+}
+.nomobile {
+    display: none;
+}
+
+@media screen and (min-width: 800px) {
+    .nomobile {
+        display: inline-block;
+    }
+}
