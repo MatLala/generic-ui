@@ -1,0 +1,16 @@
+/******************************************************
+	ODF
+******************************************************/
+
+#viewerOdf{
+	position: relative;
+	width: auto;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#viewerOdf:first-child {
+	margin-left: auto;
+	margin-right: auto;
+}

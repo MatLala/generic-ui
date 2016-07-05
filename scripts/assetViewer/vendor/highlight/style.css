@@ -1,0 +1,11 @@
+pre {
+	margin: 0;
+	height: 100%;
+	overflow: auto;
+	text-align: left;
+	background-color: #f0f0f0;
+}
+
+.hljs {
+/*	overflow: hidden;*/
+}

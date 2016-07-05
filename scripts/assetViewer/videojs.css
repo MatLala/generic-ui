@@ -1,0 +1,9 @@
+/******************************************************
+	VIDEO-JS
+******************************************************/
+
+.video-js {
+	position: relative !important;
+	width: auto !important;
+	height: 100% !important;
+}
