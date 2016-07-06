@@ -61,7 +61,7 @@
         var hash = window.location.hash;
         if (hash === ''){
         if (container.scrollHeight - container.scrollTop === container.clientHeight){
-            damas.search_mongo({'time': {$exists:true, $type: 1}, 'file':{$exists:true}}, {"time":-1},nbElements, offsetElements, function(res){
+            damas.search_mongo({'time': {$exists:true},'#parent':{$exists:true}}, {"time":-1},nbElements, offsetElements, function(res){
                 damas.read(res, function(assets){
                     var tableBody = document.querySelector('#contents tbody');
                     tableLogContent(tableBody, assets);
@@ -80,7 +80,7 @@
     compLog = (function(container){
         container.innerHTML = '';
         var tableBody = tableLog(container);
-        damas.search_mongo({'time': {$exists:true, $type: 1}, 'file':{$exists:true}}, {"time":-1},nbElements,0, function(res){
+        damas.search_mongo({'time': {$exists:true}, '#parent':{$exists:true}}, {"time":-1},nbElements,0, function(res){
             damas.read(res, function(assets){ 
                 tableLogContent(tableBody, assets);
                 offsetElements += nbElements;
@@ -138,16 +138,19 @@
             td2.className = 'clickable';
             
             var time = new Date(parseInt(assets[i].time));
+            var file = assets[i].file || assets[i]['#parent'];
+            
             
             td1.setAttribute('title', time);
             td2.setAttribute('title', JSON_tooltip(assets[i]));
             
             var path = document.createElement('span');
             path.className = 'nomobile';
-            path.innerHTML = assets[i].file.split('/').slice(0,-1).join('/')+'/';
             var filename = document.createElement('span');
-            filename.innerHTML = assets[i].file.split('/').pop();
-
+            if (file){
+                path.innerHTML = file.split('/').slice(0,-1).join('/')+'/';
+                filename.innerHTML = file.split('/').pop();
+            }    
 
             td1.innerHTML = ('00'+time.getHours()).slice(-2)+':'+('00'+time.getMinutes()).slice(-2)+':'+('00'+time.getSeconds()).slice(-2);
             td3.innerHTML = assets[i].author;
@@ -156,7 +159,8 @@
             td2.appendChild(path);
             td2.appendChild(filename);
             
-            tr.file = assets[i].file;
+            tr.file = assets[i].file || assets[i]['#parent'];
+            
 
             tr.appendChild(td1);
             tr.appendChild(td2);

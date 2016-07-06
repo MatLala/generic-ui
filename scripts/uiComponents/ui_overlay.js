@@ -28,11 +28,11 @@
             // require assetViewer Repository
             var filepath = viewHashNode();
             console.log(filepath);
-            damas.search('file:'+filepath, function(index){
+            damas.search('#parent:'+filepath, function(index){
                 damas.read(index, function(node){
                     var viewerContainer = assetOverlay();
                     assetViewerHeader(node[0]);
-                    assetViewerSelector(node[0].file, viewerContainer);
+                    assetViewerSelector(node[0]['#parent'], viewerContainer);
                 });
             });
         }
@@ -125,9 +125,9 @@
         var assetLabel = document.createElement('div');
         assetLabel.setAttribute('class', 'assetLabel');
         assetTitle.appendChild(assetLabel);
-        if(json.file){
+        if(json.file || json['#parent']){
         //    assetLabel.innerHTML = json.file.split('/').pop();
-            assetLabel.innerHTML = json.file;
+            assetLabel.innerHTML = json.file || json['#parent'];
             var btDl = document.createElement('a');
             btDl.setAttribute('class', 'headBt btDl clickable');
             btDl.setAttribute('href', json.file );

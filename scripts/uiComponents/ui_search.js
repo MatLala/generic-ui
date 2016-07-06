@@ -26,7 +26,7 @@
     * 
     */
     function hashSearch() {
-        sortBy = 'file';
+        sortBy = '#parent';
         order = 1;
 
         var hash = window.location.hash;
@@ -65,7 +65,7 @@
         var sort = {};
         sort[sortBy] = order;
 
-        damas.search_mongo({'file': 'REGEX_'+terms+'.*'}, sort, nbElements, offsetElements, function(res){
+        damas.search_mongo({'#parent': 'REGEX_'+terms+'.*'}, sort, nbElements, offsetElements, function(res){
             damas.read(res, function(assets){
                 container.innerHTML = '';
                 tableSearchContent(container, assets);
@@ -83,7 +83,7 @@
                 var sort = {};
                 sort[sortBy] = order;
                 var searchTerms = hash.replace(/#search=([^&]*).*/,'$1');
-                damas.search_mongo({'file': 'REGEX_'+searchTerms+'.*'}, sort, nbElements, offsetElements, function(res){
+                damas.search_mongo({'#parent': 'REGEX_'+searchTerms+'.*'}, sort, nbElements, offsetElements, function(res){
                     damas.read(res, function(assets){
                         var tableBody = document.querySelector('#contents tbody');
                         tableSearchContent(tableBody, assets);
@@ -181,7 +181,7 @@
         var tbody = document.createElement('tbody');
 
         th1.setAttribute('name', 'time');
-        th2.setAttribute('name', 'file');
+        th2.setAttribute('name', '#parent');
         th3.setAttribute('name', 'author');
         th4.setAttribute('name', 'comment');
 
@@ -236,17 +236,58 @@
             var td4 = document.createElement('td');
 
             td2.className = 'clickable';
+            td2.setAttribute('title', JSON_tooltip(assets[i]));
+            
+            var file = assets[i].file || assets[i]['#parent'];
+            tr.file = file;
 
             td1.innerHTML = new Date(parseInt(assets[i].time));
-            td2.innerHTML = assets[i].file;
             td3.innerHTML = assets[i].author;
             td4.innerHTML = assets[i].comment;
+            
+            var path = document.createElement('span');
+            path.className = 'nomobile';
+            var filename = document.createElement('span');
+            if (file){
+                path.innerHTML = file.split('/').slice(0,-1).join('/')+'/';
+                filename.innerHTML = file.split('/').pop();
+            }  
+            td2.appendChild(path);
+            td2.appendChild(filename);
 
             tr.appendChild(td1);
             tr.appendChild(td2);
             tr.appendChild(td3);
             tr.appendChild(td4);
             container.appendChild(tr);
+            
+            if (require.specified('ao')){
+                var tdViewer = document.createElement('td');
+                tdViewer.className = 'fa fa-eye fa-lg clickable';
+                tr.appendChild(tdViewer);
+                tdViewer.addEventListener('click', function(){
+    //                    addHash('edit='+this.file);
+                    window.location.hash = 'view='+this.parentNode.file;
+                    if (document.querySelector('.selected')){
+                        document.querySelector('.selected').classList.remove('selected');
+                    }
+                    this.parentNode.className = 'selected';
+                });
+            }
+
+            if (require.specified('editor')){
+                var tdEdit = document.createElement('td');
+                tdEdit.className = 'fa fa-pencil fa-lg clickable';
+                tr.appendChild(tdEdit);
+                tdEdit.addEventListener('click', function(){
+    //                    addHash('edit='+this.file);
+                    window.location.hash = 'edit='+this.parentNode.file;
+                    if (document.querySelector('.selected')){
+                        document.querySelector('.selected').classList.remove('selected');
+                    }
+                    this.parentNode.className = 'selected';
+                });
+            }
         }
     }
 }));

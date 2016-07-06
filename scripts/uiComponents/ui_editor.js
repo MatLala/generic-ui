@@ -36,7 +36,7 @@
             var filepath = viewHashNode();
 
             console.log(filepath);
-            damas.search('file:' + filepath, function(index) {
+            damas.search('#parent:' + filepath, function(index) {
                 damas.read(index[0], function(node) {
                     if (!document.querySelector('.panelSecond')) {
                         var container = document.querySelector('#contents');
