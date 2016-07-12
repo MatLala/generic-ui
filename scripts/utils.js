@@ -31,3 +31,13 @@ damas_connect = function (server_url, callback)
     }
     damas.verify(callback);
 }
+
+function loadCss(url) {
+	var link = document.createElement("link");
+	link.type = "text/css";
+	link.rel = "stylesheet";
+	link.href = url;
+	document.getElementsByTagName("head")[0].appendChild(link);
+}
+
+window.loadCss = loadCss;

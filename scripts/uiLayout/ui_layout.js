@@ -6,7 +6,8 @@
 */
 
 
-
+//loadCss('scripts/uiLayout/ui_layout.css');
+//loadCss('scripts/uiLayout/ui_design.css');
 /** 
  * @namespace for UI Elements
  */
@@ -56,9 +57,7 @@ ui.modal = function(){
     modalHeader.id = 'modalHeader';
     var modalContent = document.createElement('div');
     modalContent.id = 'modalContent';
-    var modalFooter = document.createElement('div');
-    modalFooter.id = 'modalFooter';
-    
+
     var btClose = document.createElement('div');
     btClose.className = 'btClose clickable';
     btClose.innerHTML = 'X';
@@ -73,7 +72,6 @@ ui.modal = function(){
     
     modalBox.appendChild(modalHeader);
     modalBox.appendChild(modalContent);
-    modalBox.appendChild(modalFooter);
     modalOverlay.appendChild(modalBox);
     
     document.body.appendChild(modalOverlay);

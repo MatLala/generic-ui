@@ -7,12 +7,13 @@ require.config({
         'log':"uiComponents/ui_log",
         'search':"uiComponents/ui_search",
         'editor':"uiComponents/ui_editor",
-        'ao':"uiComponents/ui_overlay"
+        'ao':"uiComponents/ui_overlay",
+        'upload':"uiComponents/ui_upload"
     },
     urlArgs: "v=" + (new Date()).getTime()
 });
 
-require(["damas", "domReady", "utils", "ui_layout", "log", "search", "editor", "ao"], function(damas){
+require(["damas", "domReady", "utils", "ui_layout", "log", "search", "editor", "ao", "upload"], function(damas){
     loadCss("scripts/uiLayout/ui_layout.css");
     loadCss("scripts/uiLayout/ui_design.css");
     loadCss("scripts/vendor/font-awesome-4.6.3/css/font-awesome.min.css");
