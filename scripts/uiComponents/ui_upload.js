@@ -8,7 +8,7 @@
 	}
 }(this, function () {
     loadCss('scripts/uiComponents/ui_upload.css');
-    loadCss('scripts/vendor/font-awesome-4.6.3/css/font-awesome.min.css');
+//    loadCss('scripts/vendor/font-awesome-4.6.3/css/font-awesome.min.css');
     document.addEventListener('DOMContentLoaded', function() {
         initUpload(); 
     });
@@ -33,8 +33,8 @@
         uploadBt.className = 'uploadBt clickable';
         uploadBt.setAttribute('title', 'Upload');
         uploadBt.innerHTML = 'upload';
-    //    document.getElementById('headerRight').appendChild(uploadBt);
-        document.getElementById('menubar2').appendChild(uploadBt);
+        document.getElementById('headerRight').appendChild(uploadBt);
+//        document.getElementById('menubar2').appendChild(uploadBt);
 
         uploadBt.addEventListener('click', function(ev) {
             var container = contGen();
@@ -76,7 +76,6 @@
     */
     compUpload = function(container){
         if (navigator.userAgent.indexOf("Firefox") > 0){
-            
             var overlayHeader = document.createElement('div');
             overlayHeader.className = 'overlayHeader';
             overlayHeader.innerHTML = 'Upload Module';
@@ -88,7 +87,6 @@
             container.appendChild(workdirsList);
             
             var workdirs = localStorage.getItem('workdirs');
-            console.log(workdirs);
             workdirs = JSON.parse(workdirs);
             for (var i=0; i < workdirs.length; i++){
                 var workdirDiv = document.createElement('div');
@@ -167,8 +165,9 @@
             console.log(keys);
         }
         // END DEBUG
+		var file;
         if (e.dataTransfer.files){
-            var file = e.dataTransfer.files[0];
+            file = e.dataTransfer.files[0];
         }
 
         var path;
@@ -180,7 +179,7 @@
         console.log(path);
         if(!path)
         {
-            alert('Could not determine the path for the file ' + e.dataTransfer.files[0].name +': Drop aborted' );
+            alert('Could not determine the path for the file ' + file.name +': Drop aborted' );
             return;
         }
 
@@ -228,7 +227,7 @@
                     "\n\nComment :", 'new version');
                 if( comment !== null)
                 {
-                    upload_rest(e.dataTransfer.files[0],newPath, res[0], comment, function(node){
+                    upload_rest(file,newPath, res[0], comment, function(node){
                     });
                 }
                 else {
@@ -246,7 +245,7 @@
                     "\n\nComment :", 'initial import');
                 if( comment !== null)
                 {
-                    upload_rest(e.dataTransfer.files[0],newPath, null, comment, function(node){
+                    upload_rest(file,newPath, null, comment, function(node){
                     });
                 }
                 else {

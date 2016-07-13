@@ -13,7 +13,7 @@ require.config({
     urlArgs: "v=" + (new Date()).getTime()
 });
 
-require(["damas", "domReady", "utils", "ui_layout", "log", "search", "editor", "ao", "upload"], function(damas){
+require(["damas", "domReady", "utils", "ui_layout", "log", "search", "editor", "ao", "upload"], function(damas, domReady){
     loadCss("scripts/uiLayout/ui_layout.css");
     loadCss("scripts/uiLayout/ui_design.css");
     loadCss("scripts/vendor/font-awesome-4.6.3/css/font-awesome.min.css");
