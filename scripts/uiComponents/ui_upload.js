@@ -100,18 +100,16 @@
                 workdirDiv.appendChild(workdirDelete);
                 workdirDiv.appendChild(workdirTxt);
                 workdirsList.appendChild(workdirDiv);
+
+                workdirDelete.addEventListener('click', function(e){
+                    var target = e.target;
+                    if(confirm('Remove this work directory ?\n'+target.nextSibling.innerHTML)){
+                        console.log(target.nextSibling.innerHTML);
+                        removeWorkdirs('"'+target.nextSibling.innerHTML+'"');
+                        target.parentNode.remove();
+                    }
+                });
             }
-            var workdirDel = document.querySelectorAll('.workdirDel');
-            for (var i=0; i < workdirDel.length; i++){
-            workdirDel[i].addEventListener('click', function(e){
-                if(confirm('Delete this work directory ?\n'+this.nextSibling.innerHTML)){
-                    console.log(this.nextSibling.innerHTML);
-                    removeWorkdirs('"'+this.nextSibling.innerHTML+'"');
-                    this.parentNode.remove();
-                }
-            });
-            }
-            
             var zoneDrop = document.createElement('div');
             zoneDrop.className = 'dropZone';
 
@@ -225,7 +223,7 @@
                 var comment = prompt("Upload new version\n\nFile : "+decodeURIComponent(newPath) +
                     "\nSize : "+ human_size(file.size)+
 //                    "\n\nWork dir : "+ findWorkdir(path)+
-                    "\n\nOrigin : "+ path+
+                    "\n\nOrigin : "+ decodeURIComponent(path)+
 //                    "\nDestination : "+ newPath.replace(file.name, '')+
                     "\n\nComment :", 'new version');
                 if( comment !== null)
@@ -243,7 +241,7 @@
                 var comment = prompt("Upload new file\n\nFile : "+ decodeURIComponent(newPath) +
                     "\nSize : "+ human_size(file.size)+
 //                    "\n\nWork dir : "+ findWorkdir(path)+
-                    "\n\nOrigin : "+ path+
+                    "\n\nOrigin : "+ decodeURIComponent(path)+
 //                    "\nDestination : "+ newPath.replace(file.name, '')+
                     "\n\nComment :", 'initial import');
                 if( comment !== null)
