@@ -33,8 +33,8 @@
         uploadBt.className = 'uploadBt clickable';
         uploadBt.setAttribute('title', 'Upload');
         uploadBt.innerHTML = 'upload';
-        document.getElementById('headerRight').appendChild(uploadBt);
-//        document.getElementById('menubar2').appendChild(uploadBt);
+//        document.getElementById('headerRight').appendChild(uploadBt);
+        document.getElementById('menubar2').appendChild(uploadBt);
 
         uploadBt.addEventListener('click', function(ev) {
             var container = contGen();
