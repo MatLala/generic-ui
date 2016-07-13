@@ -1,18 +1,11 @@
-/* HEADER */
-
-/* Button */
-/*
-.uploadBt {
-    position: relative;
-    display: inline-block;
-    margin-left: 9px;
-    float: left;
-    width: 30px;
-    height: 30px;
-    background-color: #b4b4b4;
+.clickable {
+    cursor: pointer;
 }
-*/
-
+.btClose {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
 /**
 * UPLOAD
 */
@@ -23,8 +16,6 @@
     left: 0;
     right: 0;
     z-index: 1;
-    
-/*    height: calc(100% - 70px);*/
     padding: 10px 30px 30px;
     display: flex;
     -webkit-flex-flow: column;
@@ -33,31 +24,13 @@
     flex-direction: column;
     background-color: rgba(255, 255, 255, 0.8);
 }
-
-body.dragover {
-    background-color: rgba(212, 212, 212, 0.7);
+.overlayHeader {
+    height: 30px;
+    font-size: 20px;
+/*    text-align: left;*/
+    line-height: 30px;
+    padding-left: 30px;
 }
-body.dragover:before {
-    content: "Drag & Drop File Here";
-    position: absolute;
-    font-size: 30px;
-    top: 30%;
-    left: 0;
-    right: 0;
-    z-index: 1;
-}
-body.dragover:after {
-    content: "\f0ee";
-    font-family: FontAwesome;
-    position: absolute;
-    font-size: 160px;
-    color: #add8e6;
-    top: 50%;
-    left: 0;
-    right: 0;
-    z-index: 1;
-}
-
 .workdirsList {
     text-align: left;
     padding-bottom: 10px;
@@ -66,9 +39,8 @@ body.dragover:after {
     float: left;
     padding-right: 6px;
 }
-
 .dropZone {
-    border: 1px dashed #646464;
+    border: 2px dashed #6d6d6d;
     border-radius: 6px;
     text-align: center;
     position: relative;
@@ -79,8 +51,6 @@ body.dragover:after {
 	box-flex: 1 1 auto;
 	flex: 1 1 auto;
 }
-
-
 .dropZone:before {
     content: "\f0ee";
     font-family: FontAwesome;
@@ -115,54 +85,6 @@ body.dragover:after {
     white-space: normal; 
 }
 
-/* MODAL */
-
-.modalOverlay {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    left: 0;
-    top: 0;
-    background: rgba(57, 57, 57, 0.6) none repeat scroll 0 0;
-}
-.modalBox {
-    width: 90%;
-    height: 80%;
-    position: relative;
-    border-radius: 6px;
-    background-color: #ffffff;
-}
-.btClose {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-}
-#modalHeader {
-    height: 30px;
-    font-size: 20px;
-    text-align: left;
-    line-height: 30px;
-    padding-left: 30px;
-}
-#modalContent {
-    height: calc(100% - 70px);
-    padding: 10px 30px;
-    display: flex;
-    -webkit-flex-flow: column;
-    -moz-flex-flow: column;
-    flex-flow: column;
-    flex-direction: column;
-}
-.clickable {
-    cursor: pointer;
-}
-
 @media screen and (min-width: 800px) {
-    /* MODAL */
-    .modalBox {
-        width: 600px;
-    }
+
 }

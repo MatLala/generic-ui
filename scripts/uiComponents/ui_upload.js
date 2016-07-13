@@ -8,6 +8,7 @@
 	}
 }(this, function () {
     loadCss('scripts/uiComponents/ui_upload.css');
+    loadCss('scripts/vendor/font-awesome-4.6.3/css/font-awesome.min.css');
     document.addEventListener('DOMContentLoaded', function() {
         initUpload(); 
     });
@@ -36,33 +37,38 @@
         document.getElementById('menubar2').appendChild(uploadBt);
 
         uploadBt.addEventListener('click', function(ev) {
-            var container = ui.modal();
+            var container = contGen();
             compUpload(container);
         });
         document.body.ondragover = function(ev){
             ev.stopPropagation();
             ev.preventDefault();
-            if (!document.querySelector('.overlayBodyDrop') && !document.querySelector('.modalOverlay')){
-                var container = document.createElement('div');
-                container.className = 'overlayBodyDrop';
+            if (!document.querySelector('.overlayBodyDrop')){
+                var container = contGen();
+                container.style.pointerEvents = 'none';
                 compUpload(container);
-                var containerClose = document.createElement('div');
-                containerClose.className = 'fa fa-close fa-2x btClose clickable';
-//                containerClose.innerHTML = 'X';
-                containerClose.addEventListener('click', function(){
-                    container.remove();
-                });
-                container.appendChild(containerClose);
-                this.appendChild(container);
-                
-                container.ondragleave = function(ev){
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                    document.querySelector('.overlayBodyDrop').remove();
-                };
             }
         };
     }
+    
+    function contGen(){
+        var container = document.createElement('div');
+        container.className = 'overlayBodyDrop';
+        
+        var containerClose = document.createElement('div');
+        containerClose.className = 'fa fa-close fa-2x btClose clickable';
+        containerClose.addEventListener('click', function(){
+            container.remove();
+        });
+        container.appendChild(containerClose);
+        document.body.appendChild(container);
+        document.body.ondragleave = function(ev){
+            ev.preventDefault();
+            ev.stopPropagation();
+            container.remove();
+        };
+        return container;
+    };
     
     /**
     * Generate Component : Upload
@@ -71,10 +77,10 @@
     compUpload = function(container){
         if (navigator.userAgent.indexOf("Firefox") > 0){
             
-            if (document.getElementById('modalHeader')){
-                var modalHeader = document.getElementById('modalHeader');
-                modalHeader.innerHTML = 'Upload Module';
-            }
+            var overlayHeader = document.createElement('div');
+            overlayHeader.className = 'overlayHeader';
+            overlayHeader.innerHTML = 'Upload Module';
+            container.appendChild(overlayHeader);
 
             var workdirsList = document.createElement('div');
             workdirsList.className = 'workdirsList';
@@ -111,19 +117,20 @@
 
             container.appendChild(zoneDrop);
             
-            zoneDrop.ondragover = function(ev){
-                ev.preventDefault();
-                ev.stopPropagation();
-                this.classList.add("dragover");
-            };
-            zoneDrop.ondragleave = function(ev){
-                ev.preventDefault();
-                this.classList.remove("dragover");
-            };
-            zoneDrop.ondrop = function(ev){
-                container.innerHTML = '';
-                container.style.textAlign = 'center';
-                damasflow_ondrop(ev, container);
+//            zoneDrop.ondragover = function(ev){
+//                ev.preventDefault();
+//                ev.stopPropagation();
+//                this.style.pointerEvents = 'initial';
+//                this.classList.add("dragover");
+//            };
+//            zoneDrop.ondragleave = function(ev){
+//                ev.preventDefault();
+//                ev.stopPropagation();
+////                this.style.pointerEvents = 'none';
+//                this.classList.remove("dragover");
+//            };
+            document.body.ondrop = function(ev){
+                damasflow_ondrop(ev);
             }
         }
         else {
@@ -137,7 +144,7 @@
     //    document.getElementById('modalHeader').innerHTML = 'Upload';
     };
 
-    damasflow_ondrop = function ( e, container )
+    damasflow_ondrop = function(e)
     {
         if (document.querySelector('.modalOverlay')){
             document.querySelector('.modalOverlay').remove();
