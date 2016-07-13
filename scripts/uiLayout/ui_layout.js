@@ -8,6 +8,7 @@
 
 //loadCss('scripts/uiLayout/ui_layout.css');
 //loadCss('scripts/uiLayout/ui_design.css');
+loadCss('scripts/vendor/font-awesome-4.6.3/css/font-awesome.min.css');
 /** 
  * @namespace for UI Elements
  */
@@ -27,8 +28,8 @@ ui.secondPanel = function(container){
     panelContent.id = 'panelContent';
     panelContent.className = 'panelContent';
     var panelClose = document.createElement('div');
-    panelClose.className = 'btClose clickable';
-    panelClose.innerHTML = 'X';
+    panelClose.className = 'fa fa-close fa-lg btClose clickable';
+//    panelClose.innerHTML = 'X';
     panelClose.addEventListener('click', function(){
         panel.remove();
         document.dispatchEvent(closePanel);
@@ -59,8 +60,8 @@ ui.modal = function(){
     modalContent.id = 'modalContent';
 
     var btClose = document.createElement('div');
-    btClose.className = 'btClose clickable';
-    btClose.innerHTML = 'X';
+    btClose.className = 'fa fa-close fa-lg btClose clickable'
+//    btClose.innerHTML = 'X';
     
     modalBox.appendChild(btClose);
     

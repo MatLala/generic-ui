@@ -16,6 +16,24 @@
 /**
 * UPLOAD
 */
+.overlayBodyDrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    
+/*    height: calc(100% - 70px);*/
+    padding: 10px 30px 30px;
+    display: flex;
+    -webkit-flex-flow: column;
+    -moz-flex-flow: column;
+    flex-flow: column;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
 body.dragover {
     background-color: rgba(212, 212, 212, 0.7);
 }
@@ -43,6 +61,10 @@ body.dragover:after {
 .workdirsList {
     text-align: left;
     padding-bottom: 10px;
+}
+.workdirsList i {
+    float: left;
+    padding-right: 6px;
 }
 
 .dropZone {
@@ -90,9 +112,7 @@ body.dragover:after {
     border-bottom: 1px solid #646464;
 }
 #upload_div td {
-    vertical-align: middle;
-    white-space: normal;
-    
+    white-space: normal; 
 }
 
 /* MODAL */
@@ -135,6 +155,9 @@ body.dragover:after {
     -moz-flex-flow: column;
     flex-flow: column;
     flex-direction: column;
+}
+.clickable {
+    cursor: pointer;
 }
 
 @media screen and (min-width: 800px) {

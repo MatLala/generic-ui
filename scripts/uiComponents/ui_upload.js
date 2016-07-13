@@ -40,28 +40,28 @@
             compUpload(container);
         });
         document.body.ondragover = function(ev){
-
-            if (document.querySelector('.modalOverlay')){
-                this.removeEventListener('dragover');
+            ev.stopPropagation();
+            ev.preventDefault();
+            if (!document.querySelector('.overlayBodyDrop') && !document.querySelector('.modalOverlay')){
+                var container = document.createElement('div');
+                container.className = 'overlayBodyDrop';
+                compUpload(container);
+                var containerClose = document.createElement('div');
+                containerClose.className = 'fa fa-close fa-2x btClose clickable';
+//                containerClose.innerHTML = 'X';
+                containerClose.addEventListener('click', function(){
+                    container.remove();
+                });
+                container.appendChild(containerClose);
+                this.appendChild(container);
+                
+                container.ondragleave = function(ev){
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    document.querySelector('.overlayBodyDrop').remove();
+                };
             }
-            ev.preventDefault();
-            ev.stopPropagation();
-//            var container = ui.modal();
-//            compUpload(container);
-            this.classList.add("dragover");
-        }
-        document.body.ondragleave = function(ev){
-            ev.preventDefault();
-            ev.stopPropagation();
-//            document.querySelector('.modalOverlay').remove();
-            this.classList.remove("dragover");
         };
-        document.body.ondrop = function(ev){
-            if (document.querySelector('.modalOverlay')){
-                this.removeEventListener('ondrop');
-            }
-            damasflow_ondrop(ev);
-        }
     }
     
     /**
@@ -71,15 +71,40 @@
     compUpload = function(container){
         if (navigator.userAgent.indexOf("Firefox") > 0){
             
-            var modalHeader = document.getElementById('modalHeader');
-            modalHeader.innerHTML = 'Upload Module';
-            
+            if (document.getElementById('modalHeader')){
+                var modalHeader = document.getElementById('modalHeader');
+                modalHeader.innerHTML = 'Upload Module';
+            }
+
             var workdirsList = document.createElement('div');
             workdirsList.className = 'workdirsList';
-            var workdirs = localStorage.getItem('workdirs');
-            var workdirsTxt = decodeURIComponent(JSON.parse(workdirs));
-            workdirsList.innerHTML = 'Currents Work Directories :<br>'+workdirsTxt.replace(/,/g, '<br>');
+            workdirsList.innerHTML = 'Current Work Directories :';
             container.appendChild(workdirsList);
+            
+            var workdirs = localStorage.getItem('workdirs');
+            console.log(workdirs);
+            workdirs = JSON.parse(workdirs);
+            for (var i=0; i < workdirs.length; i++){
+                var workdirDiv = document.createElement('div');
+                var workdirTxt = document.createElement('div');
+                workdirTxt.innerHTML = decodeURIComponent(workdirs[i]);
+                var workdirDelete = document.createElement('i');
+                workdirDelete.className = 'fa fa-close clickable workdirDel';
+                workdirDelete.setAttribute('title', 'Delete');
+                workdirDiv.appendChild(workdirDelete);
+                workdirDiv.appendChild(workdirTxt);
+                workdirsList.appendChild(workdirDiv);
+            }
+            var workdirDel = document.querySelectorAll('.workdirDel');
+            for (var i=0; i < workdirDel.length; i++){
+            workdirDel[i].addEventListener('click', function(e){
+                if(confirm('Delete this work directory ?\n'+this.nextSibling.innerHTML)){
+                    console.log(this.nextSibling.innerHTML);
+                    removeWorkdirs('"'+this.nextSibling.innerHTML+'"');
+                    this.parentNode.remove();
+                }
+            });
+            }
             
             var zoneDrop = document.createElement('div');
             zoneDrop.className = 'dropZone';
@@ -104,6 +129,10 @@
         else {
             container.style.textAlign = 'center';
             container.innerHTML = 'Upload works only with Firefox,<br>please use Firefox !';
+            container.ondrop = function(ev){
+                ev.preventDefault();
+                ev.stopPropagation();
+            };
         }
     //    document.getElementById('modalHeader').innerHTML = 'Upload';
     };
@@ -113,7 +142,9 @@
         if (document.querySelector('.modalOverlay')){
             document.querySelector('.modalOverlay').remove();
         }
-        
+        if (document.querySelector('.overlayBodyDrop')){
+            document.querySelector('.overlayBodyDrop').remove();
+        }
         //alert('COMING SOON :) Drop your assets and connect them, in this web page');
         e.stopPropagation();
         if(e.preventDefault) e.preventDefault();
@@ -228,7 +259,7 @@
             document.body.classList.remove("dragover");
         
         var req = new XMLHttpRequest();
-        var fd= new FormData();
+        var fd = new FormData();
         fd.append('path', path);
         fd.append('comment', comment);
         fd.append('id', id);
@@ -251,10 +282,9 @@
         var td2 = document.createElement('td');
         var td3 = document.createElement('td');
         var td4 = document.createElement('td');
-        var td5 = document.createElement('td');
 
         var fileName = document.createElement('div');
-        fileName.innerHTML = path;
+        fileName.innerHTML = decodeURIComponent(path);
         td3.appendChild(fileName);
 
         var progress= document.createElement('progress');
@@ -262,30 +292,28 @@
         var uploadInfos = document.createElement('div');
         var speed = document.createElement('span');
         var stats= document.createElement('span');
-        var cancel= document.createElement('button');
-        speed.style.paddingRight = '6px';
-        cancel.style.height = '18px';
-        cancel.style.lineHeight = '9px';
+        var cancel= document.createElement('div');
+        speed.style.paddingLeft = '6px';
 
-        uploadInfos.appendChild(speed);
         uploadInfos.appendChild(stats);
+        uploadInfos.appendChild(speed);
 
-        td4.innerHTML = comment;
         td2.appendChild(progress);
-        td5.appendChild(uploadInfos);
+        td4.appendChild(uploadInfos);
         td1.appendChild(cancel);
+        td1.style.textAlign = 'center';
 
         speed.setAttribute("id","speed");
         progress.setAttribute("id",'progressBar');
         stats.setAttribute("id",'stats');
         cancel.setAttribute("id",'cancel');
-        cancel.innerHTML="X";
+        cancel.className = 'fa fa-close fa-lg clickable';
+        cancel.setAttribute('title', 'Cancel');
 
         tr.appendChild(td1);
         tr.appendChild(td2);
         tr.appendChild(td3);
         tr.appendChild(td4);
-        tr.appendChild(td5);
         table.appendChild(tr);
 
         cancel.addEventListener("click",function(e){
@@ -297,7 +325,7 @@
             
         var d = new Date();
         var starttime = oldtime = d.getTime();
-        progress.value=0;
+        progress.value = 0;
       /*req.upload.addEventListener("progress",progressHandler, false);
       req.addEventListener("load", completeHandler, false);*/
         if(id)
@@ -313,7 +341,8 @@
             }
         });
         req.upload.onprogress = function(e) {
-            progress.max=e.total;
+            var total = e.total;
+            progress.max = total;
             var delta_size = e.loaded - progress.value;
             var d = new Date();
             var delta_time = d.getTime() - oldtime;
@@ -321,20 +350,23 @@
             var tempSpeed=(( delta_size * 1000 / delta_time )) * 100;
             speed.innerHTML=human_size((tempSpeed) / 100) +'/s';
             progress.value = e.loaded;
-            stats.innerHTML = e.loaded + '/' + e.total + ' (' + Math.ceil( e.loaded * 100 / e.total ) + '%)';
+            stats.innerHTML = e.loaded + '/' + total + ' (' + Math.ceil( e.loaded * 100 / total ) + '%)';
         };
         req.onreadystatechange = function(e){
             if(req.readyState == 4)
             {
-                if(req.status == 201)
+                if(req.status === 201)
                 {
                     var d = new Date();
                     var delta_time = d.getTime() - starttime;
                     speed.innerHTML= human_size( progress.max * 1000 / delta_time ) + '/s' ;
                     //setTimeout("500",function({upload_div.remove();}));
                     //        callback(JSON.parse(req.responseText));
-    //                alert('ok!');
-//                    document.getElementById('cancel').innerHTML = 'Done !';
+                    cancel.setAttribute('title', 'Remove');
+                }
+                if(req.status === 500)
+                {
+                    alert(req.responseText);
                 }
             }
         }
@@ -374,10 +406,13 @@
     }
 
     function removeWorkdirs(wd){
+        console.log(wd);
         var workdirs=JSON.parse(localStorage["workdirs"]);
         var index=workdirs.indexOf(wd);
-        if(workdirs[wd])
+        if(index !== 0){
             workdirs.splice(wd,1);
+            console.log(workdirs);
+        }
         localStorage["workdirs"]=JSON.stringify(workdirs);
         console.log(localStorage["workdirs"]);
     }
