@@ -12,11 +12,11 @@
     document.addEventListener('DOMContentLoaded', function() {
         initUpload(); 
     });
-//    require(['domReady'], function (domReady) {
-//        domReady(function () {
-//            loadBtUpload(); 
-//        });
-//    });
+    require(['domReady'], function (domReady) {
+        domReady(function () {
+            initUpload(); 
+        });
+    });
     
     /**
     * HTML rendering methods for UI Components inside Layout
