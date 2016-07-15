@@ -9,6 +9,7 @@
 }(this, function () {
     loadCss('scripts/uiComponents/ui_upload.css');
 //    loadCss('scripts/vendor/font-awesome-4.6.3/css/font-awesome.min.css');
+loadCss('//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css');
     document.addEventListener('DOMContentLoaded', function() {
         initUpload(); 
     });
