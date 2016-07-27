@@ -30,7 +30,7 @@ loadCss('//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css')
         * Button for Upload Component
         * Localisation : Header
         */
-        var uploadBt = document.createElement('button');
+        var uploadBt = document.createElement('a');
         uploadBt.className = 'uploadBt clickable';
         uploadBt.setAttribute('title', 'Upload');
         uploadBt.innerHTML = 'upload';
