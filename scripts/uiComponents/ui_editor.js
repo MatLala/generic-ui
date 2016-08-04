@@ -110,6 +110,7 @@
         var area = document.createElement('textarea');
         area.name = 'editor';
         area.innerHTML = JSON.stringify(json).replace(/,/g, ',\n');
+//        area.innerHTML = JSON.stringify(json);
 
         var updateBt = document.createElement('button');
         updateBt.setAttribute('type', 'submit');
@@ -120,7 +121,7 @@
 
         form.addEventListener('submit', function(event) {
             event.preventDefault();
-            damas.update(json._id, JSON.parse(form.elements['editor'].value), function( res ) {
+            damas.update(JSON.parse(form.elements['editor'].value), function( res ) {
                 if (!res) {
                     alert("something went wrong!");
                     return;
