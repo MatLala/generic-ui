@@ -8,17 +8,6 @@
 	}
 }(this, function () {
     loadCss('generic-ui/scripts/uiComponents/ui_editor.css');
-    require(['domReady'], function (domReady) {
-        domReady(function () {
-            hashEditor();
-        });
-    });
-    /**
-    * Listen specific component Hash
-    */
-    window.addEventListener('hashchange', function(event){
-        hashEditor();
-    });
     
     /**
     * HTML rendering methods for UI Components inside Layout
@@ -26,20 +15,13 @@
     * require damas.js
     * require main.js
     * require ui_common.js
-    * call by process_hash function from main.js
+    * call by global initEditor function in ui_log.js and ui-search.js
     */
-    function hashEditor() {
-        var hash = window.location.hash;
-        if (/edit=/.test(hash)) {
-
-            //Common function from main.js
-            var filepath = viewHashNode();
-
+    function initEditor(filepath) {
             console.log(filepath);
             damas.search('#parent:' + filepath, function(index) {
                 damas.read(index[0], function(node) {
                     if (!document.querySelector('.panelSecond')) {
-//                        var container = document.querySelector('#contents');
                         var container = document.body;
                         compEditor(createPanel(container), node);
                     }
@@ -48,8 +30,8 @@
                     }
                 });
             });
-        }
     };
+ 
 	function createPanel(container){
 		var panel = document.createElement('div');
 		panel.className = 'panelSecond';
@@ -79,12 +61,6 @@
     compEditor = function(container, json){
 
         document.addEventListener("secondPanel:close", function(e){
-            e.preventDefault();
-            var n = window.location.hash;
-            var splitH = n.split('edit=');
-            splitH.pop();
-            history.pushState({}, null, splitH);
-//            previousHash();
             if (document.querySelector('.selected')){
                 document.querySelector('.selected').classList.remove('selected');
             }
@@ -141,5 +117,5 @@
 
         editorContent.appendChild(form);
     };
-
+    window.initEditor = initEditor;
 }));

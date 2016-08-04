@@ -110,7 +110,11 @@
         document.body.appendChild(assetOverlay);
     }
     document.addEventListener("assetOverlay:close", function(){
-        previousHash();
+            var n = window.location.hash;
+            var splitH = n.split('&view=');
+            splitH.pop();
+            console.log(splitH);
+            history.pushState({}, null, splitH);
     }, false);
 
 

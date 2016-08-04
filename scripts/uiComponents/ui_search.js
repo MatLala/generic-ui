@@ -30,7 +30,7 @@
         order = 1;
 
         var hash = window.location.hash;
-        if (/search=/.test(hash)) {
+        if (/search=/.test(hash) && !(/view=/.test(hash))) {
             if (document.querySelector('.showAssetOverlay')){
                 var overlayDiv = document.querySelector('#assetOverlay');
                 overlayDiv.classList.remove('showAssetOverlay');
@@ -250,7 +250,8 @@
                 tdViewer.className = 'fa fa-eye fa-lg clickable';
                 tr.appendChild(tdViewer);
                 tdViewer.addEventListener('click', function(){
-                    window.location.hash = 'view='+this.parentNode.file;
+                    addHash('view='+this.parentNode.file);
+//                    window.location.hash = 'view='+this.parentNode.file;
                     if (document.querySelector('.selected')){
                         document.querySelector('.selected').classList.remove('selected');
                     }
@@ -263,8 +264,21 @@
                 tdEdit.className = 'fa fa-pencil fa-lg clickable';
                 tr.appendChild(tdEdit);
                 tdEdit.addEventListener('click', function(){
-    //                    addHash('edit='+this.file);
-                    window.location.hash = 'edit='+this.parentNode.file;
+//                    var currentHash = window.location.hash;
+//                    if (/edit=/.test(currentHash)) {
+//                        var splitHash = currentHash.split('&');
+//                        splitHash.pop();
+//                        var arr = [];
+//                        arr.push(splitHash);
+//                        arr.push('edit='+this.parentNode.file);
+//                        window.location.hash = arr.join('&');
+//                    }
+//                    else {
+//                        addHash('edit='+this.parentNode.file);
+//                    }
+                    
+//                    window.location.hash = 'edit='+this.parentNode.file;
+                    initEditor(this.parentNode.file);
                     if (document.querySelector('.selected')){
                         document.querySelector('.selected').classList.remove('selected');
                     }

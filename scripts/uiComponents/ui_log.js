@@ -186,12 +186,10 @@
                     tr.appendChild(tdEdit);
                     tdEdit.addEventListener('click', function(){
     //                    addHash('edit='+this.file);
-                        window.location.hash = 'edit='+this.parentNode.file;
+//                        window.location.hash = 'edit='+this.parentNode.file;
+                        initEditor(this.parentNode.file);
                         if (document.querySelector('.selected')){
-                           var ro = document.querySelectorAll('.selected')[0];
-                            console.log(ro);
-//                            ro.className = '';
-                            ro.classList.remove('selected');
+                           document.querySelector('.selected').classList.remove('selected');
                         }
                         this.parentNode.className = 'selected';
                     });
