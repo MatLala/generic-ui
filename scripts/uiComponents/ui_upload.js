@@ -8,10 +8,11 @@
 	}
 }(this, function () {
     loadCss('generic-ui/scripts/uiComponents/ui_upload.css');
-    loadCss('generic-ui/scripts/vendor/font-awesome-4.6.3/css/font-awesome.min.css');
+    loadCss('//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css');
 //    document.addEventListener('DOMContentLoaded', function() {
 //        initUpload(); 
 //    });
+
     require(['domReady'], function (domReady) {
         domReady(function () {
             initUpload(); 
@@ -368,12 +369,13 @@
                     //        callback(JSON.parse(req.responseText));
                     cancel.setAttribute('title', 'Remove');
                 }
-                if(req.status === 500)
+                if(req.status !== 201)
                 {
                     alert(req.responseText);
                 }
             }
         }
+	req.setRequestHeader('Authorization', 'Bearer ' + damas.token);
         req.send(fd);
     }
     
