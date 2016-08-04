@@ -109,12 +109,33 @@
             });
             return false;
         });
+        
+        var deleteBt = document.createElement('button');
+        deleteBt.innerHTML = 'Delete';
+        deleteBt.addEventListener('click', function(event) {
+            event.preventDefault();
+            if (confirm("Delete this node ?")){
+                damas.delete(json._id, function( res ) {
+                    if (!res) {
+                        alert("something went wrong!");
+                        return;
+                    }
+                    else {
+//                        deleteBt.dispatchEvent(closePanel);
+                        alert("node deleted! to do : refresh page and close editor...");
+                        return;
+                    }
+                });
+                return false;
+            }
+        });
+        
 
         form.appendChild(area);
         form.appendChild(updateBt);
         container.appendChild(editorTitle);
         container.appendChild(editorContent);
-
+        editorContent.appendChild(deleteBt);
         editorContent.appendChild(form);
     };
     window.initEditor = initEditor;

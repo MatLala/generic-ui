@@ -133,69 +133,72 @@
         */
         function tableLogContent(container, assets) {
             for (var i=0; i<assets.length; i++) {
-                var tr = document.createElement('tr');
-                var td1 = document.createElement('td');
-                var td2 = document.createElement('td');
-                var td3 = document.createElement('td');
-
-                var time = new Date(parseInt(assets[i].time));
-                var file = assets[i].file || assets[i]['#parent'];
-                tr.file = file || assets[i]['#parent'];
-
-                td1.setAttribute('title', time);
-                td2.setAttribute('title', JSON_tooltip(assets[i]));
-
-                var path = document.createElement('span');
-                path.className = 'nomobile';
-                var filename = document.createElement('span');
-                if (file){
-                    path.innerHTML = file.split('/').slice(0,-1).join('/')+'/';
-                    filename.innerHTML = file.split('/').pop();
-                }    
-
-                td1.innerHTML = ('00'+time.getDate()).slice(-2)+'/'+('00'+time.getMonth()).slice(-2)+' '+('00'+time.getHours()).slice(-2)+':'+('00'+time.getMinutes()).slice(-2)+':'+('00'+time.getSeconds()).slice(-2);
-                td3.innerHTML = '&lt;'+assets[i].author+'&gt; '+assets[i].comment;
-
-                td2.appendChild(path);
-                td2.appendChild(filename);
-
-                tr.file = assets[i].file || assets[i]['#parent'];
-
-
-                tr.appendChild(td1);
-                tr.appendChild(td2);
-                tr.appendChild(td3);
-
-                if (require.specified('ui_overlay')){
-                    var tdViewer = document.createElement('td');
-                    tdViewer.className = 'fa fa-eye fa-lg clickable';
-                    tr.appendChild(tdViewer);
-                    tdViewer.addEventListener('click', function(){
-    //                    addHash('edit='+this.file);
-                        window.location.hash = 'view='+this.parentNode.file;
-                        if (document.querySelector('.selected')){
-                            document.querySelector('.selected').classList.remove('selected');
-                        }
-                        this.parentNode.className = 'selected';
-                    });
-                }
-
-                if (require.specified('ui_editor')){
-                    var tdEdit = document.createElement('td');
-                    tdEdit.className = 'fa fa-pencil fa-lg clickable';
-                    tr.appendChild(tdEdit);
-                    tdEdit.addEventListener('click', function(){
-    //                    addHash('edit='+this.file);
-//                        window.location.hash = 'edit='+this.parentNode.file;
-                        initEditor(this.parentNode.file);
-                        if (document.querySelector('.selected')){
-                           document.querySelector('.selected').classList.remove('selected');
-                        }
-                        this.parentNode.className = 'selected';
-                    });
-                }
-                container.appendChild(tr);
+                container.appendChild(tableLogTr(assets[i]));
             }
+        }
+        function tableLogTr(asset) {
+            var tr = document.createElement('tr');
+            var td1 = document.createElement('td');
+            var td2 = document.createElement('td');
+            var td3 = document.createElement('td');
+
+            var time = new Date(parseInt(asset.time));
+            var file = asset.file || asset['#parent'];
+            tr.file = file;
+
+            td1.setAttribute('title', time);
+            td2.setAttribute('title', JSON_tooltip(asset));
+
+            var path = document.createElement('span');
+            path.className = 'nomobile';
+            var filename = document.createElement('span');
+            if (file){
+                path.innerHTML = file.split('/').slice(0,-1).join('/')+'/';
+                filename.innerHTML = file.split('/').pop();
+            }    
+
+            td1.innerHTML = ('00'+time.getDate()).slice(-2)+'/'+('00'+time.getMonth()).slice(-2)+' '+('00'+time.getHours()).slice(-2)+':'+('00'+time.getMinutes()).slice(-2)+':'+('00'+time.getSeconds()).slice(-2);
+            td3.innerHTML = '&lt;'+asset.author+'&gt; '+asset.comment;
+
+            td2.appendChild(path);
+            td2.appendChild(filename);
+
+            tr.file = asset.file || asset['#parent'];
+
+
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+
+            if (require.specified('ui_overlay')){
+                var tdViewer = document.createElement('td');
+                tdViewer.className = 'fa fa-eye fa-lg clickable';
+                tr.appendChild(tdViewer);
+                tdViewer.addEventListener('click', function(){
+//                    addHash('edit='+this.file);
+                    window.location.hash = 'view='+this.parentNode.file;
+                    if (document.querySelector('.selected')){
+                        document.querySelector('.selected').classList.remove('selected');
+                    }
+                    this.parentNode.className = 'selected';
+                });
+            }
+
+            if (require.specified('ui_editor')){
+                var tdEdit = document.createElement('td');
+                tdEdit.className = 'fa fa-pencil fa-lg clickable';
+                tr.appendChild(tdEdit);
+                tdEdit.addEventListener('click', function(){
+//                    addHash('edit='+this.file);
+//                        window.location.hash = 'edit='+this.parentNode.file;
+                    initEditor(this.parentNode.file);
+                    if (document.querySelector('.selected')){
+                       document.querySelector('.selected').classList.remove('selected');
+                    }
+                    this.parentNode.className = 'selected';
+                });
+            }
+            return tr;
         }
     
     if (typeof window !== 'undefined') {
@@ -246,6 +249,10 @@
     socket.on('remove', function (nodes) {
         console.log(nodes.length + ' nodes removed');
         console.log(nodes);
+        console.log('to do : remove node tr !');
+        var tbody = document.querySelector('tbody');
+        nodes.forEach(function(node){
+        });
     });
 
     return socket;
