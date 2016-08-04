@@ -7,8 +7,8 @@
 		root.compLog = factory();
 	}
 }(this, function () {
-    loadCss('scripts/uiComponents/ui_overlay.css');
-    require(['domReady', 'scripts/assetViewer/assetViewerSelector.js'], function (domReady, assetViewerSelector) {
+    loadCss('generic-ui/scripts/uiComponents/ui_overlay.css');
+    require(['domReady', 'generic-ui/scripts/assetViewer/assetViewerSelector.js'], function (domReady, assetViewerSelector) {
         domReady(function () {
             hashViewer();
         });

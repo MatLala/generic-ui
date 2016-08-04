@@ -7,7 +7,7 @@
 		root.compEditor = factory();
 	}
 }(this, function () {
-    loadCss('scripts/uiComponents/ui_editor.css');
+    loadCss('generic-ui/scripts/uiComponents/ui_editor.css');
     require(['domReady'], function (domReady) {
         domReady(function () {
             hashEditor();
@@ -39,8 +39,9 @@
             damas.search('#parent:' + filepath, function(index) {
                 damas.read(index[0], function(node) {
                     if (!document.querySelector('.panelSecond')) {
-                        var container = document.querySelector('#contents');
-                        compEditor(ui.secondPanel(container), node);
+//                        var container = document.querySelector('#contents');
+                        var container = document.body;
+                        compEditor(createPanel(container), node);
                     }
                     else {
                         compEditor(document.querySelector('#panelContent'), node);
@@ -49,6 +50,27 @@
             });
         }
     };
+	function createPanel(container){
+		var panel = document.createElement('div');
+		panel.className = 'panelSecond';
+		var panelContent = document.createElement('div');
+		panelContent.id = 'panelContent';
+		panelContent.className = 'panelContent';
+		var panelClose = document.createElement('div');
+		panelClose.className = 'fa fa-close fa-lg btClose clickable';
+	//    panelClose.innerHTML = 'X';
+		panelClose.addEventListener('click', function(){
+			panel.remove();
+			document.dispatchEvent(closePanel);
+		});
+		var closePanel = new CustomEvent( "secondPanel:close");
+
+		panel.appendChild(panelClose);
+		panel.appendChild(panelContent);
+
+		container.appendChild(panel);
+		return panelContent;
+	};
 
     /**
     * Generate Component : Editor

@@ -1,13 +1,13 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
 		// AMD. Register as an anonymous module.
-		define([], factory);
-	} else {
-		// Browser globals
-		root.compLog = factory();
-	}
-}(this, function () {
-    require(["damas"], function(damas){
+		define(['socket.io/socket.io'], factory);
+	} else if (typeof module === 'object' && module.exports) { // Node
+        module.exports = factory(require('socket.io-client'));
+    } else { // Browser globals
+        root.returnExports = factory(root.io);
+    }
+}(this, function (io) {
         loadCss('scripts/uiComponents/ui_log.css');
         require(['domReady'], function (domReady) {
             domReady(function () {
@@ -26,7 +26,7 @@
         * 
         */
         function hashLog() {
-            nbElements = 20;
+            nbElements = 100;
             offsetElements = 0;
             var hash = window.location.hash;
             if (hash === ''){
@@ -46,7 +46,7 @@
                     document.querySelector('.resultsTable').remove();
                 }
                 //Default View
-                var container = document.querySelector('#panelPrincipal');
+                var container = document.querySelector('#contents');
                 compLog(container);
             }
         };
@@ -56,6 +56,7 @@
         });
 
         var container = document.querySelector('#panelPrincipal');
+//        var container = document.querySelector('#contents');
 
         container.addEventListener('scroll', function(event){
             event.preventDefault();
@@ -100,24 +101,26 @@
             var th1 = document.createElement('th');
             var th2 = document.createElement('th');
             var th3 = document.createElement('th');
-            var th4 = document.createElement('th');
             var tbody = document.createElement('tbody');
+            
+            table.className = 'log';
 
             th1.innerHTML = 'time';
             th2.innerHTML = 'file';
-            th3.innerHTML = 'author';
-            th4.innerHTML = 'comment';
+            th3.innerHTML = 'comment';
+            
+            th1.style.width = '15ex';
+            th1.style.width = '15ex';
 
             var icon = document.createElement('span');
             icon.className = 'sortIcon';
             icon.innerHTML = '&xutri;';
-            th2.appendChild(icon);
+            th1.appendChild(icon);
 
             table.appendChild(thead);
             thead.appendChild(th1);
             thead.appendChild(th2);
             thead.appendChild(th3);
-            thead.appendChild(th4);
             table.appendChild(tbody);
 
             container.appendChild(table);
@@ -134,13 +137,10 @@
                 var td1 = document.createElement('td');
                 var td2 = document.createElement('td');
                 var td3 = document.createElement('td');
-                var td4 = document.createElement('td');
-
-                td2.className = 'clickable';
 
                 var time = new Date(parseInt(assets[i].time));
                 var file = assets[i].file || assets[i]['#parent'];
-
+                tr.file = file || assets[i]['#parent'];
 
                 td1.setAttribute('title', time);
                 td2.setAttribute('title', JSON_tooltip(assets[i]));
@@ -153,9 +153,8 @@
                     filename.innerHTML = file.split('/').pop();
                 }    
 
-                td1.innerHTML = ('00'+time.getHours()).slice(-2)+':'+('00'+time.getMinutes()).slice(-2)+':'+('00'+time.getSeconds()).slice(-2);
-                td3.innerHTML = assets[i].author;
-                td4.innerHTML = assets[i].comment;
+                td1.innerHTML = ('00'+time.getDate()).slice(-2)+'/'+('00'+time.getMonth()).slice(-2)+' '+('00'+time.getHours()).slice(-2)+':'+('00'+time.getMinutes()).slice(-2)+':'+('00'+time.getSeconds()).slice(-2);
+                td3.innerHTML = '&lt;'+assets[i].author+'&gt; '+assets[i].comment;
 
                 td2.appendChild(path);
                 td2.appendChild(filename);
@@ -166,9 +165,8 @@
                 tr.appendChild(td1);
                 tr.appendChild(td2);
                 tr.appendChild(td3);
-                tr.appendChild(td4);
 
-                if (require.specified('ao')){
+                if (require.specified('ui_overlay')){
                     var tdViewer = document.createElement('td');
                     tdViewer.className = 'fa fa-eye fa-lg clickable';
                     tr.appendChild(tdViewer);
@@ -182,7 +180,7 @@
                     });
                 }
 
-                if (require.specified('editor')){
+                if (require.specified('ui_editor')){
                     var tdEdit = document.createElement('td');
                     tdEdit.className = 'fa fa-pencil fa-lg clickable';
                     tr.appendChild(tdEdit);
@@ -190,7 +188,10 @@
     //                    addHash('edit='+this.file);
                         window.location.hash = 'edit='+this.parentNode.file;
                         if (document.querySelector('.selected')){
-                            document.querySelector('.selected').classList.remove('selected');
+                           var ro = document.querySelectorAll('.selected')[0];
+                            console.log(ro);
+//                            ro.className = '';
+                            ro.classList.remove('selected');
                         }
                         this.parentNode.className = 'selected';
                     });
@@ -198,5 +199,56 @@
                 container.appendChild(tr);
             }
         }
+    
+    if (typeof window !== 'undefined') {
+        var address = location.protocol + '//' + location.host;
+        var socket = io.connect(address, { path: '/socket.io' });
+
+        window.addEventListener('beforeunload', function (event) {
+            socket.close();
+        });
+    } else {
+        // Suppose a local Socket.io server over TLS
+        var address = 'wss://0.0.0.0:8443';
+        var socket = io.connect(address, {
+            path: '/socket.io',
+            rejectUnauthorized: false
+        });
+    }
+
+    socket.on('connect', function () {
+        console.log('Connected to the Socket server ' + address);
     });
+
+    socket.on('disconnect', function (reason) {
+        console.log('Disconnected: ' + reason);
+    });
+
+    socket.on('create', function (nodes) {
+        console.log(nodes.length + ' nodes created');
+        console.log(nodes);
+        var tbody = document.querySelector('tbody');
+        nodes.forEach(function(node){
+            if (node.time !== undefined && node['#parent'] !== undefined ) {
+                var tr = tableLogTr(node);
+                tr.style.opacity = '0';
+                tbody.insertBefore(tr, tbody.firstChild);
+                setTimeout(function() {
+                    tr.style.opacity = '1';
+                }, 1);
+            }
+        });
+    });
+
+    socket.on('update', function (nodes) {
+        console.log(nodes.length + ' nodes updated');
+        console.log(nodes);
+    });
+
+    socket.on('remove', function (nodes) {
+        console.log(nodes.length + ' nodes removed');
+        console.log(nodes);
+    });
+
+    return socket;
 }));

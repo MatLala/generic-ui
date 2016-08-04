@@ -7,7 +7,7 @@
 		root.compSearch = factory();
 	}
 }(this, function () {
-    loadCss('scripts/uiComponents/ui_search.css');
+    loadCss('generic-ui/scripts/uiComponents/ui_search.css');
     require(['domReady'], function (domReady) {
         domReady(function () {
             hashSearch(); 
@@ -37,7 +37,8 @@
                 overlayDiv.classList.add('hideAssetOverlay');
             }
             var searchTerms = hash.replace(/#search=([^&]*).*/,'$1');
-            var container = document.querySelector('#panelPrincipal');
+//            var container = document.querySelector('#panelPrincipal');
+			var container = document.querySelector('#contents');
             console.log(searchTerms);
             container.innerHTML = '';
             var tableBody = tableSearch(container, searchTerms);   
@@ -57,7 +58,7 @@
     */
 
     function tableSearchSort(container, terms, sortBy, order){
-        var nbElements = 20;
+        var nbElements = 100;
         offsetElements = 0;
         sortBy = sortBy;
         order = order;
@@ -75,6 +76,7 @@
     };
 
     var container = document.querySelector('#panelPrincipal');
+//	var container = document.querySelector('#contents');
     container.addEventListener('scroll', function(event){
         var hash = window.location.hash;
         if (/search=/.test(hash)) {
@@ -119,11 +121,13 @@
 
     var searchBt = document.createElement('a');
     searchBt.className = 'searchBt clickable';
-    searchBt.innerHTML = '&bigodot;';
+    searchBt.innerHTML = 'search';
     searchBt.setAttribute('title', 'Search');
 
     document.getElementById('headerCentral').appendChild(searchForm);
     document.getElementById('headerCentral').appendChild(searchBt);
+//	document.getElementById('menubar2').appendChild(searchForm);
+//    document.getElementById('menubar2').appendChild(searchBt);
 
     searchForm.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -150,23 +154,6 @@
     });
 
     /**
-    * Generate Component : Search Results
-    * 
-    */
-    //compSearch = (function(container, terms){
-    //    
-    //    container.innerHTML = '';
-    //    var tableBody = tableSearch(container, terms);
-    //    damas.search_mongo({'file': 'REGEX_'+terms+'.*'}, {"time":-1},nbElements,offsetElements, function(res){
-    //        console.log(res);
-    //        damas.read(res, function(assets){
-    //            tableSearchContent(tableBody, assets);
-    //            offsetElements += nbElements;
-    //        });
-    //    });
-    //});
-
-    /**
     * Generate Table
     * 
     */
@@ -177,24 +164,23 @@
         var th1 = document.createElement('th');
         var th2 = document.createElement('th');
         var th3 = document.createElement('th');
-        var th4 = document.createElement('th');
         var tbody = document.createElement('tbody');
+		
+//		table.className = 'log';
+		table.style.width = '100%';
 
         th1.setAttribute('name', 'time');
         th2.setAttribute('name', '#parent');
-        th3.setAttribute('name', 'author');
-        th4.setAttribute('name', 'comment');
+        th3.setAttribute('name', 'comment');
 
         th1.innerHTML = 'time';
         th2.innerHTML = 'file';
-        th3.innerHTML = 'author';
-        th4.innerHTML = 'comment';
+        th3.innerHTML = 'comment';
 
         table.appendChild(thead);
         thead.appendChild(th1);
         thead.appendChild(th2);
         thead.appendChild(th3);
-        thead.appendChild(th4);
         table.appendChild(tbody);
 
         for (var i=0; i < thead.children.length; i++){
@@ -233,17 +219,15 @@
             var td1 = document.createElement('td');
             var td2 = document.createElement('td');
             var td3 = document.createElement('td');
-            var td4 = document.createElement('td');
 
-            td2.className = 'clickable';
             td2.setAttribute('title', JSON_tooltip(assets[i]));
             
+			var time = new Date(parseInt(assets[i].time));
             var file = assets[i].file || assets[i]['#parent'];
             tr.file = file;
 
-            td1.innerHTML = new Date(parseInt(assets[i].time));
-            td3.innerHTML = assets[i].author;
-            td4.innerHTML = assets[i].comment;
+			td1.innerHTML = ('00'+time.getDate()).slice(-2)+'/'+('00'+time.getMonth()).slice(-2)+' '+('00'+time.getHours()).slice(-2)+':'+('00'+time.getMinutes()).slice(-2)+':'+('00'+time.getSeconds()).slice(-2);
+			td3.innerHTML = '&lt;'+assets[i].author+'&gt; '+assets[i].comment;
             
             var path = document.createElement('span');
             path.className = 'nomobile';
@@ -251,22 +235,21 @@
             if (file){
                 path.innerHTML = file.split('/').slice(0,-1).join('/')+'/';
                 filename.innerHTML = file.split('/').pop();
-            }  
+            }
+			td2.setAttribute('title', JSON_tooltip(assets[i]));
             td2.appendChild(path);
             td2.appendChild(filename);
 
             tr.appendChild(td1);
             tr.appendChild(td2);
             tr.appendChild(td3);
-            tr.appendChild(td4);
             container.appendChild(tr);
             
-            if (require.specified('ao')){
+            if (require.specified('ui_overlay')){
                 var tdViewer = document.createElement('td');
                 tdViewer.className = 'fa fa-eye fa-lg clickable';
                 tr.appendChild(tdViewer);
                 tdViewer.addEventListener('click', function(){
-    //                    addHash('edit='+this.file);
                     window.location.hash = 'view='+this.parentNode.file;
                     if (document.querySelector('.selected')){
                         document.querySelector('.selected').classList.remove('selected');
@@ -275,7 +258,7 @@
                 });
             }
 
-            if (require.specified('editor')){
+            if (require.specified('ui_editor')){
                 var tdEdit = document.createElement('td');
                 tdEdit.className = 'fa fa-pencil fa-lg clickable';
                 tr.appendChild(tdEdit);

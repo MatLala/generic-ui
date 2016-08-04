@@ -11,7 +11,7 @@
     background-color: #dedede;
 }
 .editorContent {
-    height: calc(100% - 120px);
+    height: calc(100% - 130px);
     padding: 0 10px;
 }
 .editorContentHeader {

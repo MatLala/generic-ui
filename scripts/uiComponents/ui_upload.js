@@ -7,11 +7,11 @@
 		root.ui_upload = factory();
 	}
 }(this, function () {
-    loadCss('scripts/uiComponents/ui_upload.css');
-//    loadCss('scripts/vendor/font-awesome-4.6.3/css/font-awesome.min.css');
-    document.addEventListener('DOMContentLoaded', function() {
-        initUpload(); 
-    });
+    loadCss('generic-ui/scripts/uiComponents/ui_upload.css');
+    loadCss('generic-ui/scripts/vendor/font-awesome-4.6.3/css/font-awesome.min.css');
+//    document.addEventListener('DOMContentLoaded', function() {
+//        initUpload(); 
+//    });
     require(['domReady'], function (domReady) {
         domReady(function () {
             initUpload(); 
@@ -29,7 +29,7 @@
         * Button for Upload Component
         * Localisation : Header
         */
-        var uploadBt = document.createElement('button');
+        var uploadBt = document.createElement('a');
         uploadBt.className = 'uploadBt clickable';
         uploadBt.setAttribute('title', 'Upload');
         uploadBt.innerHTML = 'upload';

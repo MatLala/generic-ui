@@ -233,8 +233,22 @@ assetViewerSelector = function (fileUrl, viewport)
 		return;
 	}
 	
-	//Asset nonviewable selector 
-	if(extension === 'blend' || extension === 'max' || extension === 'zip' || extension === 'rar' || extension === 'rfa' || extension === 'dxf' || extension === 'docx' || extension === 'doc' || extension === 'xls' || extension === 'xlsx')
+	//Asset Map selector
+	if(extension==='csv' || extension==='gpx' || extension==='kml' || extension==='wkt' || extension==='topojson' || extension==='geojson')
+	{
+		var wrapperMap = document.createElement('div');
+		wrapperMap.id = map;
+		wrapperMap.style.height = '100%';
+		viewport.appendChild(wrapperMap);
+		
+		var map = L.map('map').setView([43.300, 5.367], 12);
+
+		return;
+	}
+	
+		//Asset nonviewable selector 
+//	if(extension === 'blend' || extension === 'max' || extension === 'zip' || extension === 'rar' || extension === 'rfa' || extension === 'dxf' || extension === 'docx' || extension === 'doc' || extension === 'xls' || extension === 'xlsx' || extension === 'ma')
+	else
 	{	
 		viewport.innerHTML = '';
 		var wrapper = document.createElement('div');
@@ -270,19 +284,6 @@ assetViewerSelector = function (fileUrl, viewport)
 //			$$('iframe.downloadIframe')[0].src = damas.server + "/download.php?file=" + node.keys.get('file');
 			
 		});
-		return;
-	}
-	
-	//Asset Map selector
-	if(extension==='csv' || extension==='gpx' || extension==='kml' || extension==='wkt' || extension==='topojson' || extension==='geojson')
-	{
-		var wrapperMap = document.createElement('div');
-		wrapperMap.id = map;
-		wrapperMap.style.height = '100%';
-		viewport.appendChild(wrapperMap);
-		
-		var map = L.map('map').setView([43.300, 5.367], 12);
-
 		return;
 	}
 }

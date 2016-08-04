@@ -2,9 +2,6 @@
 
 /* Search */
 .searchForm {
-    position: relative;
-    display: inline-block;
-    width: 80%;
     display: none;
 }
 .searchInput {
@@ -25,7 +22,6 @@
 }
 .searchBt {
     float: right;
-    font-size: 30px;
 }
 
 /* CONTENTS */
@@ -43,7 +39,10 @@
 @media screen and (min-width: 800px) {
      /* Search */
     .searchForm {
+        position: relative;
         display: inline-block;
+        width: 80%;
+        margin: 0;
     }
     .searchBt {
         display: none;
