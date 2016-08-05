@@ -1,23 +1,23 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['scripts/assetViewer/vendor/leaflet-0.8/leaflet.js'], factory);
+        define(['generic-ui/scripts/assetViewer/vendor/leaflet-0.8/leaflet.js'], factory);
     } else {
         // Browser globals
         root.leafletViewer = factory(root.L);
     }
 }(this, function (L) {
-	loadCss('scripts/assetViewer/vendor/leaflet-0.8/leaflet.css');
-	loadCss('scripts/assetViewer/vendor/leaflet-0.8/draw/leaflet.draw.css');
-	loadCss('scripts/assetViewer/vendor/leaflet-0.8/fullscreen/Control.FullScreen.css');
+	loadCss('generic-ui/scripts/assetViewer/vendor/leaflet-0.8/leaflet.css');
+	loadCss('generic-ui/scripts/assetViewer/vendor/leaflet-0.8/draw/leaflet.draw.css');
+	loadCss('generic-ui/scripts/assetViewer/vendor/leaflet-0.8/fullscreen/Control.FullScreen.css');
 //	loadCss('scripts/assetViewer/vendor/leaflet-0.8/mappaint/mappaint.css');
 
 	leafletViewer = function (viewport, url, w, h)
 	{
-		require( ['scripts/assetViewer/vendor/leaflet-0.8/draw/LetterIcon.js',
-                  'scripts/assetViewer/vendor/leaflet-0.8/draw/leaflet.draw-src.js',
+		require( ['generic-ui/scripts/assetViewer/vendor/leaflet-0.8/draw/LetterIcon.js',
+                  'generic-ui/scripts/assetViewer/vendor/leaflet-0.8/draw/leaflet.draw-src.js',
 //                  'scripts/assetViewer/vendor/leaflet-0.8/mappaint/mappaint.js',
-                  'scripts/assetViewer/vendor/leaflet-0.8/fullscreen/Control.FullScreen.js'], function(){
+                  'generic-ui/scripts/assetViewer/vendor/leaflet-0.8/fullscreen/Control.FullScreen.js'], function(){
 
 			var node = {};
 			viewport.innerHTML = '';
