@@ -26,7 +26,7 @@
         var hash = window.location.hash;
         if (/view=/.test(hash)){
             // require assetViewer Repository
-            var filepath = viewHashNode();
+            var filepath = decodeURIComponent(viewHashNode());
             console.log(filepath);
             damas.search('#parent:'+filepath, function(index){
                 damas.read(index, function(node){
@@ -77,8 +77,8 @@
 
         var closeAssetOverlay = document.createElement('div');
         closeAssetOverlay.setAttribute('id', 'closeAssetOverlay');
-        closeAssetOverlay.setAttribute('class', 'clickable');
-        closeAssetOverlay.innerHTML = 'X';
+        closeAssetOverlay.setAttribute('class', 'fa fa-close fa-lg clickable');
+//        closeAssetOverlay.innerHTML = 'X';
         assetHeader.appendChild(closeAssetOverlay);
 
         closeAssetOverlay.addEventListener( 'click', function(event){
@@ -110,11 +110,16 @@
         document.body.appendChild(assetOverlay);
     }
     document.addEventListener("assetOverlay:close", function(){
+        if (document.getElementById('contents').children.length > 0){
             var n = window.location.hash;
-            var splitH = n.split('&view=');
+            var splitH = n.split('view=');
             splitH.pop();
-            console.log(splitH);
             history.pushState({}, null, splitH);
+        }
+        else {
+            previousHash();
+        }
+            
     }, false);
 
 
@@ -132,15 +137,15 @@
         if(json.file || json['#parent']){
         //    assetLabel.innerHTML = json.file.split('/').pop();
             assetLabel.innerHTML = json.file || json['#parent'];
-            var btDl = document.createElement('a');
-            btDl.setAttribute('class', 'headBt btDl clickable');
-            btDl.setAttribute('href', json.file );
-            btDl.setAttribute('title', 'Download');
-            var btUp = document.createElement('a');
-            btUp.setAttribute('class', 'headBt btUp clickable');
-            btUp.setAttribute('title', 'Upload Version');
-            assetBts.appendChild(btDl);
-            assetBts.appendChild(btUp);
+//            var btDl = document.createElement('a');
+//            btDl.setAttribute('class', 'headBt btDl clickable');
+//            btDl.setAttribute('href', json.file );
+//            btDl.setAttribute('title', 'Download');
+//            var btUp = document.createElement('a');
+//            btUp.setAttribute('class', 'headBt btUp clickable');
+//            btUp.setAttribute('title', 'Upload Version');
+//            assetBts.appendChild(btDl);
+//            assetBts.appendChild(btUp);
         }
         else
         {
