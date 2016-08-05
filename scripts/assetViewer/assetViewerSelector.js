@@ -5,7 +5,7 @@ assetViewerSelector = function (fileUrl, viewport)
 	//Asset picture selector
 	if(extension==='png'|| extension==='jpg'|| extension==='jpeg' || extension==='tiff' || extension==='gif'  || extension==='bmp')
 	{
-		require(["scripts/assetViewer/leafletViewer.js"], function(leafletViewer){
+		require(["generic-ui/scripts/assetViewer/leafletViewer.js"], function(leafletViewer){
 			var img = document.createElement('img');
 			img.style.display = 'none';
 			img.addEventListener( 'load', function(e){
@@ -18,7 +18,7 @@ assetViewerSelector = function (fileUrl, viewport)
 	}
 	if(extension==='svg')
 	{
-		require(["scripts/assetViewer/leafletViewer.js"], function(leafletViewer){
+		require(["generic-ui/scripts/assetViewer/leafletViewer.js"], function(leafletViewer){
 			var img = document.createElement('img');
 			img.style.display = 'none';
 			img.addEventListener( 'load', function(e){
@@ -28,7 +28,6 @@ assetViewerSelector = function (fileUrl, viewport)
 				var x = w/w1;
 				var h1 = this.height;
 				var h = h1*x;
-//				leafletViewer(viewport, fileUrl, w, h);
 				leafletViewer.initialize(viewport, fileUrl, this.width, this.height);
 			});
 			img.src = fileUrl;
@@ -39,66 +38,74 @@ assetViewerSelector = function (fileUrl, viewport)
 	//Asset video selector
 	if(extension==='mov' || extension === 'mp4' || extension === 'mkv' || extension === 'avi')
 	{
-		require(["scripts/assetViewer/vendor/video-js/video-js-4.11.4/video.js"],
+		require([
+            "generic-ui/scripts/assetViewer/vendor/video-js/video-js-5.10.7/video.js"
+        ],
 			function(videojs){
-				loadCss('scripts/assetViewer/vendor/video-js/video-js-4.11.4/video-js.css');
-				loadCss('scripts/assetViewer/videojs.css');
-	
-				viewport.innerHTML = '';
-				var wrapperVideo = document.createElement('video');
-				wrapperVideo.setAttribute('class', 'video-js vjs-default-skin');
-				wrapperVideo.setAttribute('controls','true');
-			
-				var source1 = document.createElement('source');
-				source1.setAttribute('src',fileUrl);
-				source1.setAttribute('type','video/mp4');
+                require([
+//                    "scripts/assetViewer/vendor/video-js/videojs.hotkeys.js",
+//                    "scripts/assetViewer/vendor/video-js/video-framebyframe.js"
+                ], function(){
+                    loadCss('generic-ui/scripts/assetViewer/vendor/video-js/video-js-5.10.7/video-js.css');
+                    loadCss('generic-ui/scripts/assetViewer/videojs.css');
 
-				var source2 = document.createElement('source');
-				source2.setAttribute('src',fileUrl);
-				source2.setAttribute('type','video/webm');
-			
-				var source3 = document.createElement('source');
-				source3.setAttribute('src',fileUrl);
-				source3.setAttribute('type','video/x-flv');
+                    viewport.innerHTML = '';
+                    var wrapperVideo = document.createElement('video');
+                    wrapperVideo.setAttribute('class', 'video-js vjs-default-skin');
+                    wrapperVideo.setAttribute('controls','true');
 
-				viewport.appendChild(wrapperVideo);
-				wrapperVideo.appendChild(source1);
-				wrapperVideo.appendChild(source2);
-				wrapperVideo.appendChild(source3);
+                    var source1 = document.createElement('source');
+                    source1.setAttribute('src',fileUrl);
+                    source1.setAttribute('type','video/mp4');
 
-				var player = videojs(wrapperVideo, {
-					"techOrder": ['html5', 'flash'],
-					"preload": 'auto',
-					"loop": true,
-					plugins: {
-//						framebyframe: {
-//						  fps: 24,
-//						  steps: [
-//							{ text: '-5', step: -5 },
-//							{ text: '-1', step: -1 },
-//							{ text: '+1', step: 1 },
-//							{ text: '+5', step: 5 },
-//						  ]
-//						}
-					}
-				}, function() {
-//					this.hotkeys({
-//						volumeStep: 0.1,
-//						seekStep: 1,
-//						enableMute: true,
-//						enableFullscreen: true
-//					});
-				});
+                    var source2 = document.createElement('source');
+                    source2.setAttribute('src',fileUrl);
+                    source2.setAttribute('type','video/webm');
+
+                    var source3 = document.createElement('source');
+                    source3.setAttribute('src',fileUrl);
+                    source3.setAttribute('type','video/x-flv');
+
+                    viewport.appendChild(wrapperVideo);
+                    wrapperVideo.appendChild(source1);
+                    wrapperVideo.appendChild(source2);
+                    wrapperVideo.appendChild(source3);
+
+                    var player = videojs(wrapperVideo, {
+                        "techOrder": ['html5', 'flash'],
+                        "controls": true,
+                        "preload": 'auto',
+                        "loop": true,
+                        plugins: {
+//                            framebyframe: {
+//                              fps: 24,
+//                              steps: [
+//                                { text: '-5', step: -5 },
+//                                { text: '-1', step: -1 },
+//                                { text: '+1', step: 1 },
+//                                { text: '+5', step: 5 },
+//                              ]
+//                            }
+                        }
+                    }, function() {
+//                        this.hotkeys({
+//                            volumeStep: 0.1,
+//                            seekStep: 1,
+//                            enableMute: true,
+//                            enableFullscreen: true
+//                        });
+                    });
+                });
 			});
 		return;
 				
 	}	
 	if(extension === 'flv')
 	{
-		require(["scripts/assetViewer/vendor/video-js/video-js-4.11.4/video.js"],
+		require(["generic-ui/scripts/assetViewer/vendor/video-js/video-js-4.11.4/video.js"],
 			function(videojs){
-				loadCss('scripts/assetViewer/vendor/video-js/video-js-4.11.4/video-js.css');
-				loadCss('scripts/assetViewer/videojs.css');
+				loadCss('generic-ui/scripts/assetViewer/vendor/video-js/video-js-4.11.4/video-js.css');
+				loadCss('generic-ui/scripts/assetViewer/videojs.css');
 			
 				var wrapperVideo = document.createElement('video');
 				wrapperVideo.setAttribute('class', 'video-js vjs-default-skin');
@@ -146,8 +153,8 @@ assetViewerSelector = function (fileUrl, viewport)
 	//Asset Open Documents selector
 	if(extension==='odt'|| extension==='odf' || extension==='odp'|| extension==='ods')
 	{
-		require(["scripts/assetViewer/vendor/webodf/webodf.js"], function(webodf){
-			loadCss('scripts/assetViewer/webodf.css');
+		require(["generic-ui/scripts/assetViewer/vendor/webodf/webodf.js"], function(webodf){
+			loadCss('generic-ui/scripts/assetViewer/webodf.css');
             viewport.innerHTML = '';
 			var wrapperOpenDoc = document.createElement('div');
 			wrapperOpenDoc.setAttribute('id','wrapperOpenDoc');
@@ -169,6 +176,8 @@ assetViewerSelector = function (fileUrl, viewport)
 	{
 		viewport.innerHTML = '';
 		var wrapperPdf = document.createElement('iframe');
+        wrapperPdf.style.width = '100%';
+        wrapperPdf.style.height = '100%';
 		wrapperPdf.id = 'viewer';
 		wrapperPdf.src = fileUrl;
 		viewport.appendChild(wrapperPdf);
@@ -179,52 +188,45 @@ assetViewerSelector = function (fileUrl, viewport)
 	if(extension==='txt')
 	{
 		var httpRequest = new XMLHttpRequest();
+        httpRequest.open('GET', fileUrl, false);
 		httpRequest.onreadystatechange = function() {
 			if (httpRequest.readyState === 4) {
-				var textarea = document.createElement('textarea');
-				textarea.appendChild(document.createTextNode(httpRequest.responseText));
-				textarea.classList.add('fillParent');
-				viewport.appendChild(textarea);
-				textarea.fillParent();
+                if(httpRequest.status === 200 || httpRequest.status == 0){
+                    var textarea = document.createElement('div');
+                    textarea.style.width = '100%';
+                    textarea.style.height = '100%';
+                    textarea.style.overflow = 'auto';
+                    textarea.appendChild(document.createTextNode(httpRequest.responseText));
+                    textarea.classList.add('fillParent');
+                    viewport.appendChild(textarea);
+                    textarea.fillParent();
+                }
 			}
 		};
-		httpRequest.open('GET', fileUrl);
-		httpRequest.send();
+		
+		httpRequest.send(null);
 		return;
 	}
-	//Asset Py selector
-	if(extension === 'py')
+	//Asset Py and others languages selector
+	if(extension === 'py' || extension === 'sh' || extension === 'js' || extension === 'json' || extension === 'xml' || extension === 'md')
 	{
-		require(["scripts/assetViewer/vendor/highlight/highlight.min.js"],
+		require(["generic-ui/scripts/assetViewer/vendor/highlight/highlight.min.js"],
 //		require(["scripts/assetViewer/highlight/highlight.pack.js"],	
 			function(hljs){
-				loadCss('scripts/assetViewer/vendor/highlight/default.min.css');
-				loadCss('scripts/assetViewer/vendor/highlight/style.css');
+				loadCss('generic-ui/scripts/assetViewer/vendor/highlight/default.min.css');
+				loadCss('generic-ui/scripts/assetViewer/vendor/highlight/style.css');
 				var httpRequest = new XMLHttpRequest();
 				httpRequest.onreadystatechange = function() {
 					if (httpRequest.readyState === 4) {
 						viewport.innerHTML = '';
-						//if (httpRequest.status === 200) {
-						//var data = JSON.parse(httpRequest.responseText);
-						//if (callback) callback(data);
-						//alert(httpRequest.responseText);
 						var pre = document.createElement('pre');
 						var code = document.createElement('code');
 						code.appendChild(document.createTextNode(httpRequest.responseText));
 						hljs.highlightBlock(code);
 						pre.classList.add('fillParent');
 						code.classList.add('fillParent');
-						//textarea.style.position = 'absolute';
-						//textarea.style.top = '0';
-						//textarea.style.left = '0';
-						//textarea.style.width = '100%';
-						//textarea.style.height = '100%';
 						viewport.appendChild(pre);
 						pre.appendChild(code);
-						//pre.fillParent();
-						//code.fillParent();
-						//viewport.innerHTML = '';
-						//}
 					}
 				};
 				httpRequest.open('GET', fileUrl);
@@ -253,9 +255,11 @@ assetViewerSelector = function (fileUrl, viewport)
 		viewport.innerHTML = '';
 		var wrapper = document.createElement('div');
 		wrapper.setAttribute('class', 'noviewer');
+        var content = document.createElement('div');
+
 		var txt1 = document.createElement('div');
 		txt1.style.paddingBottom = '10px';
-		txt1.innerHTML = 'format <strong>' + extension + '</strong> non visualisable';
+		txt1.innerHTML = '<strong>' + extension + '</strong> format not viewable';
 		
 		var wrapperIcon = document.createElement('div');
 		wrapperIcon.style.display = 'block';
@@ -268,22 +272,23 @@ assetViewerSelector = function (fileUrl, viewport)
 		
 		var btDown = document.createElement('a');
 		btDown.setAttribute('class', 'assetD');
+        btDown.style.textDecoration = 'none';
+        btDown.style.color = '#000';
 		btDown.href = fileUrl;
 		var iconDown = document.createElement('i');
 		iconDown.setAttribute('class', 'fa fa-download');
 		var txtDown = document.createElement('span');
+        txtDown.style.paddingLeft = '6px';
 		txtDown.innerHTML = 'Download';
 		btDown.appendChild(iconDown);
 		btDown.appendChild(txtDown);
-		wrapper.appendChild(txt1);
-		wrapper.appendChild(wrapperIcon);
-		wrapper.appendChild(btDown);
+		content.appendChild(txt1);
+		content.appendChild(wrapperIcon);
+		content.appendChild(btDown);
+        
+        wrapper.appendChild(content);
 		viewport.appendChild(wrapper);
 		
-		btDown.addEventListener('click', function(event){
-//			$$('iframe.downloadIframe')[0].src = damas.server + "/download.php?file=" + node.keys.get('file');
-			
-		});
 		return;
 	}
 }
