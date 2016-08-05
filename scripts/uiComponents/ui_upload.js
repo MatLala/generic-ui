@@ -275,8 +275,9 @@
             var table = document.createElement('table');
             table.id = 'upload_table';
             upload_div.appendChild(table);
+            var panelP = document.getElementById('panelPrincipal');
             var contents = document.getElementById('contents');
-            document.body.insertBefore(upload_div, contents);
+            panelP.insertBefore(upload_div, contents);
         }
         else {
             var upload_div = document.getElementById('upload_div');

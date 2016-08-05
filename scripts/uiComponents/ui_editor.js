@@ -80,7 +80,7 @@
         editorContent.appendChild(editorContentHeader);
 
         var nodeName = document.createElement('div');
-        nodeName.innerHTML = 'Node : '+json._id;
+        nodeName.innerHTML = 'Node : </br>'+json['#parent'];
         editorContentHeader.appendChild(nodeName);
 
         var area = document.createElement('textarea');
@@ -90,6 +90,7 @@
 
         var updateBt = document.createElement('button');
         updateBt.setAttribute('type', 'submit');
+        updateBt.className = 'clickable';
         updateBt.innerHTML = 'Update';
 
         var form = document.createElement('form');
@@ -112,6 +113,8 @@
         
         var deleteBt = document.createElement('button');
         deleteBt.innerHTML = 'Delete';
+        deleteBt.className = 'clickable';
+        deleteBt.style.float = 'left';
         deleteBt.addEventListener('click', function(event) {
             event.preventDefault();
             if (confirm("Delete this node ?")){
@@ -130,13 +133,17 @@
             }
         });
         
+//        editorContent.style.height = container.clientHeight - (nodeName.clientHeight +editorTitle.clientHeight) +'px';
+//        container.style.height = window.innerHeight +'px';
+//        form.style.height = window.innerHeight - (nodeName.clientHeight +editorTitle.clientHeight) +'px'; 
 
         form.appendChild(area);
         form.appendChild(updateBt);
         container.appendChild(editorTitle);
         container.appendChild(editorContent);
-        editorContent.appendChild(deleteBt);
+        
         editorContent.appendChild(form);
+        editorContent.appendChild(deleteBt);
     };
     window.initEditor = initEditor;
 }));

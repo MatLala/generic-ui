@@ -252,8 +252,8 @@
                 tdViewer.addEventListener('click', function(){
                     addHash('view='+this.parentNode.file);
 //                    window.location.hash = 'view='+this.parentNode.file;
-                    if (document.querySelector('.selected')){
-                        document.querySelector('.selected').classList.remove('selected');
+                    if (document.querySelector('tr.selected')){
+                        document.querySelector('tr.selected').classList.remove('selected');
                     }
                     this.parentNode.className = 'selected';
                 });
@@ -279,8 +279,8 @@
                     
 //                    window.location.hash = 'edit='+this.parentNode.file;
                     initEditor(this.parentNode.file);
-                    if (document.querySelector('.selected')){
-                        document.querySelector('.selected').classList.remove('selected');
+                    if (document.querySelector('tr.selected')){
+                        document.querySelector('tr.selected').classList.remove('selected');
                     }
                     this.parentNode.className = 'selected';
                 });

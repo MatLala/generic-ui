@@ -145,6 +145,7 @@
             var time = new Date(parseInt(asset.time));
             var file = asset.file || asset['#parent'];
             tr.file = file;
+            
 
             td1.setAttribute('title', time);
             td2.setAttribute('title', JSON_tooltip(asset));
@@ -171,20 +172,21 @@
             tr.appendChild(td3);
 
             if (require.specified('ui_overlay')){
-                var tdViewer = document.createElement('td');
-                tdViewer.className = 'fa fa-eye fa-lg clickable';
-                tr.appendChild(tdViewer);
-                tdViewer.addEventListener('click', function(){
-//                    addHash('edit='+this.file);
+//                var tdViewer = document.createElement('td');
+//                tdViewer.className = 'fa fa-eye fa-lg clickable';
+//                tr.appendChild(tdViewer);
+                td2.className ='clickable';
+                td2.addEventListener('click', function(){
                     window.location.hash = 'view='+this.parentNode.file;
-                    if (document.querySelector('.selected')){
-                        document.querySelector('.selected').classList.remove('selected');
+                    if (document.querySelector('tr.selected')){
+                        document.querySelector('tr.selected').classList.remove('selected');
                     }
                     this.parentNode.className = 'selected';
                 });
             }
 
             if (require.specified('ui_editor')){
+                tr.id = asset._id;
                 var tdEdit = document.createElement('td');
                 tdEdit.className = 'fa fa-pencil fa-lg clickable';
                 tr.appendChild(tdEdit);
@@ -192,8 +194,8 @@
 //                    addHash('edit='+this.file);
 //                        window.location.hash = 'edit='+this.parentNode.file;
                     initEditor(this.parentNode.file);
-                    if (document.querySelector('.selected')){
-                       document.querySelector('.selected').classList.remove('selected');
+                    if (document.querySelector('tr.selected')){
+                       document.querySelector('tr.selected').classList.remove('selected');
                     }
                     this.parentNode.className = 'selected';
                 });
@@ -250,8 +252,13 @@
         console.log(nodes.length + ' nodes removed');
         console.log(nodes);
         console.log('to do : remove node tr !');
-        var tbody = document.querySelector('tbody');
         nodes.forEach(function(node){
+            var nodeTr = document.getElementById(node);
+            nodeTr.style.opacity = '1';
+            setTimeout(function() {
+                nodeTr.style.opacity = '0';
+                nodeTr.remove();
+            }, 1);
         });
     });
 
