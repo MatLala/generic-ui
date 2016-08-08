@@ -39,7 +39,7 @@
 		panelContent.id = 'panelContent';
 		panelContent.className = 'panelContent';
 		var panelClose = document.createElement('div');
-		panelClose.className = 'fa fa-close fa-lg btClose clickable';
+		panelClose.className = 'fa fa-close btCloseP clickable';
 	//    panelClose.innerHTML = 'X';
 		panelClose.addEventListener('click', function(){
 			panel.remove();
@@ -85,7 +85,7 @@
 
         var area = document.createElement('textarea');
         area.name = 'editor';
-        area.innerHTML = JSON.stringify(json).replace(/,/g, ',\n');
+        area.innerHTML = JSON.stringify(json).replace(/,/g, ',\n').replace(/{/g, '{\n').replace(/}/g, '\n}');
 //        area.innerHTML = JSON.stringify(json);
 
         var updateBt = document.createElement('button');
@@ -98,7 +98,14 @@
 
         form.addEventListener('submit', function(event) {
             event.preventDefault();
-            damas.update(JSON.parse(form.elements['editor'].value), function( res ) {
+            var updateN;
+            try {
+                updateN = JSON.parse(form.elements['editor'].value.replace(/'/g, '"'));
+            } catch (e) {
+                alert("not writing correctly !");
+                return;
+            }
+            damas.update(updateN, function( res ) {
                 if (!res) {
                     alert("something went wrong!");
                     return;
@@ -125,7 +132,6 @@
                     }
                     else {
 //                        deleteBt.dispatchEvent(closePanel);
-                        alert("node deleted! to do : refresh page and close editor...");
                         return;
                     }
                 });
