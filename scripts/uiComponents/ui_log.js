@@ -29,7 +29,7 @@
             nbElements = 100;
             offsetElements = 0;
             var hash = window.location.hash;
-            if (hash === ''){
+            if (hash === '' || hash === '#log'){
                 if (document.querySelector('.modalOverlay')){
                     var modalOverlay = document.querySelector('.modalOverlay');
                     modalOverlay.remove();
@@ -188,7 +188,7 @@
             if (require.specified('ui_editor')){
                 tr.id = asset._id;
                 var tdEdit = document.createElement('td');
-                tdEdit.className = 'fa fa-pencil fa-lg clickable';
+                tdEdit.className = 'fa fa-pencil clickable';
                 tr.appendChild(tdEdit);
                 tdEdit.addEventListener('click', function(){
 //                    addHash('edit='+this.file);
