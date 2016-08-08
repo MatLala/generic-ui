@@ -41,6 +41,10 @@
 			var container = document.querySelector('#contents');
             console.log(searchTerms);
             container.innerHTML = '';
+            var searchAbout = document.createElement('div');
+            searchAbout.className = 'searchAbout';
+            searchAbout.innerHTML = 'Search results for "'+ searchTerms + '" :';
+            container.appendChild(searchAbout);
             var tableBody = tableSearch(container, searchTerms);   
             tableSearchSort(tableBody, searchTerms, sortBy, order);
             var thead = document.getElementsByName(sortBy)[0];
@@ -104,7 +108,7 @@
     searchForm.className = 'searchForm';
     var searchInput = document.createElement('input');
     searchInput.className = 'searchInput';
-    searchInput.setAttribute('type', 'search');
+//    searchInput.setAttribute('type', 'search');
     searchInput.setAttribute('name', 'search');
     searchInput.setAttribute('results', '10');
     searchInput.setAttribute('placeholder', 'Search');
@@ -166,7 +170,7 @@
         var th3 = document.createElement('th');
         var tbody = document.createElement('tbody');
 		
-//		table.className = 'log';
+		table.className = 'log';
 		table.style.width = '100%';
 
         th1.setAttribute('name', 'time');
@@ -246,12 +250,13 @@
             container.appendChild(tr);
             
             if (require.specified('ui_overlay')){
-                var tdViewer = document.createElement('td');
-                tdViewer.className = 'fa fa-eye fa-lg clickable';
-                tr.appendChild(tdViewer);
-                tdViewer.addEventListener('click', function(){
+//                var tdViewer = document.createElement('td');
+//                tdViewer.className = 'fa fa-lg clickable';
+//                tr.appendChild(tdViewer);
+                td2.className ='clickable';
+                td2.addEventListener('click', function(){
                     addHash('view='+this.parentNode.file);
-//                    window.location.hash = 'view='+this.parentNode.file;
+                    window.location.hash = 'view='+this.parentNode.file;
                     if (document.querySelector('tr.selected')){
                         document.querySelector('tr.selected').classList.remove('selected');
                     }
@@ -260,8 +265,9 @@
             }
 
             if (require.specified('ui_editor')){
+//                tr.id = asset._id;
                 var tdEdit = document.createElement('td');
-                tdEdit.className = 'fa fa-pencil fa-lg clickable';
+                tdEdit.className = 'fa fa-pencil clickable';
                 tr.appendChild(tdEdit);
                 tdEdit.addEventListener('click', function(){
 //                    var currentHash = window.location.hash;
