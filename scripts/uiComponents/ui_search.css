@@ -10,6 +10,14 @@
 .searchInput {
     height: 24px;
     width: 100%;
+    background-color: #fff;
+    border: 1px solid #d4d4d4;
+    border-radius: 3px;
+    line-height: 24px;
+    display: inline-block;
+    padding: 4px 6px;
+    /* margin-bottom: 10px; */
+    vertical-align: middle;
 }
 .searchReset {
     position: absolute;
@@ -19,24 +27,17 @@
 }
 /* Buttons */
 .searchBt {
+/*
     position: relative;
     display: inline-block;
     margin-left: 9px;
+*/
 }
 .searchBt {
-    float: right;
+/*    float: right;*/
 }
-
-/* CONTENTS */
-.homeContents table {
-    width: 100%;
-}
-.homeContents th {
-    cursor: pointer;
-}
-.homeContents th > span {
-    display: inline-block;
-    padding-left: 6px;
+.searchAbout {
+    height: 24px;
 }
 
 @media screen and (min-width: 800px) {
