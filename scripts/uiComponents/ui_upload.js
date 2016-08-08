@@ -132,7 +132,12 @@
         }
         else {
             container.style.textAlign = 'center';
-            container.innerHTML = 'Upload works only with Firefox,<br>please use Firefox !';
+            var alertTxt = document.createElement('div');
+            alertTxt.innerHTML = 'Upload works only with Firefox,<br>please use Firefox !';
+            alertTxt.style.position = 'absolute';
+            alertTxt.style.top = '50%';
+            alertTxt.style.width = '100%';
+            container.appendChild(alertTxt);
             container.ondrop = function(ev){
                 ev.preventDefault();
                 ev.stopPropagation();
