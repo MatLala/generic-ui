@@ -250,13 +250,9 @@
             container.appendChild(tr);
             
             if (require.specified('ui_overlay')){
-//                var tdViewer = document.createElement('td');
-//                tdViewer.className = 'fa fa-lg clickable';
-//                tr.appendChild(tdViewer);
                 td2.className ='clickable';
                 td2.addEventListener('click', function(){
                     addHash('view='+this.parentNode.file);
-                    window.location.hash = 'view='+this.parentNode.file;
                     if (document.querySelector('tr.selected')){
                         document.querySelector('tr.selected').classList.remove('selected');
                     }
@@ -265,7 +261,7 @@
             }
 
             if (require.specified('ui_editor')){
-//                tr.id = asset._id;
+                tr.id = asset._id;
                 var tdEdit = document.createElement('td');
                 tdEdit.className = 'fa fa-pencil clickable';
                 tr.appendChild(tdEdit);
