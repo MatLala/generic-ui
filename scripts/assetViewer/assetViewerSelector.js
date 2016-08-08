@@ -199,7 +199,6 @@ assetViewerSelector = function (fileUrl, viewport)
                     textarea.appendChild(document.createTextNode(httpRequest.responseText));
                     textarea.classList.add('fillParent');
                     viewport.appendChild(textarea);
-                    textarea.fillParent();
                 }
 			}
 		};
