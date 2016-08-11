@@ -6,8 +6,6 @@
     "Rémy LALANNE, PRIMCODE",
   ],
   "description": "Console user interface for DAMAS-core",
-  "keywords": [
-  ],
   "license": "GPL3",
   "ignore": [
     "scripts/assetViewer",
