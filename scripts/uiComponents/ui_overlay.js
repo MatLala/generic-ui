@@ -8,7 +8,7 @@
 	}
 }(this, function () {
     loadCss('generic-ui/scripts/uiComponents/ui_overlay.css');
-    require(['domReady', 'generic-ui/scripts/assetViewer/assetViewerSelector.js'], function (domReady, assetViewerSelector) {
+    require(['domReady', 'scripts/assetViewer/assetViewerSelector.js'], function (domReady, assetViewerSelector) {
         domReady(function () {
             hashViewer();
         });
@@ -27,14 +27,9 @@
         if (/view=/.test(hash)){
             // require assetViewer Repository
             var filepath = decodeURIComponent(viewHashNode());
-            console.log(filepath);
-            damas.search('#parent:'+filepath, function(index){
-                damas.read(index, function(node){
-                    var viewerContainer = assetOverlay();
-                    assetViewerHeader(node[0]);
-                    assetViewerSelector(node[0]['#parent'], viewerContainer);
-                });
-            });
+            var viewerContainer = assetOverlay();
+            overlayHeader(filepath);
+            assetViewerSelector(filepath, viewerContainer)
         }
     }
 
@@ -110,46 +105,31 @@
         document.body.appendChild(assetOverlay);
     }
     document.addEventListener("assetOverlay:close", function(){
-        if (document.getElementById('contents').children.length > 0){
+//        if (document.getElementById('contents').children.length > 0){
             var n = window.location.hash;
             var splitH = n.split('view=');
             splitH.pop();
             history.pushState({}, null, splitH);
-        }
-        else {
-            previousHash();
-        }
+//        }
+//        else {
+//            previousHash();
+//        }
             
     }, false);
 
 
     /**
-    * Header for assetViewer Component
+    * Header for overlay Component
     * 
     */
-    assetViewerHeader = function(json){
+    overlayHeader = function(filepath){
         var assetTitle = assetHeader.querySelector('.assetTitle');
         var assetBts = assetHeader.querySelector('.assetBts');
 
         var assetLabel = document.createElement('div');
         assetLabel.setAttribute('class', 'assetLabel');
         assetTitle.appendChild(assetLabel);
-        if(json.file || json['#parent']){
         //    assetLabel.innerHTML = json.file.split('/').pop();
-            assetLabel.innerHTML = json.file || json['#parent'];
-//            var btDl = document.createElement('a');
-//            btDl.setAttribute('class', 'headBt btDl clickable');
-//            btDl.setAttribute('href', json.file );
-//            btDl.setAttribute('title', 'Download');
-//            var btUp = document.createElement('a');
-//            btUp.setAttribute('class', 'headBt btUp clickable');
-//            btUp.setAttribute('title', 'Upload Version');
-//            assetBts.appendChild(btDl);
-//            assetBts.appendChild(btUp);
-        }
-        else
-        {
-            assetLabel.innerHTML = json._id;
-        }
+        assetLabel.innerHTML = filepath;
     };
 }));
