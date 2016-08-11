@@ -19,14 +19,13 @@
     /**
     * HTML rendering methods for UI Components inside Layout
     * require html container
-    * require damas.js
-    * call by process_hash function from main.js
     */
     function hashViewer() {
         var hash = window.location.hash;
         if (/view=/.test(hash)){
             // require assetViewer Repository
-            var filepath = decodeURIComponent(viewHashNode());
+            hash = hash.replace(/.*view=/, '');
+            var filepath = decodeURIComponent(hash);
             var viewerContainer = assetOverlay();
             overlayHeader(filepath);
             assetViewerSelector(filepath, viewerContainer)
