@@ -35,8 +35,10 @@
         uploadBt.setAttribute('title', 'Upload');
         uploadBt.innerHTML = 'upload';
 //        document.getElementById('headerRight').appendChild(uploadBt);
-        document.getElementById('menubar2').appendChild(uploadBt);
-
+        if (document.getElementById('menubar2')){
+            document.getElementById('menubar2').appendChild(uploadBt);
+        }
+        
         uploadBt.addEventListener('click', function(ev) {
             var container = contGen();
             compUpload(container);
@@ -57,7 +59,8 @@
         container.className = 'overlayBodyDrop';
         
         var containerClose = document.createElement('div');
-        containerClose.className = 'fa fa-close fa-2x btClose clickable';
+        containerClose.className = 'fa fa-close fa-lg btClose clickable';
+        containerClose.style.pointerEvents = 'auto';
         containerClose.addEventListener('click', function(){
             container.remove();
         });
@@ -113,19 +116,7 @@
             zoneDrop.className = 'dropZone';
 
             container.appendChild(zoneDrop);
-            
-//            zoneDrop.ondragover = function(ev){
-//                ev.preventDefault();
-//                ev.stopPropagation();
-//                this.style.pointerEvents = 'initial';
-//                this.classList.add("dragover");
-//            };
-//            zoneDrop.ondragleave = function(ev){
-//                ev.preventDefault();
-//                ev.stopPropagation();
-////                this.style.pointerEvents = 'none';
-//                this.classList.remove("dragover");
-//            };
+
             document.body.ondrop = function(ev){
                 damasflow_ondrop(ev);
             }
@@ -143,7 +134,6 @@
                 ev.stopPropagation();
             };
         }
-    //    document.getElementById('modalHeader').innerHTML = 'Upload';
     };
 
     damasflow_ondrop = function(e)
@@ -171,10 +161,6 @@
             console.log(keys);
         }
         // END DEBUG
-		var file;
-        if (e.dataTransfer.files){
-            file = e.dataTransfer.files[0];
-        }
 
         var path;
         if (keys['text/x-moz-url'])
@@ -226,14 +212,14 @@
             if(res.length>0)
             {
                 var comment = prompt("Upload new version\n\nFile : "+decodeURIComponent(newPath) +
-                    "\nSize : "+ human_size(file.size)+
+                    "\nSize : "+ human_size(e.dataTransfer.files[0].size)+
 //                    "\n\nWork dir : "+ findWorkdir(path)+
                     "\n\nOrigin : "+ decodeURIComponent(path)+
 //                    "\nDestination : "+ newPath.replace(file.name, '')+
                     "\n\nComment :", 'new version');
                 if( comment !== null)
                 {
-                    upload_rest(file,newPath, res[0], comment, function(node){
+                    upload_rest(e.dataTransfer.files[0], newPath, res[0], comment, function(node){
                     });
                 }
                 else {
@@ -244,14 +230,14 @@
             else
             {
                 var comment = prompt("Upload new file\n\nFile : "+ decodeURIComponent(newPath) +
-                    "\nSize : "+ human_size(file.size)+
+                    "\nSize : "+ human_size(e.dataTransfer.files[0].size)+
 //                    "\n\nWork dir : "+ findWorkdir(path)+
                     "\n\nOrigin : "+ decodeURIComponent(path)+
 //                    "\nDestination : "+ newPath.replace(file.name, '')+
                     "\n\nComment :", 'initial import');
                 if( comment !== null)
                 {
-                    upload_rest(file,newPath, null, comment, function(node){
+                    upload_rest(e.dataTransfer.files[0], newPath, null, comment, function(node){
                     });
                 }
                 else {
@@ -280,9 +266,16 @@
             var table = document.createElement('table');
             table.id = 'upload_table';
             upload_div.appendChild(table);
-            var panelP = document.getElementById('panelPrincipal');
-            var contents = document.getElementById('contents');
-            panelP.insertBefore(upload_div, contents);
+            if (document.getElementById('panelPrincipal')){
+                var panelP = document.getElementById('panelPrincipal');
+                var contents = document.getElementById('contents');
+                panelP.insertBefore(upload_div, contents); 
+            }
+            else {
+                upload_div.className = 'uploadProgressDefault';
+                document.body.appendChild(upload_div);
+            }
+            
         }
         else {
             var upload_div = document.getElementById('upload_div');
