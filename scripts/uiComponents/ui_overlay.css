@@ -90,7 +90,12 @@
 .assetCard {
     min-height: 150px;
 }
-
+.noviewer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%
+}
 
 /**
 * OVERLAY
@@ -99,7 +104,7 @@
 	color: #fff;
 }
 #assetHeader {
-	background-color: green;
+	background-color: rgb(59, 64, 59);
 }
 .assetTitle {
 	color: white;
@@ -114,7 +119,6 @@
 	height: 30px;
 }
 .assetMain {
-    padding: 10px;
     background-color: rgb(198, 198, 198);
 }
 .assetPanel {
@@ -124,9 +128,7 @@
 .assetMain_viewer {
 	text-align: center;
 	transition: all 0.3s ease;
-	background-color: lightblue;
 	font-size: 14px;
-/*	overflow: auto;*/
 }
 .assetAccTitle {
 	font-size: 13px;

@@ -2,16 +2,23 @@
 .panelPrincipal .fa-pencil {
     padding-left: 6px;
 }
-
-.editorTitle {
-    height: 30px;
-    font-size: 14px;
-    line-height: 30px;
-    text-align: center;
-    background-color: #dedede;
+.btCloseP {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: black;
 }
+.editorTitle {
+    height: 45px;
+    font-size: 14px;
+    line-height: 45px;
+    text-align: center;
+    background-color: #808a89;
+    color: white;
+}
+
 .editorContent {
-    height: calc(100% - 120px);
+    height: calc(100% - 170px);
     padding: 0 10px;
 }
 .editorContentHeader {
@@ -21,10 +28,12 @@
     font-size: 13px;
 }
 .editorContentHeader div:first-child {
-    padding-bottom: 10px;
+/*    word-break: break-all;*/
+    word-wrap: break-word;
+/*    padding-bottom: 10px;*/
 }
 .editorForm {
-    height: 100%;
+    margin: 0;
 }
 .editorForm textarea {
     display: block;
@@ -37,7 +46,6 @@
     height: 100%;
 }
 .editorForm button {
-    margin-top: 10px;
     float: right;
 }
 .editorInputs {
@@ -56,4 +64,27 @@
 .editorInputs input:last-of-type {
     margin-left: 5px;
     width: calc(70% - 5px);
+}
+.editorContent button {
+    font-family: monospace;
+    margin-bottom: 12px;
+    margin-top: 12px;
+    border-radius: 3px;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 6px 12px;
+    text-decoration: none;
+    border: 1px solid #d4d4d4;
+    background-color: #f1f1f1;
+    color: black;
+    margin: 6px 0;
+    /* padding: 0 1ex; */
+}
+.editorContent button:hover {
+    background-color: #c7c7c7;
+}
+@media screen and (min-width: 800px) {
+    .btCloseP {
+        color: white;
+    }
 }

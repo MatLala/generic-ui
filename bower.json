@@ -1,0 +1,16 @@
+{
+  "name": "generic-ui",
+  "version": "0.1",
+  "authors": [
+    "Mathieu LALANNE, PRIMCODE",
+    "Rémy LALANNE, PRIMCODE",
+  ],
+  "description": "Console user interface for DAMAS-core",
+  "license": "GPL3",
+  "ignore": [
+    "scripts/assetViewer",
+    "index.html",
+    "index_bo.html",
+    "README.md"
+  ]
+}

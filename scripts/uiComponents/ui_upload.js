@@ -7,12 +7,12 @@
 		root.ui_upload = factory();
 	}
 }(this, function () {
-    loadCss('scripts/uiComponents/ui_upload.css');
-//    loadCss('scripts/vendor/font-awesome-4.6.3/css/font-awesome.min.css');
-loadCss('//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css');
-    document.addEventListener('DOMContentLoaded', function() {
-        initUpload(); 
-    });
+    loadCss('generic-ui/scripts/uiComponents/ui_upload.css');
+    loadCss('//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css');
+//    document.addEventListener('DOMContentLoaded', function() {
+//        initUpload(); 
+//    });
+
     require(['domReady'], function (domReady) {
         domReady(function () {
             initUpload(); 
@@ -132,7 +132,12 @@ loadCss('//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css')
         }
         else {
             container.style.textAlign = 'center';
-            container.innerHTML = 'Upload works only with Firefox,<br>please use Firefox !';
+            var alertTxt = document.createElement('div');
+            alertTxt.innerHTML = 'Upload works only with Firefox,<br>please use Firefox !';
+            alertTxt.style.position = 'absolute';
+            alertTxt.style.top = '50%';
+            alertTxt.style.width = '100%';
+            container.appendChild(alertTxt);
             container.ondrop = function(ev){
                 ev.preventDefault();
                 ev.stopPropagation();
@@ -275,8 +280,9 @@ loadCss('//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css')
             var table = document.createElement('table');
             table.id = 'upload_table';
             upload_div.appendChild(table);
+            var panelP = document.getElementById('panelPrincipal');
             var contents = document.getElementById('contents');
-            document.body.insertBefore(upload_div, contents);
+            panelP.insertBefore(upload_div, contents);
         }
         else {
             var upload_div = document.getElementById('upload_div');
