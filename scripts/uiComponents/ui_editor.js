@@ -21,7 +21,7 @@
             console.log(filepath);
             damas.search('#parent:' + filepath, function(index) {
                 damas.read(index[0], function(node) {
-                    if (!document.querySelector('.panelSecond')) {
+                    if (!document.querySelector('#panelSecond')) {
                         var container = document.body;
                         compEditor(createPanel(container), node);
                     }
@@ -34,7 +34,7 @@
  
 	function createPanel(container){
 		var panel = document.createElement('div');
-		panel.className = 'panelSecond';
+		panel.id = 'panelSecond';
 		var panelContent = document.createElement('div');
 		panelContent.id = 'panelContent';
 		panelContent.className = 'panelContent';
@@ -43,9 +43,7 @@
 	//    panelClose.innerHTML = 'X';
 		panelClose.addEventListener('click', function(){
 			panel.remove();
-			document.dispatchEvent(closePanel);
 		});
-		var closePanel = new CustomEvent( "secondPanel:close");
 
 		panel.appendChild(panelClose);
 		panel.appendChild(panelContent);
@@ -92,15 +90,26 @@
         updateBt.setAttribute('type', 'submit');
         updateBt.className = 'clickable';
         updateBt.innerHTML = 'Update';
+        updateBt.style.float = 'right';
 
         var form = document.createElement('form');
         form.className = 'editorForm';
+        
+        area.addEventListener('change', function(e){
+            var updateN;
+            try {
+                updateN = JSON.parse(form.elements['editor'].value);
+            } catch (e) {
+                alert("not writing correctly !");
+                return;
+            }
+        });
 
         form.addEventListener('submit', function(event) {
             event.preventDefault();
             var updateN;
             try {
-                updateN = JSON.parse(form.elements['editor'].value.replace(/'/g, '"'));
+                updateN = JSON.parse(form.elements['editor'].value);
             } catch (e) {
                 alert("not writing correctly !");
                 return;
@@ -131,7 +140,6 @@
                         return;
                     }
                     else {
-//                        deleteBt.dispatchEvent(closePanel);
                         return;
                     }
                 });
@@ -139,17 +147,23 @@
             }
         });
         
-//        editorContent.style.height = container.clientHeight - (nodeName.clientHeight +editorTitle.clientHeight) +'px';
-//        container.style.height = window.innerHeight +'px';
-//        form.style.height = window.innerHeight - (nodeName.clientHeight +editorTitle.clientHeight) +'px'; 
+        var bts = document.createElement('div');
+        bts.style.width = '100%';
+        bts.style.display = 'table';
 
         form.appendChild(area);
-        form.appendChild(updateBt);
+        form.appendChild(bts);
+        bts.appendChild(updateBt);
+        bts.appendChild(deleteBt);
         container.appendChild(editorTitle);
         container.appendChild(editorContent);
         
         editorContent.appendChild(form);
-        editorContent.appendChild(deleteBt);
+
+        area.style.height = window.innerHeight - (editorTitle.offsetHeight + editorContentHeader.offsetHeight + bts.offsetHeight) +'px';
+        window.addEventListener('resize', function(event){
+            area.style.height = window.innerHeight - (editorTitle.offsetHeight + editorContentHeader.offsetHeight + bts.offsetHeight) +'px';
+        });
     };
     window.initEditor = initEditor;
 }));
