@@ -21,46 +21,45 @@
     top: 5px;
     right: 5px;
 }
-.editorForm textarea {
-    display: block;
+.editorBox textarea {
     width: 100%;
     resize: vertical;
+    margin: 0;
+}
+.editorContent {
+    padding: 0 10px;
 }
 
 /**
 * EDITOR DESIGN STYLE
 */
+tr.selected {
+    background-color: #f1f1f1;
+}
 #panelSecond {
     width: 240px;
-}
-.panelContent {
     background-color: #fff;
-}
-.btCloseP {
-    color: #fff;
 }
 .editorTitle {
     padding: 6px;
-    text-align: center;
-    background-color: #808a89;
-    color: white;
-}
-.editorContent {
-    padding: 0 10px;
+/*    border-bottom: 1px solid #000;*/
 }
 .editorContentHeader {
-    text-align: center;
     padding: 10px 0;
 }
 .editorContentHeader div:first-child {
-/*    word-break: break-all;*/
     word-wrap: break-word;
-/*    padding-bottom: 10px;*/
 }
-.editorForm {
-    margin: 0;
+.spinCss {
+    animation: Rotate .6s linear infinite;
+    -webkit-animation: Rotate .6s linear infinite;
 }
-.editorForm textarea {
+@keyframes Rotate {
+  from { transform:rotate(0deg);}
+  to { transform:rotate(360deg);}
+}
+/*
+.editorBox textarea {
     resize: vertical;
     border-radius: 2px;
     border: 1px solid #dedede;
@@ -73,17 +72,18 @@
     margin-top: 12px;
     border-radius: 3px;
     font-size: 12px;
-    cursor: pointer;
     padding: 6px 12px;
     border: 1px solid #d4d4d4;
     background-color: #f1f1f1;
     margin: 6px 0;
-    /* padding: 0 1ex; */
     display: table-cell;
 }
+*/
+/*
 .editorContent button:hover {
     background-color: #c7c7c7;
 }
+*/
 @media screen and (max-width: 800px) {
     #panelSecond {
         display: flex;
