@@ -116,6 +116,7 @@
                 else {
                     event.target.innerHTML = 'Update';
                     updateBt.setAttribute('disabled', 'disabled');
+                    jsonOriginValue = JSON.stringify(area.value);
                     return;
                 }
             });
