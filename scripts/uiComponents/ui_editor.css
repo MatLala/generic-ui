@@ -1,90 +1,99 @@
-/* EDITOR */
-.panelPrincipal .fa-pencil {
-    padding-left: 6px;
+#panelSecond {
+    display: inline-block;
+    position: relative;
+    -webkit-box-flex: 0 0 auto;
+    -moz-box-flex: 0 0 auto;
+    -webkit-flex:  0 0 auto;
+    -ms-flex:  0 0 auto;
+    box-flex: 0 0 auto;
+    flex: 0 0 auto;
+    -webkit-box-ordinal-group: 2;  
+    -moz-box-ordinal-group: 2;	 
+    -ms-flex-order: 2;
+    -webkit-order: 2;
+    order: 2;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
+/* EDITOR */
 .btCloseP {
     position: absolute;
     top: 5px;
     right: 5px;
-    color: black;
 }
-.editorTitle {
-    height: 45px;
-    font-size: 14px;
-    line-height: 45px;
-    text-align: center;
-    background-color: #808a89;
-    color: white;
-}
-
-.editorContent {
-    height: calc(100% - 170px);
-    padding: 0 10px;
-}
-.editorContentHeader {
+.editorBox textarea {
     width: 100%;
-    text-align: center;
-    padding: 10px 0;
-    font-size: 13px;
-}
-.editorContentHeader div:first-child {
-/*    word-break: break-all;*/
-    word-wrap: break-word;
-/*    padding-bottom: 10px;*/
-}
-.editorForm {
+    resize: vertical;
     margin: 0;
 }
-.editorForm textarea {
-    display: block;
-    width: 100%;
+.editorContent {
+    padding: 0 10px;
+}
+
+/**
+* EDITOR DESIGN STYLE
+*/
+tr.selected {
+    background-color: #f1f1f1;
+}
+#panelSecond {
+    width: 240px;
+    background-color: #fff;
+}
+.editorTitle {
+    padding: 6px;
+/*    border-bottom: 1px solid #000;*/
+}
+.editorContentHeader {
+    padding: 10px 0;
+}
+.editorContentHeader div:first-child {
+    word-wrap: break-word;
+}
+.spinCss {
+    animation: Rotate .6s linear infinite;
+    -webkit-animation: Rotate .6s linear infinite;
+}
+@keyframes Rotate {
+  from { transform:rotate(0deg);}
+  to { transform:rotate(360deg);}
+}
+/*
+.editorBox textarea {
     resize: vertical;
     border-radius: 2px;
     border: 1px solid #dedede;
     font: inherit;
     font-size: 13px;
-    height: 100%;
-}
-.editorForm button {
-    float: right;
-}
-.editorInputs {
-    display: table;
-    padding-bottom: 5px;
-    width: 100%;
-}
-.editorInputs input {
-    display: table-cell;
-    border: 1px solid #dedede;
-    border-radius: 2px;
-}
-.editorInputs input:first-of-type {
-    width: 30%;
-}
-.editorInputs input:last-of-type {
-    margin-left: 5px;
-    width: calc(70% - 5px);
 }
 .editorContent button {
-    font-family: monospace;
+    font-family: inherit;
     margin-bottom: 12px;
     margin-top: 12px;
     border-radius: 3px;
     font-size: 12px;
-    cursor: pointer;
     padding: 6px 12px;
-    text-decoration: none;
     border: 1px solid #d4d4d4;
     background-color: #f1f1f1;
-    color: black;
     margin: 6px 0;
-    /* padding: 0 1ex; */
+    display: table-cell;
 }
+*/
+/*
 .editorContent button:hover {
     background-color: #c7c7c7;
 }
-@media screen and (min-width: 800px) {
-    .btCloseP {
-        color: white;
+*/
+@media screen and (max-width: 800px) {
+    #panelSecond {
+        display: flex;
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 100;
     }
 }

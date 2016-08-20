@@ -11,41 +11,34 @@
     
     /**
     * HTML rendering methods for UI Components inside Layout
-    * require html container
     * require damas.js
-    * require main.js
-    * require ui_common.js
-    * call by global initEditor function in ui_log.js and ui-search.js
+    * call by global initEditor function in ui_log.js and ui_search.js
     */
-    function initEditor(filepath) {
-            console.log(filepath);
-            damas.search('#parent:' + filepath, function(index) {
-                damas.read(index[0], function(node) {
-                    if (!document.querySelector('.panelSecond')) {
-                        var container = document.body;
-                        compEditor(createPanel(container), node);
-                    }
-                    else {
-                        compEditor(document.querySelector('#panelContent'), node);
-                    }
-                });
-            });
+    function initEditor(node) {
+        if (!document.querySelector('#panelSecond')) {
+            compEditor(createPanel(document.body), node);
+        }
+        else {
+            compEditor(document.querySelector('#panelContent'), node);
+        }
     };
  
 	function createPanel(container){
 		var panel = document.createElement('div');
-		panel.className = 'panelSecond';
+		panel.id = 'panelSecond';
 		var panelContent = document.createElement('div');
 		panelContent.id = 'panelContent';
-		panelContent.className = 'panelContent';
 		var panelClose = document.createElement('div');
-		panelClose.className = 'fa fa-close btCloseP clickable';
-	//    panelClose.innerHTML = 'X';
-		panelClose.addEventListener('click', function(){
-			panel.remove();
-			document.dispatchEvent(closePanel);
-		});
-		var closePanel = new CustomEvent( "secondPanel:close");
+//		panelClose.className = 'fa fa-close btCloseP clickable';
+        panelClose.className = 'btCloseP clickable';
+	    panelClose.innerHTML = 'X';
+        
+        panelClose.addEventListener('click', function(e){
+            panel.remove();
+            if (document.querySelector('tr.selected')){
+                document.querySelector('tr.selected').classList.remove('selected');
+            }
+        }, false);
 
 		panel.appendChild(panelClose);
 		panel.appendChild(panelContent);
@@ -58,14 +51,8 @@
     * Generate Component : Editor
     * 
     */
-    compEditor = function(container, json){
-
-        document.addEventListener("secondPanel:close", function(e){
-            if (document.querySelector('.selected')){
-                document.querySelector('.selected').classList.remove('selected');
-            }
-        }, false);
-
+    compEditor = function(container, node){
+        
         container.innerHTML = '';
         var editorTitle = document.createElement('div');
         editorTitle.className = 'editorTitle';
@@ -80,76 +67,78 @@
         editorContent.appendChild(editorContentHeader);
 
         var nodeName = document.createElement('div');
-        nodeName.innerHTML = 'Node : </br>'+json['#parent'];
+        var file = node.file || node['#parent'] || node._id;
+        nodeName.innerHTML = 'Node : </br>'+ file;
         editorContentHeader.appendChild(nodeName);
 
         var area = document.createElement('textarea');
         area.name = 'editor';
-        area.innerHTML = JSON.stringify(json).replace(/,/g, ',\n').replace(/{/g, '{\n').replace(/}/g, '\n}');
-//        area.innerHTML = JSON.stringify(json);
+        area.innerHTML = JSON.stringify(node).replace(/,/g, ',\n').replace(/{/g, '{\n').replace(/}/g, '\n}');
+        var jsonOriginValue = JSON.stringify(area.value);
 
         var updateBt = document.createElement('button');
-        updateBt.setAttribute('type', 'submit');
-        updateBt.className = 'clickable';
         updateBt.innerHTML = 'Update';
+        updateBt.style.float = 'right';
+        updateBt.setAttribute('disabled', 'disabled');
 
-        var form = document.createElement('form');
-        form.className = 'editorForm';
-
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
+        var form = document.createElement('div');
+        form.className = 'editorBox';
+        
+        area.addEventListener('keyup', function(e){
             var updateN;
             try {
-                updateN = JSON.parse(form.elements['editor'].value.replace(/'/g, '"'));
+                updateN = JSON.parse(area.value);
+                if (JSON.stringify(area.value) != jsonOriginValue){
+                    updateBt.innerHTML = 'Update';
+                    updateBt.removeAttribute('disabled');
+                }
             } catch (e) {
-                alert("not writing correctly !");
+                updateBt.setAttribute('disabled', 'disabled');
                 return;
             }
-            damas.update(updateN, function( res ) {
+        });
+
+        updateBt.addEventListener('click', function(event) {
+            event.preventDefault();
+            var updateN = JSON.parse(area.value);
+            var spin = document.createElement('div');
+            spin.innerHTML = 'X';
+            spin.classList.add('spinCss');
+            event.target.innerHTML = '';
+            event.target.appendChild(spin);
+            damas.update(updateN, function(res) {
                 if (!res) {
-                    alert("something went wrong!");
+                    event.target.innerHTML = 'Update';
+                    updateBt.setAttribute('disabled', 'disabled');
+                    alert("something went wrong !");
                     return;
                 }
                 else {
-                    alert("update done!");
+                    event.target.innerHTML = 'Update';
+                    updateBt.setAttribute('disabled', 'disabled');
+                    jsonOriginValue = JSON.stringify(area.value);
                     return;
                 }
             });
             return false;
         });
         
-        var deleteBt = document.createElement('button');
-        deleteBt.innerHTML = 'Delete';
-        deleteBt.className = 'clickable';
-        deleteBt.style.float = 'left';
-        deleteBt.addEventListener('click', function(event) {
-            event.preventDefault();
-            if (confirm("Delete this node ?")){
-                damas.delete(json._id, function( res ) {
-                    if (!res) {
-                        alert("something went wrong!");
-                        return;
-                    }
-                    else {
-//                        deleteBt.dispatchEvent(closePanel);
-                        return;
-                    }
-                });
-                return false;
-            }
-        });
-        
-//        editorContent.style.height = container.clientHeight - (nodeName.clientHeight +editorTitle.clientHeight) +'px';
-//        container.style.height = window.innerHeight +'px';
-//        form.style.height = window.innerHeight - (nodeName.clientHeight +editorTitle.clientHeight) +'px'; 
+        var bts = document.createElement('div');
+        bts.style.width = '100%';
+        bts.style.display = 'table';
 
         form.appendChild(area);
-        form.appendChild(updateBt);
+        form.appendChild(bts);
+        bts.appendChild(updateBt);
         container.appendChild(editorTitle);
         container.appendChild(editorContent);
         
         editorContent.appendChild(form);
-        editorContent.appendChild(deleteBt);
+
+        area.style.height = window.innerHeight - (editorTitle.offsetHeight + editorContentHeader.offsetHeight + bts.offsetHeight) +'px';
+        window.addEventListener('resize', function(event){
+            area.style.height = window.innerHeight - (editorTitle.offsetHeight + editorContentHeader.offsetHeight + bts.offsetHeight) +'px';
+        });
     };
     window.initEditor = initEditor;
 }));
