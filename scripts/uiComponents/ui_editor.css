@@ -26,9 +26,6 @@
     resize: vertical;
     margin: 0;
 }
-.editorContent {
-    padding: 0 10px;
-}
 
 /**
 * EDITOR DESIGN STYLE
@@ -42,7 +39,6 @@ tr.selected {
 }
 .editorTitle {
     padding: 6px;
-/*    border-bottom: 1px solid #000;*/
 }
 .editorContentHeader {
     padding: 10px 0;
@@ -79,6 +75,9 @@ tr.selected {
     display: table-cell;
 }
 */
+.editorContent button {
+    font-family: inherit;
+}
 /*
 .editorContent button:hover {
     background-color: #c7c7c7;
@@ -95,5 +94,8 @@ tr.selected {
         left: 0;
         top: 0;
         z-index: 100;
+    }
+    #panelContent {
+        width: 100%;
     }
 }
