@@ -56,7 +56,7 @@
         container.innerHTML = '';
         var editorTitle = document.createElement('div');
         editorTitle.className = 'editorTitle';
-        editorTitle.innerHTML = 'Attribute Editor';
+        editorTitle.innerHTML = 'JSON Editor';
 
         var editorContent = document.createElement('div');
         editorContent.id = 'editorContent';
@@ -67,18 +67,30 @@
         editorContent.appendChild(editorContentHeader);
 
         var nodeName = document.createElement('div');
-        var file = node.file || node['#parent'] || node._id;
-        nodeName.innerHTML = 'Node : </br>'+ file;
+        nodeName.innerHTML = 'Node : </br>'+ node._id;
         editorContentHeader.appendChild(nodeName);
 
         var area = document.createElement('textarea');
         area.name = 'editor';
+//        var keys = Object.keys(node).sort();
+//        console.log(keys);
+//        var text = '{\n';
+//        for (i = 0; i < keys.length ; i++){
+//            text += '"'+ keys[i] +'":"' + node[keys[i]] +'"';
+//            if (i !== keys.length - 1) {
+//                text += ',\n';
+//            }
+//            else {
+//                text += '\n}';
+//            }
+//        }
+        
         area.innerHTML = JSON.stringify(node).replace(/,/g, ',\n').replace(/{/g, '{\n').replace(/}/g, '\n}');
-        var jsonOriginValue = JSON.stringify(area.value);
+//        area.innerHTML = text;
+        var jsonOriginValue = JSON.stringify(node);
 
         var updateBt = document.createElement('button');
         updateBt.innerHTML = 'Update';
-        updateBt.style.float = 'right';
         updateBt.setAttribute('disabled', 'disabled');
 
         var form = document.createElement('div');
@@ -88,7 +100,7 @@
             var updateN;
             try {
                 updateN = JSON.parse(area.value);
-                if (JSON.stringify(area.value) != jsonOriginValue){
+                if (JSON.stringify(updateN) != jsonOriginValue){
                     updateBt.innerHTML = 'Update';
                     updateBt.removeAttribute('disabled');
                 }
@@ -101,6 +113,7 @@
         updateBt.addEventListener('click', function(event) {
             event.preventDefault();
             var updateN = JSON.parse(area.value);
+            console.log(updateN);
             var spin = document.createElement('div');
             spin.innerHTML = 'X';
             spin.classList.add('spinCss');
@@ -116,7 +129,7 @@
                 else {
                     event.target.innerHTML = 'Update';
                     updateBt.setAttribute('disabled', 'disabled');
-                    jsonOriginValue = JSON.stringify(area.value);
+                    jsonOriginValue = JSON.stringify(res);
                     return;
                 }
             });
@@ -124,8 +137,7 @@
         });
         
         var bts = document.createElement('div');
-        bts.style.width = '100%';
-        bts.style.display = 'table';
+        bts.style.textAlign = 'right';
 
         form.appendChild(area);
         form.appendChild(bts);
