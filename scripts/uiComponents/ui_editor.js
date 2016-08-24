@@ -15,6 +15,7 @@
     * call by global initEditor function in ui_log.js and ui_search.js
     */
     function initEditor(node) {
+        node = damas.read(node._id);
         if (!document.querySelector('#panelSecond')) {
             compEditor(createPanel(document.body), node);
         }
@@ -72,22 +73,8 @@
 
         var area = document.createElement('textarea');
         area.name = 'editor';
-//        var keys = Object.keys(node).sort();
-//        console.log(keys);
-//        var text = '{\n';
-//        for (i = 0; i < keys.length ; i++){
-//            text += '"'+ keys[i] +'":"' + node[keys[i]] +'"';
-//            if (i !== keys.length - 1) {
-//                text += ',\n';
-//            }
-//            else {
-//                text += '\n}';
-//            }
-//        }
-        
-        area.innerHTML = JSON.stringify(node).replace(/,/g, ',\n').replace(/{/g, '{\n').replace(/}/g, '\n}');
-//        area.innerHTML = text;
-        var jsonOriginValue = JSON.stringify(node);
+        area.innerHTML = JSON.stringify(sortNode(node)).replace(/,/g, ',\n').replace(/{/g, '{\n').replace(/}/g, '\n}');
+        var jsonOriginValue = JSON.stringify(sortNode(node));
 
         var updateBt = document.createElement('button');
         updateBt.innerHTML = 'Update';
@@ -100,7 +87,7 @@
             var updateN;
             try {
                 updateN = JSON.parse(area.value);
-                if (JSON.stringify(updateN) != jsonOriginValue){
+                if (JSON.stringify(sortNode(updateN)) != jsonOriginValue){
                     updateBt.innerHTML = 'Update';
                     updateBt.removeAttribute('disabled');
                 }
@@ -129,7 +116,8 @@
                 else {
                     event.target.innerHTML = 'Update';
                     updateBt.setAttribute('disabled', 'disabled');
-                    jsonOriginValue = JSON.stringify(res);
+                    node = res;
+                    jsonOriginValue = JSON.stringify(sortNode(res));
                     return;
                 }
             });
@@ -151,6 +139,15 @@
         window.addEventListener('resize', function(event){
             area.style.height = window.innerHeight - (editorTitle.offsetHeight + editorContentHeader.offsetHeight + bts.offsetHeight) +'px';
         });
+    };
+    
+    function sortNode(node){
+        var sortN = {};
+        var sortK = Object.keys(node).sort();
+        sortK.forEach(function(k){
+            sortN[k] =  node[k]; 
+        });
+        return sortN;
     };
     window.initEditor = initEditor;
 }));
