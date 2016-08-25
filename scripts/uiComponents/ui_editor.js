@@ -53,7 +53,6 @@
     * 
     */
     compEditor = function(container, node){
-        
         container.innerHTML = '';
         var editorTitle = document.createElement('div');
         editorTitle.className = 'editorTitle';
@@ -73,8 +72,18 @@
 
         var area = document.createElement('textarea');
         area.name = 'editor';
-        area.innerHTML = JSON.stringify(sortNode(node)).replace(/,/g, ',\n').replace(/{/g, '{\n').replace(/}/g, '\n}');
-        var jsonOriginValue = JSON.stringify(sortNode(node));
+        var keys = Object.keys(node).sort();
+        var text = '{\n';
+        for (i = 0; i < keys.length ; i++){
+            text += '"'+ keys[i] +'":"' + node[keys[i]] +'"';
+            if (i !== keys.length - 1) {
+                text += ',\n';
+            }
+            else {
+                text += '\n}';
+            }
+        }
+        area.innerHTML = text;
 
         var updateBt = document.createElement('button');
         updateBt.innerHTML = 'Update';
@@ -87,9 +96,11 @@
             var updateN;
             try {
                 updateN = JSON.parse(area.value);
-                if (JSON.stringify(sortNode(updateN)) != jsonOriginValue){
-                    updateBt.innerHTML = 'Update';
+                if (!compareObjects(node, updateN)){
                     updateBt.removeAttribute('disabled');
+                }
+                else {
+                    updateBt.setAttribute('disabled', 'disabled');
                 }
             } catch (e) {
                 updateBt.setAttribute('disabled', 'disabled');
@@ -100,7 +111,6 @@
         updateBt.addEventListener('click', function(event) {
             event.preventDefault();
             var updateN = JSON.parse(area.value);
-            console.log(updateN);
             var spin = document.createElement('div');
             spin.innerHTML = 'X';
             spin.classList.add('spinCss');
@@ -114,10 +124,7 @@
                     return;
                 }
                 else {
-                    event.target.innerHTML = 'Update';
-                    updateBt.setAttribute('disabled', 'disabled');
-                    node = res;
-                    jsonOriginValue = JSON.stringify(sortNode(res));
+                    compEditor(document.querySelector('#panelContent'), res);
                     return;
                 }
             });
@@ -141,13 +148,17 @@
         });
     };
     
-    function sortNode(node){
-        var sortN = {};
-        var sortK = Object.keys(node).sort();
-        sortK.forEach(function(k){
-            sortN[k] =  node[k]; 
-        });
-        return sortN;
-    };
+    function compareObjects(a, b) {
+        if (Object.keys(a).length != Object.keys(b).length) { 
+            return false;
+        }
+        for (i in a) {
+            if (a[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     window.initEditor = initEditor;
 }));
