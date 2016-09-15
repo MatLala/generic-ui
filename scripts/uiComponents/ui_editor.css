@@ -34,17 +34,8 @@ tr.selected {
     background-color: #f1f1f1;
 }
 #panelSecond {
-    width: 240px;
-    background-color: #fff;
-}
-.editorTitle {
-    padding: 6px;
-}
-.editorContentHeader {
-    padding: 10px 0;
-}
-.editorContentHeader div:first-child {
-    word-wrap: break-word;
+    width: 42ex;
+    background-color: rgba(255,255,255,.9);
 }
 .spinCss {
     animation: Rotate .6s linear infinite;
