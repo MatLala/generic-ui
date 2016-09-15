@@ -64,6 +64,12 @@
 
         var area = document.createElement('textarea');
         area.name = 'editor';
+		var text = JSON.stringify(node);
+		text = text.replace(/,/g, ',\n');
+		text = text.replace('{', '{\n');
+		text = text.replace('}', '\n}');
+
+/*
         var keys = Object.keys(node).sort();
         var text = '{\n';
         for (i = 0; i < keys.length ; i++){
@@ -75,6 +81,7 @@
                 text += '\n}';
             }
         }
+*/
         area.innerHTML = text;
 
         var updateBt = document.createElement('button');
@@ -83,7 +90,7 @@
 
         var form = document.createElement('div');
         form.className = 'editorBox';
-        
+
         area.addEventListener('keyup', function(e){
             var updateN;
             try {
@@ -101,7 +108,6 @@
         });
 
         updateBt.addEventListener('click', function(event) {
-            event.preventDefault();
             var updateN = JSON.parse(area.value);
             var spin = document.createElement('div');
             spin.innerHTML = 'X';
@@ -111,8 +117,8 @@
             damas.update(updateN, function(res) {
                 if (!res) {
                     event.target.innerHTML = 'Update';
-                    updateBt.setAttribute('disabled', 'disabled');
-                    alert("something went wrong !");
+                    //updateBt.setAttribute('disabled', 'disabled');
+                    alert("damas.update failed");
                     return;
                 }
                 else {
@@ -141,11 +147,11 @@
     };
     
     function compareObjects(a, b) {
-        if (Object.keys(a).length != Object.keys(b).length) { 
+        if (Object.keys(a).length !== Object.keys(b).length) {
             return false;
         }
         for (i in a) {
-            if (a[i] != b[i]) {
+            if (a[i] !== b[i]) {
                 return false;
             }
         }
