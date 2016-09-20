@@ -99,13 +99,16 @@
 
 		table.className = 'search';
 
-		th1.setAttribute('name', 'file');
-		th2.setAttribute('name', 'size');
-		th3.setAttribute('name', 'time');
+		th1.setAttribute('name', conf.pathKey);
+		th2.setAttribute('name', 'file_size');
+		th3.setAttribute('name', 'file_mtime');
 
 		th1.innerHTML = 'file';
 		th2.innerHTML = 'size';
 		th3.innerHTML = 'time';
+		//var a1 = document.createElement('a');
+		//a1.setAttribute('href', 'search='+keys.search+'&sort='+this.getAttribute('name')+'&order='+ (-order) );
+		//th1.appendChild(a1);
 
 		thead.appendChild(th1);
 		thead.appendChild(th2);
@@ -115,11 +118,11 @@
 		container.appendChild(table);
 
 		var keys = getHash();
-		var sort = keys.sort || 'file';
+		var sort = keys.sort || conf.pathKey;
 		var th = document.getElementsByName(sort)[0];
 		var icon = document.createElement('span');
 		var order = (keys.order)? keys.order: 1;
-		icon.innerHTML = (order==='1')? '&xutri;' : '&xdtri;';
+		icon.innerHTML = (order==='1')? '&dtrif;' : '&utrif;';
 		th.innerHTML += ' ';
 		th.appendChild(icon);
 
@@ -143,12 +146,13 @@
 		}
 	}
 
-	function tr(asset) {
+	function tr(asset, trClass) {
 		var tr = document.createElement('tr');
 		var td1 = document.createElement('td');
 		var td2 = document.createElement('td');
 		var td3 = document.createElement('td');
 		var td4 = document.createElement('td');
+		tr.classList.add(trClass);
 		td1.classList.add('file');
 		td2.classList.add('size');
 		td3.classList.add('time');
@@ -156,11 +160,23 @@
 		tr.setAttribute('title', JSON_tooltip(asset));
 
 		var time = new Date(parseInt(asset.time));
-		var file = asset.file || asset['#parent'];
+		//var file = asset.file || asset['#parent'];
+		var file = asset[conf.pathKey] || asset['#parent'];
 		tr.file = file;
 
-		td2.innerHTML = human_size( asset.bytes || asset.size || asset.source_size);
+		td2.innerHTML = human_size( asset.file_size || asset.bytes || asset.size || asset.source_size);
 		td3.innerHTML = human_time(time);
+
+
+		td3.addEventListener('click', function(e){
+			damas.search_mongo({'#parent': asset._id}, {"time":1},100, 0, function(res){
+				damas.read(res, function(children){
+					for (var i=0; i<children.length; i++) {
+						tr.parentNode.insertBefore( searchtr(children[i], 'history'), tr.nextSibling );
+					}
+				});
+			})
+		})
 		var td4span = document.createElement('span');
 		td4span.setAttribute('title', 'delete');
 		td4span.classList.add('delete');
@@ -184,6 +200,8 @@
 		}
 		return tr;
 	}
+
+	window.searchtr = tr;
 
 }));
 
