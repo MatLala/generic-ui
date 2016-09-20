@@ -18,12 +18,12 @@
 /* EDITOR */
 .btCloseP {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 1ex;
+    right: 1ex;
 }
 .editorBox textarea {
     width: 100%;
-    resize: vertical;
+    resize: none;
     margin: 0;
 }
 

@@ -35,6 +35,7 @@
 
 	function hashSearch() {
 		if (/#search=/.test(location.hash)){
+			document.querySelector('#but_files').classList.add('selected');
 			var container = document.querySelector('#contents');
 			container.innerHTML = '';
 			search_ui.offsetElements = 0;
@@ -55,7 +56,9 @@
 		var order = keys.order ? parseInt(keys.order) : 1
 		var sort = {};
 		sort[sortBy] = order;
-		damas.search_mongo({file: 'REGEX_'+keys.search}, sort, search_ui.nbElements, search_ui.offsetElements, function(res){
+		var query = {};
+		query[conf.pathKey] = 'REGEX_'+keys.search;
+		damas.search_mongo(query, sort, search_ui.nbElements, search_ui.offsetElements, function(res){
 			damas.read(res, function(assets){
 				var tableBody = document.querySelector('#contents tbody');
 				fill(tableBody, assets);
@@ -146,6 +149,9 @@
 		var td2 = document.createElement('td');
 		var td3 = document.createElement('td');
 		var td4 = document.createElement('td');
+		td1.classList.add('file');
+		td2.classList.add('size');
+		td3.classList.add('time');
 		td4.classList.add('buttons');
 		tr.setAttribute('title', JSON_tooltip(asset));
 
