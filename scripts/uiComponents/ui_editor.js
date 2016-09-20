@@ -62,14 +62,6 @@
         editorContent.id = 'editorContent';
         editorContent.className = 'editorContent';
 
-        var editorContentHeader = document.createElement('div');
-        editorContentHeader.className = 'editorContentHeader';
-        editorContent.appendChild(editorContentHeader);
-
-        var nodeName = document.createElement('div');
-        nodeName.innerHTML = 'Node : </br>'+ node._id;
-        editorContentHeader.appendChild(nodeName);
-
         var area = document.createElement('textarea');
         area.name = 'editor';
 		var text = JSON.stringify(node);
@@ -148,9 +140,9 @@
         
         editorContent.appendChild(form);
 
-        area.style.height = window.innerHeight - (editorTitle.offsetHeight + editorContentHeader.offsetHeight + bts.offsetHeight) +'px';
+        area.style.height = window.innerHeight - (editorTitle.offsetHeight + bts.offsetHeight) +'px';
         window.addEventListener('resize', function(event){
-            area.style.height = window.innerHeight - (editorTitle.offsetHeight + editorContentHeader.offsetHeight + bts.offsetHeight) +'px';
+            area.style.height = window.innerHeight - (editorTitle.offsetHeight + bts.offsetHeight) +'px';
         });
     };
     
