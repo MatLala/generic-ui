@@ -15,6 +15,7 @@
     * call by global initEditor function in ui_log.js and ui_search.js
     */
     function initEditor(node) {
+        node = damas.read(node._id);
         if (!document.querySelector('#panelSecond')) {
             compEditor(createPanel(document.body), node);
         }
@@ -52,7 +53,6 @@
     * 
     */
     compEditor = function(container, node){
-        
         container.innerHTML = '';
         var editorTitle = document.createElement('div');
         editorTitle.className = 'editorTitle';
@@ -72,22 +72,18 @@
 
         var area = document.createElement('textarea');
         area.name = 'editor';
-//        var keys = Object.keys(node).sort();
-//        console.log(keys);
-//        var text = '{\n';
-//        for (i = 0; i < keys.length ; i++){
-//            text += '"'+ keys[i] +'":"' + node[keys[i]] +'"';
-//            if (i !== keys.length - 1) {
-//                text += ',\n';
-//            }
-//            else {
-//                text += '\n}';
-//            }
-//        }
-        
-        area.innerHTML = JSON.stringify(node).replace(/,/g, ',\n').replace(/{/g, '{\n').replace(/}/g, '\n}');
-//        area.innerHTML = text;
-        var jsonOriginValue = JSON.stringify(node);
+        var keys = Object.keys(node).sort();
+        var text = '{\n';
+        for (i = 0; i < keys.length ; i++){
+            text += '"'+ keys[i] +'":"' + node[keys[i]] +'"';
+            if (i !== keys.length - 1) {
+                text += ',\n';
+            }
+            else {
+                text += '\n}';
+            }
+        }
+        area.innerHTML = text;
 
         var updateBt = document.createElement('button');
         updateBt.innerHTML = 'Update';
@@ -100,9 +96,11 @@
             var updateN;
             try {
                 updateN = JSON.parse(area.value);
-                if (JSON.stringify(updateN) != jsonOriginValue){
-                    updateBt.innerHTML = 'Update';
+                if (!compareObjects(node, updateN)){
                     updateBt.removeAttribute('disabled');
+                }
+                else {
+                    updateBt.setAttribute('disabled', 'disabled');
                 }
             } catch (e) {
                 updateBt.setAttribute('disabled', 'disabled');
@@ -113,7 +111,6 @@
         updateBt.addEventListener('click', function(event) {
             event.preventDefault();
             var updateN = JSON.parse(area.value);
-            console.log(updateN);
             var spin = document.createElement('div');
             spin.innerHTML = 'X';
             spin.classList.add('spinCss');
@@ -127,9 +124,7 @@
                     return;
                 }
                 else {
-                    event.target.innerHTML = 'Update';
-                    updateBt.setAttribute('disabled', 'disabled');
-                    jsonOriginValue = JSON.stringify(res);
+                    compEditor(document.querySelector('#panelContent'), res);
                     return;
                 }
             });
@@ -152,5 +147,18 @@
             area.style.height = window.innerHeight - (editorTitle.offsetHeight + editorContentHeader.offsetHeight + bts.offsetHeight) +'px';
         });
     };
+    
+    function compareObjects(a, b) {
+        if (Object.keys(a).length != Object.keys(b).length) { 
+            return false;
+        }
+        for (i in a) {
+            if (a[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     window.initEditor = initEditor;
 }));
