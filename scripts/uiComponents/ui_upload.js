@@ -171,7 +171,7 @@
         console.log(path);
         if(!path)
         {
-            alert('Could not determine the path for the file ' + file.name +': Drop aborted' );
+            alert('Could not determine the path for the file ' + e.dataTransfer.files[0].name +': Drop aborted' );
             return;
         }
 
