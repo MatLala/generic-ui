@@ -57,7 +57,7 @@
 		var sort = {};
 		sort[sortBy] = order;
 		var query = {};
-		query[conf.pathKey] = 'REGEX_'+keys.search;
+		query[conf.file_path] = 'REGEX_'+keys.search;
 		damas.search_mongo(query, sort, search_ui.nbElements, search_ui.offsetElements, function(res){
 			damas.read(res, function(assets){
 				var tableBody = document.querySelector('#contents tbody');
@@ -108,15 +108,15 @@
 
 		table.className = 'search';
 
-		th1.setAttribute('name', conf.pathKey);
-		th2.setAttribute('name', 'file_size');
-		th3.setAttribute('name', 'file_mtime');
+		th1.setAttribute('name', conf.file_path);
+		th2.setAttribute('name', conf.file_size);
+		th3.setAttribute('name', conf.file_mtime);
 		th4.setAttribute('name', 'sync');
 		//th5.setAttribute('name', 'comment');
 
 		th1.innerHTML = 'file';
-		th2.innerHTML = 'size';
-		th3.innerHTML = 'mtime';
+		th2.innerHTML = conf.file_size;
+		th3.innerHTML = conf.file_mtime;
 		th4.innerHTML = 'sync';
 		//th5.innerHTML = 'comment';
 		//var a1 = document.createElement('a');
@@ -151,7 +151,7 @@
 		container.appendChild(table);
 
 		var keys = getHash();
-		var sort = keys.sort || conf.pathKey;
+		var sort = keys.sort || conf.file_path;
 		var th = document.getElementsByName(sort)[0];
 		if (th) {
 			var icon = document.createElement('span');
@@ -198,8 +198,8 @@
 		tr.setAttribute('title', JSON_tooltip(asset));
 		td4.setAttribute('title', asset.comment);
 
-		var time = new Date(parseInt(asset.file_mtime));
-		var file = asset[conf.pathKey] || asset['#parent'];
+		var time = new Date(parseInt(asset[conf.file_mtime]));
+		var file = asset[conf.file_path] || asset['#parent'];
 		//tr.file = file;
 
 		td2.innerHTML = human_size( asset.file_size || asset.bytes || asset.size || asset.source_size);
