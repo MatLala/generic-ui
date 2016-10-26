@@ -46,8 +46,8 @@
 
 	function doSearch(){
 		var keys = getHash();
-		var sortBy = keys.sort || 'file';
-		var order = keys.order ? parseInt(keys.order) : 1
+		var sortBy = keys.sort || 'time';
+		var order = keys.order ? parseInt(keys.order) : -1;
 		var sort = {};
 		sort[sortBy] = order;
 		var query = {};
@@ -70,7 +70,7 @@
 		container.appendChild(searchInput);
 		searchInput.addEventListener('change', function(event) {
 			var keys = getHash();
-			window.location.hash = 'search='+searchInput.value+'&sort='+keys.sort+'&order='+keys.order;
+			window.location.hash = 'search='+searchInput.value+((keys.sort)?'&sort='+keys.sort:'')+((keys.order)?'&order='+keys.order:'');
 		});
 		var table = document.createElement('table');
 		var colgroup = document.createElement('colgroup');
@@ -133,7 +133,7 @@
 		container.appendChild(table);
 
 		var keys = getHash();
-		var sort = keys.sort || conf.file_path;
+		var sort = keys.sort || conf.file_mtime;
 		var th = document.getElementsByName(sort)[0];
 		if (th) {
 			var icon = document.createElement('span');
@@ -211,23 +211,20 @@
 				//progress.classList.add('synced', 'origin: '+asset.origin+'\n');
 				//span.setAttribute('title', sync);
 				span.classList.add((asset.hasOwnProperty(sync))?'synced':'notsynced');
-				if (!asset.hasOwnProperty(sync)) {
-					if (asset.origin === sync.replace('synced_', '') ) {
-						//span.style.backgroundColor = 'lightgreen';
-						span.classList.add('synced');
-						span.classList.remove('notsynced');
-						span.innerHTML = 'o';
-						time = human_time(new Date(parseInt(asset.time)));
-						title += time + ' ' + site_name + ' (origin)\n';
-					}
-					else {
-						title += '--/--/-- --:--:-- ' + site_name+ '\n';
-						//span.setAttribute('title', sync.replace('synced_','') + ': not synced');
-					}
-				}
-				else {
+				if (asset.hasOwnProperty(sync)) {
 					time = human_time(new Date(parseInt(asset[sync])));
 					title += time + ' ' + site_name+ '\n';
+				}
+				else {
+					title += '--/--/-- --:--:-- ' + site_name+ '\n';
+				}
+				if (asset.origin === sync.replace('synced_', '') ) {
+					//span.style.backgroundColor = 'lightgreen';
+					span.classList.add('synced');
+					span.classList.remove('notsynced');
+					span.innerHTML = 'o';
+					time = human_time(new Date(parseInt(asset.time)));
+					title += time + ' ' + site_name + ' (origin)\n';
 				}
 				td4.appendChild(span);
 			}
