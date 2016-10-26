@@ -41,12 +41,6 @@
 			search_ui.offsetElements = 0;
 			draw(container);
 			doSearch();
-/*
-			var searchAbout = document.createElement('div');
-			searchAbout.className = 'searchAbout';
-			searchAbout.innerHTML = 'Search results for "'+ keys.search + '" :';
-			container.appendChild(searchAbout);
-*/
 		}
 	};
 
@@ -67,29 +61,17 @@
 		});
 	}
 
-	/**
-	* Input and button (for mobiles) elements for Search Component
-	* Localisation : Header
-	*/
-
 	function draw( container ) {
 		var searchInput = document.createElement('input');
 		searchInput.className = 'searchInput';
 		searchInput.setAttribute('placeholder', 'Search');
-		//searchInput.setAttribute('type', 'search');
-		//searchInput.setAttribute('name', 'search');
-		//searchInput.setAttribute('autocomplete', 'on');
 		searchInput.value = getHash().search;
 		searchInput.focus();
 		container.appendChild(searchInput);
 		searchInput.addEventListener('change', function(event) {
-			window.location.hash = '#search='+searchInput.value;
+			var keys = getHash();
+			window.location.hash = 'search='+searchInput.value+'&sort='+keys.sort+'&order='+keys.order;
 		});
-		//searchInput.addEventListener('keyup', function(event) {
-			//if (searchInput.value.length > 0 && window.location.hash !== searchInput.value) {
-			//window.location.hash = '#search='+searchInput.value;
-			//}
-		//});
 		var table = document.createElement('table');
 		var colgroup = document.createElement('colgroup');
 		var col1 = document.createElement('col');
@@ -115,8 +97,8 @@
 		//th5.setAttribute('name', 'comment');
 
 		th1.innerHTML = 'file';
-		th2.innerHTML = conf.file_size;
-		th3.innerHTML = conf.file_mtime;
+		th2.innerHTML = 'size';
+		th3.innerHTML = 'time';
 		th4.innerHTML = 'sync';
 		//th5.innerHTML = 'comment';
 		//var a1 = document.createElement('a');
