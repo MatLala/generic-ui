@@ -207,6 +207,7 @@
 				let site_name = sync.replace('synced_', '');
 				let time = '';
 				var span= document.createElement('span');
+				td4.appendChild(span);
 				span.innerHTML = '&nbsp;';
 				//progress.classList.add('synced', 'origin: '+asset.origin+'\n');
 				//span.setAttribute('title', sync);
@@ -215,9 +216,6 @@
 					time = human_time(new Date(parseInt(asset[sync])));
 					title += time + ' ' + site_name+ '\n';
 				}
-				else {
-					title += '--/--/-- --:--:-- ' + site_name+ '\n';
-				}
 				if (asset.origin === sync.replace('synced_', '') ) {
 					//span.style.backgroundColor = 'lightgreen';
 					span.classList.add('synced');
@@ -225,8 +223,11 @@
 					span.innerHTML = 'o';
 					time = human_time(new Date(parseInt(asset.time)));
 					title += time + ' ' + site_name + ' (origin)\n';
+					continue;
 				}
-				td4.appendChild(span);
+				if (!asset.hasOwnProperty(sync)) {
+					title += '--/--/-- --:--:-- ' + site_name+ '\n';
+				}
 			}
 			td4.setAttribute('title', title );
 		}
