@@ -110,7 +110,7 @@
 		thead.appendChild(th3);
 
 		if (conf.syncKeys) {
-			var str_title = 'Sync: What is this?\nEach cell is a server:\n\n';
+			var str_title = 'Sync: What is this?\n\nEach cell is a server (from left to right):\n';
 			for (let sync of conf.syncKeys) {
 				str_title += sync.replace('synced_','')+'\n';
 			}
