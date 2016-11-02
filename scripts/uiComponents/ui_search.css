@@ -25,6 +25,9 @@ span.synced {
 span.notsynced {
 	background-color: #e0e0e0;
 }
+span.synced.outdated {
+	background-color: #ece700;
+}
 /*
     height: 24px;
     background-color: #fff;

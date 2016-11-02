@@ -225,6 +225,9 @@
 					title += time + ' ' + site_name + ' (origin)\n';
 					continue;
 				}
+				if (asset[sync] < asset.synced_online) {
+					span.classList.add('outdated');
+				}
 				if (!asset.hasOwnProperty(sync)) {
 					title += '--/--/-- --:--:-- ' + site_name+ '\n';
 				}
