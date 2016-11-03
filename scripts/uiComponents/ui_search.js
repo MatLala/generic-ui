@@ -114,7 +114,7 @@
 			for (let sync of conf.syncKeys) {
 				str_title += sync.replace('synced_','')+'\n';
 			}
-			str_title += '\ngray: the file is not synced on this server\ngreen: the file was synced on this server\no: this server is the file origin';
+			str_title += '\ngray: the file is not synced on this server\ngreen: the file was synced on this server\nyellow: the file is outdated on this server\no: this server is the file origin';
 			th4.setAttribute('title',str_title);
 			thead.appendChild(th4);
 		}
@@ -203,6 +203,7 @@
 
 		if (conf.syncKeys) {
 			let title = '';
+			let ref_time = asset.time;
 			for (let sync of conf.syncKeys) {
 				let site_name = sync.replace('synced_', '');
 				let time = '';
@@ -211,24 +212,31 @@
 				span.innerHTML = '&nbsp;';
 				//progress.classList.add('synced', 'origin: '+asset.origin+'\n');
 				//span.setAttribute('title', sync);
-				span.classList.add((asset.hasOwnProperty(sync))?'synced':'notsynced');
-				if (asset.hasOwnProperty(sync)) {
+				//span.classList.add((asset.hasOwnProperty(sync))?'synced':'notsynced');
+				var is_origin = asset.origin === sync.replace('synced_', '');
+				if (asset.hasOwnProperty(sync) && !is_origin) {
 					time = human_time(new Date(parseInt(asset[sync])));
 					title += time + ' ' + site_name+ '\n';
 				}
-				if (asset.origin === sync.replace('synced_', '') ) {
+				if (is_origin) {
 					//span.style.backgroundColor = 'lightgreen';
-					span.classList.add('synced');
-					span.classList.remove('notsynced');
+					//span.classList.add('synced');
+					//span.classList.remove('notsynced');
 					span.innerHTML = 'o';
 					time = human_time(new Date(parseInt(asset.time)));
 					title += time + ' ' + site_name + ' (origin)\n';
-					continue;
+					//continue;
 				}
-				if (asset[sync] < asset.synced_online) {
+				if (is_origin || asset.hasOwnProperty(sync)) {
+					span.classList.add('synced');
+				}
+				else {
+					span.classList.add('notsynced');
+				}
+				if (!is_origin && (asset[sync] < asset.time)) {
 					span.classList.add('outdated');
 				}
-				if (!asset.hasOwnProperty(sync)) {
+				if (!is_origin && !asset.hasOwnProperty(sync)) {
 					title += '--/--/-- --:--:-- ' + site_name+ '\n';
 				}
 			}
