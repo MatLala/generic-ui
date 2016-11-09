@@ -53,7 +53,9 @@
 		var query = {};
 		query[conf.file_path] = 'REGEX_'+keys.search;
 		damas.search_mongo(query, sort, search_ui.nbElements, search_ui.offsetElements, function(res){
-			damas.read(res, function(assets){
+			var searchInfo = document.querySelector('span#searchInfo');
+			searchInfo.innerHTML = '&nbsp;'+res.count+' results';
+			damas.read(res.ids, function(assets){
 				var tableBody = document.querySelector('#contents tbody');
 				fill(tableBody, assets);
 				search_ui.offsetElements += search_ui.nbElements;
@@ -72,6 +74,10 @@
 			var keys = getHash();
 			window.location.hash = 'search='+searchInput.value+((keys.sort)?'&sort='+keys.sort:'')+((keys.order)?'&order='+keys.order:'');
 		});
+		var searchInfo = document.createElement('span');
+		searchInfo.setAttribute('id', 'searchInfo');
+		container.appendChild(searchInfo);
+
 		var table = document.createElement('table');
 		var colgroup = document.createElement('colgroup');
 		var col1 = document.createElement('col');
@@ -191,7 +197,7 @@
 
 		td3.addEventListener('click', function(e){
 			damas.search_mongo({'#parent': asset._id}, {"file_mtime":1},100, 0, function(res){
-				damas.read(res, function(children){
+				damas.read(res.ids, function(children){
 					for (var i=0; i<children.length; i++) {
 						var newTr = searchtr(children[i]);
 						newTr.classList.add('history');
