@@ -56,8 +56,8 @@
 			var searchInfo = document.querySelector('span#searchInfo');
 			searchInfo.innerHTML = '&nbsp;'+res.count+' results';
 			damas.read(res.ids, function(assets){
-				var tableBody = document.querySelector('#contents tbody');
-				fill(tableBody, assets);
+				var table = document.querySelector('#contents table');
+				fill(table, assets);
 				search_ui.offsetElements += search_ui.nbElements;
 			});
 		});
@@ -92,7 +92,6 @@
 		var th3 = document.createElement('th');
 		var th4 = document.createElement('th');
 		var th5 = document.createElement('th');
-		var tbody = document.createElement('tbody');
 
 		table.className = 'search';
 
@@ -135,7 +134,6 @@
 		colgroup.appendChild(col6);
 		table.appendChild(colgroup);
 		table.appendChild(thead);
-		table.appendChild(tbody);
 		container.appendChild(table);
 
 		var keys = getHash();
@@ -165,11 +163,17 @@
 	 */
 	function fill(container, assets) {
 		for (var i=0; i<assets.length; i++) {
-			container.appendChild(tr(assets[i]));
+			container.appendChild(tablebody(assets[i]));
 		}
 	}
 
-	function tr(asset) {
+	function tablebody(asset) {
+		var tbody = document.createElement('tbody');
+		tbody.appendChild(tablerow(asset));
+		return tbody;
+	}
+
+	function tablerow(asset) {
 		var tr = document.createElement('tr');
 		var td1 = document.createElement('td');
 		var td2 = document.createElement('td');
@@ -196,7 +200,7 @@
 		//td5.innerHTML = asset.comment || '';
 
 		td3.addEventListener('click', function(e){
-			damas.search_mongo({'#parent': asset._id}, {"file_mtime":1},100, 0, function(res){
+			damas.search_mongo({'#parent': asset._id}, {"file_mtime":1},1000, 0, function(res){
 				damas.read(res.ids, function(children){
 					for (var i=0; i<children.length; i++) {
 						var newTr = searchtr(children[i]);
@@ -276,7 +280,7 @@
 	}
 
 	// to find the method from eventlistener
-	window.searchtr = tr;
+	window.searchtr = tablerow;
 
 }));
 
