@@ -92,6 +92,7 @@
 		var th3 = document.createElement('th');
 		var th4 = document.createElement('th');
 		var th5 = document.createElement('th');
+		var th6 = document.createElement('th');
 
 		table.className = 'search';
 
@@ -99,13 +100,13 @@
 		th2.setAttribute('name', conf.file_size);
 		th3.setAttribute('name', conf.file_mtime);
 		th4.setAttribute('name', 'sync');
-		//th5.setAttribute('name', 'comment');
+		th5.setAttribute('name', 'sync_priority');
 
 		th1.innerHTML = 'file';
 		th2.innerHTML = 'size';
 		th3.innerHTML = 'time';
 		th4.innerHTML = 'sync';
-		//th5.innerHTML = 'comment';
+		th5.innerHTML = 'priority';
 		//var a1 = document.createElement('a');
 		//a1.setAttribute('href', 'search='+keys.search+'&sort='+this.getAttribute('name')+'&order='+ (-order) );
 		//th1.appendChild(a1);
@@ -179,13 +180,13 @@
 		var td2 = document.createElement('td');
 		var td3 = document.createElement('td');
 		var td4 = document.createElement('td');
-		//var td5 = document.createElement('td');
+		var td5 = document.createElement('td');
 		var td6 = document.createElement('td');
 		td1.classList.add('file');
 		td2.classList.add('size');
 		td3.classList.add('time');
 		td4.classList.add('sync');
-		//td5.classList.add('comment');
+		td5.classList.add('priority');
 		td6.classList.add('buttons');
 		tr.setAttribute('title', JSON_tooltip(asset));
 		td4.setAttribute('title', asset.comment);
@@ -251,6 +252,35 @@
 				}
 			}
 			td4.setAttribute('title', title );
+
+			function conv_priority( val, out)
+			{
+
+			switch (val) {
+				case 0:
+				case undefined:
+					out.innerHTML = 'normal';
+					break;
+				case 1:
+					out.innerHTML = 'high';
+					break;
+				case 2:
+					out.innerHTML = 'very high';
+					break;
+				default:
+					out.innerHTML = asset.sync_priority;
+			}
+			}
+			conv_priority(asset.sync_priority, td5);
+		td5.addEventListener('click', function(e){
+			var value = prompt('Set sync priority for '+asset._id+'\nVery high = 2\nHigh = 1\nNormal = 0\nLow = -1\nVery low = -2', asset.sync_priority || 0);
+			if (value !== null) {
+				asset.sync_priority = parseInt(value);
+				damas.update(asset, function(){
+					conv_priority(parseInt(value), e.target);
+				});
+			}
+		});
 		}
 
 		var td6span = document.createElement('span');
@@ -269,7 +299,7 @@
 		tr.appendChild(td2);
 		tr.appendChild(td3);
 		tr.appendChild(td4);
-		//tr.appendChild(td5);
+		tr.appendChild(td5);
 		tr.appendChild(td6);
 		if (require.specified('ui_editor')){
 			tr.addEventListener('click', function(){

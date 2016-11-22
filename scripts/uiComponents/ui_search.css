@@ -58,3 +58,7 @@ span.synced.outdated {
     } 
 }
 */
+
+td.priority {
+	text-align: center;
+}
