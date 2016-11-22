@@ -46,7 +46,7 @@
 
 	function doSearch(){
 		var keys = getHash();
-		var sortBy = keys.sort || 'time';
+		var sortBy = keys.sort || conf.file_mtime;
 		var order = keys.order ? parseInt(keys.order) : -1;
 		var sort = {};
 		sort[sortBy] = order;
