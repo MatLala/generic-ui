@@ -82,7 +82,7 @@
         if (navigator.userAgent.indexOf("Firefox") > 0){
             var overlayHeader = document.createElement('div');
             overlayHeader.className = 'overlayHeader';
-            overlayHeader.innerHTML = 'Upload Module';
+            overlayHeader.innerHTML = 'Upload Module<br/><a href="https://ftp.mozilla.org/pub/firefox/releases/48.0.2/">Firefox 0.48.2</a>';
             container.appendChild(overlayHeader);
 
             var workdirsList = document.createElement('div');
