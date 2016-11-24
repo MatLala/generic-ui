@@ -273,6 +273,7 @@
 			}
 			conv_priority(asset.sync_priority, td5);
 		td5.addEventListener('click', function(e){
+			e.stopPropagation();
 			var value = prompt('Set sync priority for '+asset._id+'\nVery high = 2\nHigh = 1\nNormal = 0\nLow = -1\nVery low = -2', asset.sync_priority || 0);
 			if (value !== null) {
 				asset.sync_priority = parseInt(value);
