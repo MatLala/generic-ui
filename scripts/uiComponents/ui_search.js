@@ -117,7 +117,7 @@
 
 		if (conf.syncKeys) {
 			var str_title = 'Sync: What is this?\n\nEach cell is a server (from left to right):\n';
-			for (let sync of conf.syncKeys) {
+			for (var sync of conf.syncKeys) {
 				str_title += sync.replace('synced_','')+'\n';
 			}
 			str_title += '\ngray: the file is not synced on this server\ngreen: the file was synced on this server\nyellow: the file is outdated on this server\no: this server is the file origin';
@@ -213,11 +213,11 @@
 		})
 
 		if (conf.syncKeys) {
-			let title = '';
-			let ref_time = asset.time;
-			for (let sync of conf.syncKeys) {
-				let site_name = sync.replace('synced_', '');
-				let time = '';
+			var title = '';
+			var ref_time = asset.time;
+			for (var sync of conf.syncKeys) {
+				var site_name = sync.replace('synced_', '');
+				var time = '';
 				var span= document.createElement('span');
 				td4.appendChild(span);
 				span.innerHTML = '&nbsp;';
