@@ -11,7 +11,8 @@
 	loadCss('generic-ui/scripts/uiComponents/ui_search.css');
 
 	window.addEventListener('hashchange', function(event){
-		hashSearch();
+		if(window.processHash)
+			hashSearch();
 	});
 
 	var search_ui = { nbElements: 100 };
@@ -22,7 +23,9 @@
 				// SEARCH RESULT MODE
 				hashSearch();
 			}
-			document.querySelector('#panelPrincipal').addEventListener('scroll', function(event){
+
+			var scrollElem = document.getElementById('layer0');
+			scrollElem.addEventListener('scroll', function(event){
 				if (/#search=/.test(location.hash)) {
 					var container = event.target;
 					if (container.scrollHeight - container.scrollTop === container.clientHeight){
@@ -51,7 +54,11 @@
 		var sort = {};
 		sort[sortBy] = order;
 		var query = {};
-		query[conf.file_path] = 'REGEX_'+keys.search;
+		try {
+			query = JSON.parse(decodeURIComponent(keys.search));
+		} catch (e) {
+			query[conf.file_path] = 'REGEX_'+decodeURIComponent(keys.search);
+		}
 		damas.search_mongo(query, sort, search_ui.nbElements, search_ui.offsetElements, function(res){
 			var searchInfo = document.querySelector('span#searchInfo');
 			searchInfo.innerHTML = '&nbsp;'+res.count+' results';
@@ -67,7 +74,7 @@
 		var searchInput = document.createElement('input');
 		searchInput.className = 'searchInput';
 		searchInput.setAttribute('placeholder', 'Search');
-		searchInput.value = getHash().search;
+		searchInput.value = decodeURIComponent(getHash().search);
 		searchInput.focus();
 		container.appendChild(searchInput);
 		searchInput.addEventListener('change', function(event) {
@@ -196,7 +203,7 @@
 		//tr.file = file;
 
 		td2.innerHTML = human_size( asset.file_size || asset.bytes || asset.size || asset.source_size);
-		td3.innerHTML = human_time(time);
+		td3.innerHTML = html_time(time);
 		//td4.innerHTML = asset.author;
 		//td5.innerHTML = asset.comment || '';
 
@@ -274,7 +281,7 @@
 			conv_priority(asset.sync_priority, td5);
 		td5.addEventListener('click', function(e){
 			e.stopPropagation();
-			var value = prompt('Set sync priority for '+asset._id+'\nVery high = 2\nHigh = 1\nNormal = 0\nLow = -1\nVery low = -2', asset.sync_priority || 0);
+			var value = prompt('Set sync priority for '+asset._id+'\n\nHigh = 1\nNormal = 0\nLow = -1\n\n', asset.sync_priority || 0);
 			if (value !== null) {
 				asset.sync_priority = parseInt(value);
 				damas.update(asset, function(){
