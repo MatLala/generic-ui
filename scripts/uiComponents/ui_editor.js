@@ -1,95 +1,70 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
-		// AMD. Register as an anonymous module.
-		define([], factory);
-	} else {
-		// Browser globals
-		root.compEditor = factory();
-	}
+        // AMD. Register as an anonymous module.
+        define([], factory);
+    } else {
+        // Browser globals
+        root.compEditor = factory();
+    }
 }(this, function () {
     loadCss('generic-ui/scripts/uiComponents/ui_editor.css');
     
-    /**
-    * HTML rendering methods for UI Components inside Layout
-    * require damas.js
-    * call by global initEditor function in ui_log.js and ui_search.js
-    */
     function initEditor(node) {
-        node = damas.read(node._id);
-        if (!document.querySelector('#panelSecond')) {
-            compEditor(createPanel(document.body), node);
-        }
-        else {
-            compEditor(document.querySelector('#panelContent'), node);
-        }
+		document.querySelector('#layer0SidePanel').style.minWidth = '50ex';
+        damas.read(node._id, function(node){
+            if (!document.querySelector('#panelSecond')) {
+                draw(document.querySelector('#layer0SidePanel'), node);
+            }
+            refresh( document.querySelector('#panelSecond'), node);
+        });
     };
- 
-	function createPanel(container){
-		var panel = document.createElement('div');
-		panel.id = 'panelSecond';
-		var panelContent = document.createElement('div');
-		panelContent.id = 'panelContent';
-		var panelClose = document.createElement('div');
-//		panelClose.className = 'fa fa-close btCloseP clickable';
+
+    draw = function (container, node) {
+        var panel = document.createElement('div');
+        var panelContent = document.createElement('div');
+        var panelClose = document.createElement('div');
+        var editorTitle = document.createElement('div');
+        var editorContent = document.createElement('div');
+        var form = document.createElement('div');
+        var area = document.createElement('textarea');
+        var updateBt = document.createElement('button');
+        var bts = document.createElement('div');
+
+        panel.appendChild(panelClose);
+        panel.appendChild(panelContent);
+        container.appendChild(panel);
+        form.appendChild(area);
+        form.appendChild(bts);
+        bts.appendChild(updateBt);
+        panelContent.appendChild(editorTitle);
+        panelContent.appendChild(editorContent);
+        editorContent.appendChild(form);
+
+        area.name = 'editor';
+        panel.id = 'panelSecond';
+        panelContent.id = 'panelContent';
+        //panelClose.className = 'fa fa-close btCloseP clickable';
         panelClose.className = 'btCloseP clickable';
-	    panelClose.innerHTML = 'X';
-        
+        form.className = 'editorBox';
+        editorTitle.className = 'editorTitle menubar';
+        editorContent.id = 'editorContent';
+        editorContent.className = 'editorContent';
+
+        panelClose.innerHTML = 'X';
         panelClose.addEventListener('click', function(e){
+            container.style.width = '0';
+            container.style.minWidth = '0';
             panel.remove();
             if (document.querySelector('tr.selected')){
                 document.querySelector('tr.selected').classList.remove('selected');
             }
         }, false);
 
-		panel.appendChild(panelClose);
-		panel.appendChild(panelContent);
-
-		container.appendChild(panel);
-		return panelContent;
-	};
-
-    /**
-    * Generate Component : Editor
-    * 
-    */
-    compEditor = function(container, node){
-        container.innerHTML = '';
-        var editorTitle = document.createElement('div');
-        editorTitle.className = 'editorTitle';
         editorTitle.innerHTML = 'JSON Editor';
-
-        var editorContent = document.createElement('div');
-        editorContent.id = 'editorContent';
-        editorContent.className = 'editorContent';
-
-        var area = document.createElement('textarea');
-        area.name = 'editor';
-		var text = JSON.stringify(node);
-		text = text.replace(/,/g, ',\n');
-		text = text.replace('{', '{\n');
-		text = text.replace('}', '\n}');
-
-/*
-        var keys = Object.keys(node).sort();
-        var text = '{\n';
-        for (i = 0; i < keys.length ; i++){
-            text += '"'+ keys[i] +'":"' + node[keys[i]] +'"';
-            if (i !== keys.length - 1) {
-                text += ',\n';
-            }
-            else {
-                text += '\n}';
-            }
-        }
-*/
-        area.innerHTML = text;
-
-        var updateBt = document.createElement('button');
         updateBt.innerHTML = 'Update';
         updateBt.setAttribute('disabled', 'disabled');
-
-        var form = document.createElement('div');
-        form.className = 'editorBox';
+        bts.style.textAlign = 'right';
+        UI_resize_all();
 
         area.addEventListener('keyup', function(e){
             var updateN;
@@ -122,30 +97,34 @@
                     return;
                 }
                 else {
-                    compEditor(document.querySelector('#panelContent'), res);
+                    refresh(form, res);
                     return;
                 }
             });
             return false;
         });
         
-        var bts = document.createElement('div');
-        bts.style.textAlign = 'right';
-
-        form.appendChild(area);
-        form.appendChild(bts);
-        bts.appendChild(updateBt);
-        container.appendChild(editorTitle);
-        container.appendChild(editorContent);
-        
-        editorContent.appendChild(form);
-
-        area.style.height = window.innerHeight - (editorTitle.offsetHeight + bts.offsetHeight) +'px';
+        area.style.height = window.innerHeight - document.querySelector('#layer0menu').clientHeight -  (editorTitle.offsetHeight + bts.offsetHeight) +'px';
         window.addEventListener('resize', function(event){
-            area.style.height = window.innerHeight - (editorTitle.offsetHeight + bts.offsetHeight) +'px';
+            area.style.height = window.innerHeight - document.querySelector('#layer0menu').clientHeight -  (editorTitle.offsetHeight + bts.offsetHeight) +'px';
+            //area.style.height = container.parentNode.clientHeight - (editorTitle.offsetHeight + bts.offsetHeight) -100 +'px';
         });
     };
-    
+
+    refresh = function( editor_div, node ) {
+        console.log(editor_div);
+        var text = JSON.stringify(node);
+        text = text.replace('{', '{\n');
+        text = text.replace('}', '\n}');
+        text = text.replace(/:/g, ':\n');
+        text = text.replace(/,/g, ',\n\n');
+        var area = editor_div.querySelector('textarea');
+        var updateBt = editor_div.querySelector('button');
+        area.value = text;
+        updateBt.innerHTML = 'Update';
+        updateBt.setAttribute('disabled', 'disabled');
+    };
+
     function compareObjects(a, b) {
         if (Object.keys(a).length !== Object.keys(b).length) {
             return false;
