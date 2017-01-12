@@ -71,6 +71,32 @@
 	}
 
 	function draw( container ) {
+		var br1 = document.createElement('br');
+		var searchShortcuts = document.createElement('div');
+		container.appendChild(br1);
+		container.appendChild(searchShortcuts);
+		searchShortcuts.innerHTML = 'shortcuts: ';
+		searchShortcuts.style.textAlign = 'right';
+		var a0 = document.createElement('a');
+		var a1 = document.createElement('a');
+		var a2 = document.createElement('a');
+		var a3 = document.createElement('a');
+		a0.href='#search=';
+		a0.innerHTML = 'all';
+		a1.href='#search={"deleted":true}&sort='+conf.file_path+'&order=1';
+		a1.innerHTML = 'deleted';
+		a2.href='#search={"'+conf.file_path+'":"REGEX_/","origin":{"$ne":"online"},"synced_online":{"$exists":false},"online":"1"}&sort='+conf.file_path+'&order=1';
+		a2.innerHTML = 'announced';
+		//a3.innerHTML = 'locks';
+		//a3.href = '#search={"lock":{"$exists":true}}&sort=lock&order=1';
+		searchShortcuts.appendChild(a0);
+		searchShortcuts.innerHTML += ' ';
+		searchShortcuts.appendChild(a1);
+		searchShortcuts.innerHTML += ' ';
+		searchShortcuts.appendChild(a2);
+		//searchShortcuts.innerHTML += ' ';
+		//searchShortcuts.appendChild(a3);
+
 		var searchInput = document.createElement('input');
 		searchInput.className = 'searchInput';
 		searchInput.setAttribute('placeholder', 'Search');
@@ -84,6 +110,7 @@
 		var searchInfo = document.createElement('span');
 		searchInfo.setAttribute('id', 'searchInfo');
 		container.appendChild(searchInfo);
+
 
 		var table = document.createElement('table');
 		var colgroup = document.createElement('colgroup');
