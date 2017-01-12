@@ -85,7 +85,7 @@
 		a0.innerHTML = 'all';
 		a1.href='#search={"deleted":true}&sort='+conf.file_path+'&order=1';
 		a1.innerHTML = 'deleted';
-		a2.href='#search={"'+conf.file_path+'":"REGEX_/","origin":{"$ne":"online"},"synced_online":{"$exists":false},"online":"1"}&sort='+conf.file_path+'&order=1';
+		a2.href='#search={"'+conf.file_path+'":"REGEX_/","origin":{"$exists":true,"$ne":"online"},"synced_online":{"$exists":false},"online":"1"}&sort='+conf.file_path+'&order=1';
 		a2.innerHTML = 'announced';
 		//a3.innerHTML = 'locks';
 		//a3.href = '#search={"lock":{"$exists":true}}&sort=lock&order=1';
