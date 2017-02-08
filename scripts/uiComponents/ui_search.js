@@ -62,11 +62,13 @@
 		damas.search_mongo(query, sort, search_ui.nbElements, search_ui.offsetElements, function(res){
 			var searchInfo = document.querySelector('span#searchInfo');
 			searchInfo.innerHTML = '&nbsp;'+res.count+' results';
-			damas.read(res.ids, function(assets){
-				var table = document.querySelector('#contents table');
-				fill(table, assets);
-				search_ui.offsetElements += search_ui.nbElements;
-			});
+			if (res.count > 0) {
+				damas.read(res.ids, function(assets){
+					var table = document.querySelector('#contents table');
+					fill(table, assets);
+					search_ui.offsetElements += search_ui.nbElements;
+				});
+			}
 		});
 	}
 
