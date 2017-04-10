@@ -19,6 +19,9 @@ span.synced,
 span.notsynced {
 	margin: 0 1px
 }
+span.sync_error {
+	background-color: #e7acac;
+}
 span.synced {
 	background-color: #ace7ac;
 }
