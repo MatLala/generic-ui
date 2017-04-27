@@ -295,6 +295,10 @@
 				}
 			}
 			td4.setAttribute('title', title );
+			if (asset.sync_disabled === true) {
+				td4.style.textDecoration = 'line-through';
+				td5.style.textDecoration = 'line-through';
+			}
 
 			function conv_priority( val, out)
 			{
