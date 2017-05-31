@@ -10,14 +10,24 @@
     loadCss('generic-ui/scripts/uiComponents/ui_editor.css');
     
     function initEditor(node) {
-		document.querySelector('#layer0SidePanel').style.minWidth = '50ex';
-        damas.read(node._id, function(node){
-            if (!document.querySelector('#panelSecond')) {
-                draw(document.querySelector('#layer0SidePanel'), node);
-            }
-            refresh( document.querySelector('#panelSecond'), node);
+        damas.read( node._id, function(node){
+            initEditorText(JSON.stringify(node));
         });
     };
+
+    function initEditorText(text)
+    {
+        document.querySelector('#layer0SidePanel').style.minWidth = '50ex';
+        if (!document.querySelector('#panelSecond')) {
+            draw(document.querySelector('#layer0SidePanel'), JSON.parse(text));
+        }
+        var d = document.querySelector('#panelSecond');
+        var t = d.querySelector('textarea');
+        var b = d.querySelector('button');
+        update( t, text);
+        b.setAttribute('disabled', 'disabled');
+    };
+
 
     draw = function (container, node) {
         var panel = document.createElement('div');
@@ -61,25 +71,13 @@
         }, false);
 
         editorTitle.innerHTML = 'JSON Editor';
-        updateBt.innerHTML = 'Update';
+        updateBt.innerHTML = 'Send';
         updateBt.setAttribute('disabled', 'disabled');
         bts.style.textAlign = 'right';
         UI_resize_all();
 
         area.addEventListener('keyup', function(e){
-            var updateN;
-            try {
-                updateN = JSON.parse(area.value);
-                if (!compareObjects(node, updateN)){
-                    updateBt.removeAttribute('disabled');
-                }
-                else {
-                    updateBt.setAttribute('disabled', 'disabled');
-                }
-            } catch (e) {
-                updateBt.setAttribute('disabled', 'disabled');
-                return;
-            }
+            check(area, updateBt, node);
         });
 
         updateBt.addEventListener('click', function(event) {
@@ -89,15 +87,16 @@
             spin.classList.add('spinCss');
             event.target.innerHTML = '';
             event.target.appendChild(spin);
-            damas.update(updateN, function(res) {
+            damas.upsert(updateN, function(res) {
                 if (!res) {
-                    event.target.innerHTML = 'Update';
+                    event.target.innerHTML = 'Send';
                     //updateBt.setAttribute('disabled', 'disabled');
-                    alert("damas.update failed");
+                    alert("damas.upsert failed");
                     return;
                 }
                 else {
-                    refresh(form, res);
+                    update(area, JSON.stringify(res));
+                    check(area, updateBt, res);
                     return;
                 }
             });
@@ -111,21 +110,39 @@
         });
     };
 
-    refresh = function( editor_div, node ) {
-        console.log(editor_div);
-        var text = JSON.stringify(node);
-        text = text.replace('{', '{\n');
-        text = text.replace('}', '\n}');
-        text = text.replace(/:/g, ':\n');
-        text = text.replace(/,/g, ',\n\n');
-        var area = editor_div.querySelector('textarea');
-        var updateBt = editor_div.querySelector('button');
-        area.value = text;
-        updateBt.innerHTML = 'Update';
-        updateBt.setAttribute('disabled', 'disabled');
+    update = function( area, text ) {
+        try {
+            var obj = JSON.parse(text);
+            text = text.replace('{', '{\n');
+            text = text.replace('}', '\n}');
+            text = text.replace(/:/g, ':\n');
+            text = text.replace(/,/g, ',\n\n');
+            area.value = text;
+            return true;
+        } catch (e) {
+                area.value = text;
+                return e;
+        }
     };
 
-    function compareObjects(a, b) {
+    check = function( area, button, node ) {
+        button.innerHTML = 'Send';
+        button.title = '';
+        button.setAttribute('disabled', 'disabled');
+        var obj;
+        try {
+            obj = JSON.parse(area.value);
+        } catch (e) {
+            button.innerHTML = e.name;
+            button.title = e.message;
+            return;
+        }
+        if (!same(node, obj)){
+            button.removeAttribute('disabled');
+        }
+    };
+
+    function same(a, b) {
         if (Object.keys(a).length !== Object.keys(b).length) {
             return false;
         }
