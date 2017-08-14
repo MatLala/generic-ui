@@ -14,21 +14,31 @@
     border: 1px solid #d4d4d4;
 }
 
-
-span.synced,
-span.notsynced {
-	margin: 0 1px
+table.search {
+margin-top: 4em;
 }
-span.sync_error {
+
+table.search td.file {
+	cursor: pointer;
+}
+
+td.sync {
+	text-align: center;
+	cursor: default;
+}
+td.sync span {
+	margin: 0 1px;
+}
+.sync_error {
 	background-color: #e7acac;
 }
-span.synced {
+.synced {
 	background-color: #ace7ac;
 }
-span.notsynced {
+.notsynced {
 	background-color: #e0e0e0;
 }
-span.synced.outdated {
+.synced.outdated {
 	background-color: #ece700;
 }
 /*

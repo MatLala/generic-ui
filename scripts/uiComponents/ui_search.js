@@ -83,23 +83,27 @@
 		searchShortcuts.style.textAlign = 'right';
 		var a0 = document.createElement('a');
 		var a1 = document.createElement('a');
-		var a2 = document.createElement('a');
+		//var a2 = document.createElement('a');
 		var a3 = document.createElement('a');
+		a0.innerHTML = 'latest';
 		a0.href='#search=';
-		a0.innerHTML = 'all';
-		a1.href='#search={"deleted":true}&sort='+conf.file_path+'&order=1';
 		a1.innerHTML = 'deleted';
-		a2.href='#search={"'+conf.file_path+'":"REGEX_/","origin":{"$exists":true,"$ne":"online"},"synced_online":{"$exists":false},"online":"1"}&sort='+conf.file_path+'&order=1';
-		a2.innerHTML = 'announced';
+		a1.href='#search={"deleted":true}&sort='+conf.file_path+'&order=1';
+		//a2.innerHTML = 'announced';
+		//a2.href='#search={"'+conf.file_path+'":"REGEX_/","origin":{"$exists":true,"$ne":"online"},"synced_online":{"$exists":false},"online":"1"}&sort='+conf.file_path+'&order=1';
+		a3.innerHTML = 'errors';
+		//a3.href = '#search={"sync_error":{"$exists":true}}';
+		a3.href = '#search={"sync_error":{"$exists":true}, "sync_disabled":{"$exists":false},"deleted":{"$ne":true}}';
+		searchShortcuts.appendChild(a0);
 		//a3.innerHTML = 'locks';
 		//a3.href = '#search={"lock":{"$exists":true}}&sort=lock&order=1';
 		searchShortcuts.appendChild(a0);
 		searchShortcuts.innerHTML += ' ';
 		searchShortcuts.appendChild(a1);
 		searchShortcuts.innerHTML += ' ';
-		searchShortcuts.appendChild(a2);
+		//searchShortcuts.appendChild(a2);
 		//searchShortcuts.innerHTML += ' ';
-		//searchShortcuts.appendChild(a3);
+		searchShortcuts.appendChild(a3);
 
 		var searchInput = document.createElement('input');
 		searchInput.className = 'searchInput';
@@ -128,30 +132,48 @@
 		var th1 = document.createElement('th');
 		var th2 = document.createElement('th');
 		var th3 = document.createElement('th');
-		var th4 = document.createElement('th');
+		//var th4 = document.createElement('th');
 		var th5 = document.createElement('th');
 		var th6 = document.createElement('th');
 
 		table.className = 'search';
 
+
 		th1.setAttribute('name', conf.file_path);
 		th2.setAttribute('name', conf.file_size);
 		th3.setAttribute('name', conf.file_mtime);
-		th4.setAttribute('name', 'sync');
+		//th4.setAttribute('name', 'sync');
 		th5.setAttribute('name', 'sync_priority');
 
-		th1.innerHTML = 'file';
-		th2.innerHTML = 'size';
-		th3.innerHTML = 'time';
-		th4.innerHTML = 'sync';
-		th5.innerHTML = 'priority';
-		//var a1 = document.createElement('a');
-		//a1.setAttribute('href', 'search='+keys.search+'&sort='+this.getAttribute('name')+'&order='+ (-order) );
-		//th1.appendChild(a1);
+		th1.innerHTML = 'file<br/>name';
+		th2.innerHTML = 'file<br/>size';
+		th3.innerHTML = 'file<br/>time';
 
 		thead.appendChild(th1);
 		thead.appendChild(th2);
 		thead.appendChild(th3);
+
+			for (var sync of conf.syncKeys) {
+				var th = document.createElement('th');
+				thead.appendChild(th);
+				th.classList.add('sync');
+				th.innerHTML = sync.replace('synced_','');
+				th.style.transform = 'rotate(-45deg)';
+				th.style.transformOrigin = '50% 70%';
+				th.style.height = '1ex';
+				th.style.maxWidth = '1ex';
+				//th.style.overflow = 'hidden';
+				th.style.textAlign = 'left';
+			}
+
+		//th4.innerHTML = 'sync'+conf.syncKeys.join('<br/>');
+		//th4.style.transform = 'rotate(-45deg)';
+		//th4.style.textAlign = 'left';
+		th5.innerHTML = 'sync<br/>priority';
+		//var a1 = document.createElement('a');
+		//a1.setAttribute('href', 'search='+keys.search+'&sort='+this.getAttribute('name')+'&order='+ (-order) );
+		//th1.appendChild(a1);
+
 
 		if (conf.syncKeys) {
 			var str_title = 'Sync: What is this?\n\nEach cell is a server (from left to right):\n';
@@ -159,8 +181,8 @@
 				str_title += sync.replace('synced_','')+'\n';
 			}
 			str_title += '\ngray: the file is not synced on this server\ngreen: the file was synced on this server\nyellow: the file is outdated on this server\no: this server is the file origin';
-			th4.setAttribute('title',str_title);
-			thead.appendChild(th4);
+			//th4.setAttribute('title',str_title);
+			//thead.appendChild(th4);
 		}
 
 		thead.appendChild(th5);
@@ -183,7 +205,7 @@
 			var order = (keys.order)? keys.order: 1;
 			icon.innerHTML = (order==='1')? '&dtrif;' : '&utrif;';
 			th.innerHTML += ' ';
-			th.appendChild(icon);
+			th.insertBefore(icon, th.childNodes[0]);
 		}
 
 		for (var i=0; i < thead.children.length; i++){
@@ -217,17 +239,17 @@
 		var td1 = document.createElement('td');
 		var td2 = document.createElement('td');
 		var td3 = document.createElement('td');
-		var td4 = document.createElement('td');
+		//var td4 = document.createElement('td');
 		var td5 = document.createElement('td');
 		var td6 = document.createElement('td');
 		td1.classList.add('file');
 		td2.classList.add('size');
 		td3.classList.add('time');
-		td4.classList.add('sync');
+		//td4.classList.add('sync');
 		td5.classList.add('priority');
 		td6.classList.add('buttons');
 		tr.setAttribute('title', JSON_tooltip(asset));
-		td4.setAttribute('title', asset.comment);
+		//td4.setAttribute('title', asset.comment);
 
 		var time = new Date(parseInt(asset[conf.file_mtime]));
 		var file = asset[conf.file_path] || asset['#parent'];
@@ -250,22 +272,29 @@
 			})
 		})
 
+		tr.appendChild(td1);
+		tr.appendChild(td2);
+		tr.appendChild(td3);
 		if (conf.syncKeys) {
 			var title = '';
+			var titleLines = '';
 			var ref_time = asset.time;
-			for (var sync of conf.syncKeys) {
-				var site_name = sync.replace('synced_', '');
+			for (var syncKey of conf.syncKeys) {
+				var site_name = syncKey.replace('synced_', '');
+				var synced = asset.hasOwnProperty(syncKey);
 				var time = '';
-				var span= document.createElement('span');
-				td4.appendChild(span);
+				var span= document.createElement('td');
+				span.classList.add('sync');
+				tr.appendChild(span);
 				span.innerHTML = '&nbsp;';
 				//progress.classList.add('synced', 'origin: '+asset.origin+'\n');
 				//span.setAttribute('title', sync);
 				//span.classList.add((asset.hasOwnProperty(sync))?'synced':'notsynced');
-				var is_origin = asset.origin === sync.replace('synced_', '');
-				if (asset.hasOwnProperty(sync) && !is_origin) {
-					time = human_time(new Date(parseInt(asset[sync])));
-					title += time + ' ' + site_name+ '\n';
+				var is_origin = asset.origin === site_name;
+				if (synced && !is_origin) {
+					time = human_time(new Date(parseInt(asset[syncKey])));
+					title = time + ' ' + site_name+ '\n';
+					titleLines += time + ' ' + site_name+ '\n';
 				}
 				if (is_origin) {
 					//span.style.backgroundColor = 'lightgreen';
@@ -274,29 +303,70 @@
 					span.innerHTML = 'o';
 					if(asset.hasOwnProperty('sync_error')){
 						span.classList.add('sync_error');
+					} else {
+						span.classList.add('synced');
 					}
 					time = human_time(new Date(parseInt(asset.time)));
-					title += time + ' ' + site_name + ' (origin)\n';
+					title = time + ' ' + site_name + ' (origin)\n';
+					titleLines += time + ' ' + site_name + ' (origin)\n';
 					//continue;
+					span.addEventListener('click', function(e){
+						e.stopPropagation();
+						var synced_keys = [];
+						for (var key in asset){
+							if (0 === key.indexOf("synced_")){
+							    synced_keys.push(key);
+							}
+						}
+						if (true === confirm("reset "+synced_keys+" of "+asset._id+"?\n\nthis will make rsync will compare the file at destination again and update it if necessary")) {
+							new_asset = {};
+							new_asset._id = asset._id;
+							synced_keys.forEach(function(k){
+								new_asset[k] = null;
+							});
+							damas.update(new_asset, function(res){
+								if (res){
+									var tr = e.target.parentNode.parentNode;
+									tr.parentNode.replaceChild(tablerow(res),tr);
+								} else {
+									alert('No change was made.');
+								}
+
+							});
+
+						}
+					});
+					span.style.cursor='pointer';
+
 				}
-				if (is_origin || asset.hasOwnProperty(sync)) {
+				/*
+				if (is_origin || synced) {
 					if(!asset.hasOwnProperty('sync_error')){
 						span.classList.add('synced');
 					}
 				}
-				else {
-					span.classList.add('notsynced');
+				*/
+				if (synced) {
+						span.classList.add('synced');
 				}
-				if (!is_origin && (asset[sync] < asset.time)) {
+				else {
+					if (!is_origin){
+						span.classList.add('notsynced');
+					}
+				}
+				if (!is_origin && (asset[syncKey] < asset.time)) {
 					span.classList.add('outdated');
 				}
-				if (!is_origin && !asset.hasOwnProperty(sync)) {
-					title += '--/--/-- --:--:-- ' + site_name+ '\n';
+				if (!is_origin && !synced) {
+					title = '--/--/-- --:--:-- ' + site_name+ '\n';
+					titleLines += '--/--/-- --:--:-- ' + site_name+ '\n';
 				}
+			span.setAttribute('title', title );
+
 			}
-			td4.setAttribute('title', title );
+			td5.setAttribute('title', titleLines );
 			if (asset.sync_disabled === true) {
-				td4.style.textDecoration = 'line-through';
+				//td4.style.textDecoration = 'line-through';
 				td5.style.textDecoration = 'line-through';
 			}
 
@@ -304,15 +374,21 @@
 			{
 
 			switch (val) {
-				case 0:
-				case undefined:
-					out.innerHTML = 'normal';
+				case 2:
+					out.innerHTML = 'very high';
 					break;
 				case 1:
 					out.innerHTML = 'high';
 					break;
-				case 2:
-					out.innerHTML = 'very high';
+				case 0:
+				case undefined:
+					out.innerHTML = 'normal';
+					break;
+				case -1:
+					out.innerHTML = 'low';
+					break;
+				case -2:
+					out.innerHTML = 'very low';
 					break;
 				default:
 					out.innerHTML = asset.sync_priority;
@@ -354,10 +430,7 @@
 		else {
 			td1.appendChild( human_filename_href(file) );
 		}
-		tr.appendChild(td1);
-		tr.appendChild(td2);
-		tr.appendChild(td3);
-		tr.appendChild(td4);
+		//tr.appendChild(td4);
 		tr.appendChild(td5);
 		tr.appendChild(td6);
 		if (require.specified('ui_editor')){
