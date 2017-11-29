@@ -50,7 +50,7 @@
 
 	function doSearch(){
 		var keys = getHash();
-		var sortBy = keys.sort || conf.file_mtime;
+		var sortBy = keys.sort || 'time';
 		var order = keys.order ? parseInt(keys.order) : -1;
 		var sort = {};
 		sort[sortBy] = order;
@@ -83,7 +83,7 @@
 		searchShortcuts.style.textAlign = 'right';
 		var a0 = document.createElement('a');
 		var a1 = document.createElement('a');
-		//var a2 = document.createElement('a');
+		var a2 = document.createElement('a');
 		var a3 = document.createElement('a');
 		a0.innerHTML = 'latest';
 		a0.href='#search=';
@@ -91,9 +91,10 @@
 		a1.href='#search={"deleted":true}&sort='+conf.file_path+'&order=1';
 		//a2.innerHTML = 'announced';
 		//a2.href='#search={"'+conf.file_path+'":"REGEX_/","origin":{"$exists":true,"$ne":"online"},"synced_online":{"$exists":false},"online":"1"}&sort='+conf.file_path+'&order=1';
-		a3.innerHTML = 'errors';
-		//a3.href = '#search={"sync_error":{"$exists":true}}';
-		a3.href = '#search={"sync_error":{"$exists":true}, "sync_disabled":{"$exists":false},"deleted":{"$ne":true}}';
+		a2.innerHTML = 'errors';
+		a2.href = '#search={"sync_error":{"$exists":true}, "sync_disabled":{"$exists":false},"deleted":{"$ne":true}}';
+		a3.innerHTML = 'disabled';
+		a3.href = '#search={"sync_disabled":true}';
 		searchShortcuts.appendChild(a0);
 		//a3.innerHTML = 'locks';
 		//a3.href = '#search={"lock":{"$exists":true}}&sort=lock&order=1';
@@ -103,6 +104,8 @@
 		searchShortcuts.innerHTML += ' ';
 		//searchShortcuts.appendChild(a2);
 		//searchShortcuts.innerHTML += ' ';
+		searchShortcuts.appendChild(a2);
+		searchShortcuts.innerHTML += ' ';
 		searchShortcuts.appendChild(a3);
 
 		var searchInput = document.createElement('input');
@@ -132,9 +135,10 @@
 		var th1 = document.createElement('th');
 		var th2 = document.createElement('th');
 		var th3 = document.createElement('th');
-		//var th4 = document.createElement('th');
+		var th4 = document.createElement('th');
 		var th5 = document.createElement('th');
-		var th6 = document.createElement('th');
+		//var th6 = document.createElement('th');
+		var th7 = document.createElement('th');
 
 		table.className = 'search';
 
@@ -144,14 +148,17 @@
 		th3.setAttribute('name', conf.file_mtime);
 		//th4.setAttribute('name', 'sync');
 		th5.setAttribute('name', 'sync_priority');
+		th7.setAttribute('name', 'time');
 
 		th1.innerHTML = 'file<br/>name';
 		th2.innerHTML = 'file<br/>size';
 		th3.innerHTML = 'file<br/>time';
+		th7.innerHTML = 'published';
 
-		thead.appendChild(th1);
 		thead.appendChild(th2);
 		thead.appendChild(th3);
+		thead.appendChild(th1);
+		thead.appendChild(th4);
 
 			for (var sync of conf.syncKeys) {
 				var th = document.createElement('th');
@@ -186,6 +193,8 @@
 		}
 
 		thead.appendChild(th5);
+		//thead.appendChild(th6);
+		thead.appendChild(th7);
 
 		colgroup.appendChild(col1);
 		colgroup.appendChild(col2);
@@ -198,7 +207,7 @@
 		container.appendChild(table);
 
 		var keys = getHash();
-		var sort = keys.sort || conf.file_mtime;
+		var sort = keys.sort || 'time';
 		var th = document.getElementsByName(sort)[0];
 		if (th) {
 			var icon = document.createElement('span');
@@ -239,15 +248,17 @@
 		var td1 = document.createElement('td');
 		var td2 = document.createElement('td');
 		var td3 = document.createElement('td');
-		//var td4 = document.createElement('td');
+		var td4 = document.createElement('td');
 		var td5 = document.createElement('td');
-		var td6 = document.createElement('td');
+		//var td6 = document.createElement('td');
+		var td7 = document.createElement('td');
 		td1.classList.add('file');
 		td2.classList.add('size');
 		td3.classList.add('time');
 		//td4.classList.add('sync');
 		td5.classList.add('priority');
-		td6.classList.add('buttons');
+		//td6.classList.add('buttons');
+		td7.classList.add('time');
 		tr.setAttribute('title', JSON_tooltip(asset));
 		//td4.setAttribute('title', asset.comment);
 
@@ -257,6 +268,7 @@
 
 		td2.innerHTML = human_size( asset.file_size || asset.bytes || asset.size || asset.source_size);
 		td3.innerHTML = html_time(time);
+		td4.innerHTML = (asset.sync_disabled===true)? '&#10008;':'&#10004;';
 		//td4.innerHTML = asset.author;
 		//td5.innerHTML = asset.comment || '';
 
@@ -272,9 +284,26 @@
 			})
 		})
 
-		tr.appendChild(td1);
 		tr.appendChild(td2);
 		tr.appendChild(td3);
+		tr.appendChild(td1);
+		tr.appendChild(td4);
+
+
+		td4.setAttribute('title', 'enable / disable sync' );
+		td4.style.cursor = 'pointer';
+
+		td4.addEventListener('click', function(e){
+			damas.update({_id:asset._id,sync_disabled:!asset.sync_disabled}, function(node){
+				e.stopPropagation();
+				e.preventDefault();
+				e.target.parentNode.parentNode.insertBefore(tablerow(node), e.target.parentNode );
+				e.target.parentNode.parentNode.removeChild(tr);
+				return false;
+			});
+		});
+
+
 		if (conf.syncKeys) {
 			var title = '';
 			var titleLines = '';
@@ -282,8 +311,12 @@
 			for (var syncKey of conf.syncKeys) {
 				var site_name = syncKey.replace('synced_', '');
 				var synced = asset.hasOwnProperty(syncKey);
+				var syncing = asset.hasOwnProperty('syncing_'+site_name);
 				var time = '';
 				var span= document.createElement('td');
+				if (asset.sync_disabled === true) {
+					span.style.textDecoration = 'line-through';
+				}
 				span.classList.add('sync');
 				tr.appendChild(span);
 				span.innerHTML = '&nbsp;';
@@ -318,7 +351,7 @@
 							    synced_keys.push(key);
 							}
 						}
-						if (true === confirm("reset "+synced_keys+" of "+asset._id+"?\n\nthis will make rsync will compare the file at destination again and update it if necessary")) {
+						if (true === confirm("reset "+synced_keys+" of "+asset._id+"?\n\nthis will make rsync compare the file at destination again and update it if necessary")) {
 							new_asset = {};
 							new_asset._id = asset._id;
 							synced_keys.forEach(function(k){
@@ -347,12 +380,20 @@
 				}
 				*/
 				if (synced) {
-						span.classList.add('synced');
+						if (asset.zeroed === true && 'online' === site_name ) {
+							span.classList.add('zeroed');
+						}
+						else {
+							span.classList.add('synced');
+						}
 				}
 				else {
 					if (!is_origin){
 						span.classList.add('notsynced');
 					}
+				}
+				if (syncing){
+					span.classList.add('syncing');
 				}
 				if (!is_origin && (asset[syncKey] < asset.time)) {
 					span.classList.add('outdated');
@@ -395,18 +436,19 @@
 			}
 			}
 			conv_priority(asset.sync_priority, td5);
-		td5.addEventListener('click', function(e){
-			e.stopPropagation();
-			var value = prompt('Set sync priority for '+asset._id+'\n\nHigh = 1\nNormal = 0\nLow = -1\n\n', asset.sync_priority || 0);
-			if (value !== null) {
-				asset.sync_priority = parseInt(value);
-				damas.update(asset, function(){
-					conv_priority(parseInt(value), e.target);
-				});
-			}
-		});
+			td5.addEventListener('click', function(e){
+				e.stopPropagation();
+				var value = prompt('Set sync priority for '+asset._id+'\n\nHigh = 1\nNormal = 0\nLow = -1\n\n', asset.sync_priority || 0);
+				if (value !== null) {
+					asset.sync_priority = parseInt(value);
+					damas.update(asset, function(){
+						conv_priority(parseInt(value), e.target);
+					});
+				}
+			});
 		}
 
+/*
 		var td6span = document.createElement('span');
 		td6span.setAttribute('title', 'delete');
 		td6span.classList.add('delete');
@@ -417,10 +459,42 @@
 				damas.delete(asset._id);
 			}
 		});
+		*/
+
+		td7.innerHTML = human_time(new Date(parseInt(asset.time)));
+		td7.setAttribute('title', titleLines );
+		td7.style.cursor = 'pointer';
+
+		td7.addEventListener('click', function(e){
+			e.stopPropagation();
+			var value = confirm('Re publish '+asset._id+' ?');
+			if (false !== value) {
+				var origin = prompt('Origin', asset.origin);
+				if (null !== origin) {
+					var comment = prompt('Message', 'republished from web');
+					if (null !== comment) {
+						damas.create({
+							'#parent': asset._id,
+							origin: origin,
+							comment: comment
+						}, function(n1){
+							n1._id = asset._id;
+							n1['#parent'] = undefined;
+							damas.update(n1, function(n2){
+								alert('Re publish done!');
+								e.target.parentNode.parentNode.insertBefore(tablerow(n2), e.target.parentNode );
+								e.target.parentNode.parentNode.removeChild(tr);
+							});
+						});
+					}
+				}
+			}
+		});
 
 		if (true===asset.deleted){
 			td1.style.textDecoration = "line-through"
 		}
+		/*
 		if (file.match(/\/$/)){
 			var a = document.createElement('a');
 			a.innerHTML = file;
@@ -428,11 +502,13 @@
 			td1.appendChild(a);
 		}
 		else {
+		*/
 			td1.appendChild( human_filename_href(file) );
-		}
+		//}
 		//tr.appendChild(td4);
 		tr.appendChild(td5);
-		tr.appendChild(td6);
+		//tr.appendChild(td6);
+		tr.appendChild(td7);
 		if (require.specified('ui_editor')){
 			tr.addEventListener('click', function(){
 				initEditor(asset);
