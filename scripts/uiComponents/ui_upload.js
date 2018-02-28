@@ -29,6 +29,7 @@
         if (document.getElementById('layer0Menu')){
             var uploadBt = document.createElement('a');
             uploadBt.className = 'uploadBt clickable';
+            uploadBt.setAttribute('class', 'button');
             uploadBt.setAttribute('title', 'Upload');
             uploadBt.innerHTML = 'upload';
             uploadBt.addEventListener('click', function(ev) {

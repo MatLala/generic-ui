@@ -115,7 +115,7 @@
             var obj = JSON.parse(text);
             text = text.replace('{', '{\n');
             text = text.replace('}', '\n}');
-            text = text.replace(/:/g, ':\n');
+            text = text.replace(/":/g, '":\n');
             text = text.replace(/,/g, ',\n\n');
             area.value = text;
             return true;
