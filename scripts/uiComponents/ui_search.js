@@ -342,9 +342,11 @@
 					if (asset.hasOwnProperty('sync_error')){
 						span.classList.add('sync_error');
 					} else {
-						if (asset.hasOwnProperty('synced_online')){
+						//if (asset.hasOwnProperty('synced_online')){
+						if (asset.hasOwnProperty(syncKey)){
 							span.classList.add('synced');
-							if (asset.synced_online < asset.time) {
+							//if (asset.synced_online < asset.time) {
+							if (asset[syncKey] < asset.time) {
 								span.classList.add('outdated');
 							} else {
 							}
