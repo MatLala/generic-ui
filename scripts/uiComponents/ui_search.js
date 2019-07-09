@@ -86,7 +86,7 @@
 		var a2 = document.createElement('a');
 		var a3 = document.createElement('a');
 		a0.innerHTML = 'latest';
-		a0.href='#search=';
+		a0.href='#search=^/';
 		a1.innerHTML = 'deleted';
 		a1.href='#search={"deleted":true}&sort='+conf.file_path+'&order=1';
 		//a2.innerHTML = 'announced';
@@ -167,7 +167,7 @@
 				thead.appendChild(th);
 				th.classList.add('sync');
 				th.innerHTML = sync.replace('synced_','');
-				th.style.transform = 'rotate(-45deg)';
+				th.style.transform = 'rotate(-90deg)';
 				th.style.transformOrigin = '50% 70%';
 				th.style.height = '1ex';
 				th.style.maxWidth = '1ex';
@@ -329,16 +329,22 @@
 				//span.setAttribute('title', sync);
 				//span.classList.add((asset.hasOwnProperty(sync))?'synced':'notsynced');
 				var is_origin = asset.origin === site_name;
+				if (asset.hasOwnProperty('syncError_'+site_name)){
+					span.classList.add('syncError');
+				}
 				if (synced && !is_origin) {
 					time = human_time(new Date(parseInt(asset[syncKey])));
 					title = time + ' ' + site_name+ '\n';
 					titleLines += time + ' ' + site_name+ '\n';
 				}
+				if (asset['modified_'+site_name]) {
+					span.innerHTML = 'M';
+				}
 				if (is_origin) {
 					//span.style.backgroundColor = 'lightgreen';
 					//span.classList.add('synced');
 					//span.classList.remove('notsynced');
-					span.innerHTML = 'o';
+					span.innerHTML = 'O';
 					if (asset.hasOwnProperty('sync_error')){
 						span.classList.add('sync_error');
 					} else {

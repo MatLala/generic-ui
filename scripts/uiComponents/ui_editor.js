@@ -11,7 +11,8 @@
     
     function initEditor(node) {
         damas.read( node._id, function(node){
-            initEditorText(JSON.stringify(node));
+
+            initEditorText(JSON.stringify(sortObject(node)));
         });
     };
 
@@ -28,6 +29,21 @@
         b.setAttribute('disabled', 'disabled');
     };
 
+
+	function sortObject(o) {
+		var sorted = {},
+		key, a = [];
+		for (key in o) {
+			if (o.hasOwnProperty(key)) {
+				a.push(key);
+			}
+		}
+		a.sort();
+		for (key = 0; key < a.length; key++) {
+			sorted[a[key]] = o[a[key]];
+		}
+		return sorted;
+	}
 
     draw = function (container, node) {
         var panel = document.createElement('div');
@@ -60,7 +76,7 @@
         editorContent.id = 'editorContent';
         editorContent.className = 'editorContent';
 
-        panelClose.innerHTML = 'X';
+        panelClose.innerHTML = '❌';
         panelClose.addEventListener('click', function(e){
             container.style.width = '0';
             container.style.minWidth = '0';
@@ -115,7 +131,7 @@
             var obj = JSON.parse(text);
             text = text.replace('{', '{\n');
             text = text.replace('}', '\n}');
-            text = text.replace(/":/g, '":\n');
+            text = text.replace(/":/g, '": ');
             text = text.replace(/,/g, ',\n\n');
             area.value = text;
             return true;
