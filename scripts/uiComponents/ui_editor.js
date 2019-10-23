@@ -132,7 +132,7 @@
             text = text.replace('{', '{\n');
             text = text.replace('}', '\n}');
             text = text.replace(/":/g, '": ');
-            text = text.replace(/,/g, ',\n\n');
+            text = text.replace(/,"/g, ',\n"');
             area.value = text;
             return true;
         } catch (e) {
