@@ -85,6 +85,7 @@
 		var a1 = document.createElement('a');
 		var a2 = document.createElement('a');
 		var a3 = document.createElement('a');
+		var a4 = document.createElement('a');
 		a0.innerHTML = 'latest';
 		a0.href='#search=^/';
 		a1.innerHTML = 'deleted';
@@ -95,18 +96,29 @@
 		a2.href = '#search={"sync_error":{"$exists":true}, "sync_disabled":{"$exists":false},"deleted":{"$ne":true}}';
 		a3.innerHTML = 'disabled';
 		a3.href = '#search={"sync_disabled":true}';
+
+		a4.innerHTML = 'in_progress';
+		var query_array = [];
+		for (var sync of conf.syncKeys) {
+			var name = sync.replace('synced_','');
+			query_array.push('{"syncing_'+name+'":{"$exists":true}}');
+		}
+		a4.href = '#search={"$or": [' + query_array.join(',') + ']}';
+
 		searchShortcuts.appendChild(a0);
 		//a3.innerHTML = 'locks';
 		//a3.href = '#search={"lock":{"$exists":true}}&sort=lock&order=1';
 		searchShortcuts.appendChild(a0);
 		searchShortcuts.innerHTML += ' ';
-		searchShortcuts.appendChild(a1);
+		searchShortcuts.appendChild(a4);
 		searchShortcuts.innerHTML += ' ';
 		//searchShortcuts.appendChild(a2);
 		//searchShortcuts.innerHTML += ' ';
 		searchShortcuts.appendChild(a2);
 		searchShortcuts.innerHTML += ' ';
 		searchShortcuts.appendChild(a3);
+		searchShortcuts.innerHTML += ' ';
+		searchShortcuts.appendChild(a1);
 
 		var searchInput = document.createElement('input');
 		searchInput.className = 'searchInput';
