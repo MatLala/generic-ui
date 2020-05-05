@@ -266,6 +266,7 @@
 		//var time = new Date(parseInt(asset[conf.file_mtime]));
 		var file = asset[conf.file_path] || asset['#parent'];
 		//tr.file = file;
+		td1.setAttribute('style', asset.style);
 
 		td2.innerHTML = human_size( asset.file_size || asset.bytes || asset.size || asset.source_size);
 		//td3.innerHTML = html_time(time);
