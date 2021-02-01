@@ -1,4 +1,6 @@
 #panelSecond {
+/*
+    position: fixed;
     display: inline-block;
     position: relative;
     -webkit-box-flex: 0 0 auto;
@@ -14,16 +16,17 @@
     order: 2;
     overflow-y: auto;
     overflow-x: hidden;
+	*/
 }
 /* EDITOR */
 .btCloseP {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 1ex;
+    left: 1ex;
 }
 .editorBox textarea {
     width: 100%;
-    resize: vertical;
+    resize: none;
     margin: 0;
 }
 
@@ -34,17 +37,10 @@ tr.selected {
     background-color: #f1f1f1;
 }
 #panelSecond {
-    width: 240px;
-    background-color: #fff;
-}
-.editorTitle {
-    padding: 6px;
-}
-.editorContentHeader {
-    padding: 10px 0;
-}
-.editorContentHeader div:first-child {
-    word-wrap: break-word;
+/*
+    width: 42ex;
+    background-color: rgba(255,255,255,.9);
+	*/
 }
 .spinCss {
     animation: Rotate .6s linear infinite;
@@ -84,6 +80,7 @@ tr.selected {
 }
 */
 @media screen and (max-width: 800px) {
+	/*
     #panelSecond {
         display: flex;
         height: 100%;
@@ -98,4 +95,5 @@ tr.selected {
     #panelContent {
         width: 100%;
     }
+		*/
 }

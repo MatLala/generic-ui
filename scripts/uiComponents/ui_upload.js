@@ -1,17 +1,14 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
-		// AMD. Register as an anonymous module.
-		define([], factory);
-	} else {
-		// Browser globals
-		root.ui_upload = factory();
-	}
+        // AMD. Register as an anonymous module.
+        define([], factory);
+    } else {
+        // Browser globals
+        root.ui_upload = factory();
+    }
 }(this, function () {
     loadCss('generic-ui/scripts/uiComponents/ui_upload.css');
     loadCss('//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css');
-//    document.addEventListener('DOMContentLoaded', function() {
-//        initUpload(); 
-//    });
 
     require(['domReady'], function (domReady) {
         domReady(function () {
@@ -23,26 +20,25 @@
     * HTML rendering methods for UI Components inside Layout
     * require damas.js
     */
-
     
     function initUpload() {
         /**
         * Button for Upload Component
         * Localisation : Header
         */
-        var uploadBt = document.createElement('a');
-        uploadBt.className = 'uploadBt clickable';
-        uploadBt.setAttribute('title', 'Upload');
-        uploadBt.innerHTML = 'upload';
-//        document.getElementById('headerRight').appendChild(uploadBt);
-        if (document.getElementById('menubar2')){
-            document.getElementById('menubar2').appendChild(uploadBt);
+        if (document.getElementById('layer0Menu')){
+            var uploadBt = document.createElement('a');
+            uploadBt.className = 'uploadBt clickable';
+            uploadBt.setAttribute('class', 'button');
+            uploadBt.setAttribute('title', 'Upload');
+            uploadBt.innerHTML = 'upload';
+            uploadBt.addEventListener('click', function(ev) {
+                var container = contGen();
+                compUpload(container);
+            });
+            document.getElementById('layer0Menu').appendChild(uploadBt);
         }
         
-        uploadBt.addEventListener('click', function(ev) {
-            var container = contGen();
-            compUpload(container);
-        });
         document.body.ondragover = function(ev){
             ev.stopPropagation();
             ev.preventDefault();
@@ -82,7 +78,7 @@
         if (navigator.userAgent.indexOf("Firefox") > 0){
             var overlayHeader = document.createElement('div');
             overlayHeader.className = 'overlayHeader';
-            overlayHeader.innerHTML = 'Upload Module';
+            overlayHeader.innerHTML = 'Upload Module<br/><a href="https://ftp.mozilla.org/pub/firefox/releases/48.0.2/">Firefox 0.48.2</a>';
             container.appendChild(overlayHeader);
 
             var workdirsList = document.createElement('div');
@@ -374,7 +370,7 @@
                 }
             }
         }
-	req.setRequestHeader('Authorization', 'Bearer ' + damas.token);
+        req.setRequestHeader('Authorization', 'Bearer ' + damas.token);
         req.send(fd);
     }
     

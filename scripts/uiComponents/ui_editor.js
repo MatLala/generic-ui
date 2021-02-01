@@ -1,159 +1,169 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
-		// AMD. Register as an anonymous module.
-		define([], factory);
-	} else {
-		// Browser globals
-		root.compEditor = factory();
-	}
+        // AMD. Register as an anonymous module.
+        define([], factory);
+    } else {
+        // Browser globals
+        root.compEditor = factory();
+    }
 }(this, function () {
     loadCss('generic-ui/scripts/uiComponents/ui_editor.css');
     
-    /**
-    * HTML rendering methods for UI Components inside Layout
-    * require damas.js
-    * call by global initEditor function in ui_log.js and ui_search.js
-    */
     function initEditor(node) {
-        node = damas.read(node._id);
-        if (!document.querySelector('#panelSecond')) {
-            compEditor(createPanel(document.body), node);
-        }
-        else {
-            compEditor(document.querySelector('#panelContent'), node);
-        }
+        damas.read( node._id, function(node){
+
+            initEditorText(JSON.stringify(sortObject(node)));
+        });
     };
- 
-	function createPanel(container){
-		var panel = document.createElement('div');
-		panel.id = 'panelSecond';
-		var panelContent = document.createElement('div');
-		panelContent.id = 'panelContent';
-		var panelClose = document.createElement('div');
-//		panelClose.className = 'fa fa-close btCloseP clickable';
+
+    function initEditorText(text)
+    {
+        document.querySelector('#layer0SidePanel').style.minWidth = '50ex';
+        if (!document.querySelector('#panelSecond')) {
+            draw(document.querySelector('#layer0SidePanel'), JSON.parse(text));
+        }
+        var d = document.querySelector('#panelSecond');
+        var t = d.querySelector('textarea');
+        var b = d.querySelector('button');
+        update( t, text);
+        b.setAttribute('disabled', 'disabled');
+    };
+
+
+	function sortObject(o) {
+		var sorted = {},
+		key, a = [];
+		for (key in o) {
+			if (o.hasOwnProperty(key)) {
+				a.push(key);
+			}
+		}
+		a.sort();
+		for (key = 0; key < a.length; key++) {
+			sorted[a[key]] = o[a[key]];
+		}
+		return sorted;
+	}
+
+    draw = function (container, node) {
+        var panel = document.createElement('div');
+        var panelContent = document.createElement('div');
+        var panelClose = document.createElement('div');
+        var editorTitle = document.createElement('div');
+        var editorContent = document.createElement('div');
+        var form = document.createElement('div');
+        var area = document.createElement('textarea');
+        var updateBt = document.createElement('button');
+        var bts = document.createElement('div');
+
+        panel.appendChild(panelClose);
+        panel.appendChild(panelContent);
+        container.appendChild(panel);
+        form.appendChild(area);
+        form.appendChild(bts);
+        bts.appendChild(updateBt);
+        panelContent.appendChild(editorTitle);
+        panelContent.appendChild(editorContent);
+        editorContent.appendChild(form);
+
+        area.name = 'editor';
+        panel.id = 'panelSecond';
+        panelContent.id = 'panelContent';
+        //panelClose.className = 'fa fa-close btCloseP clickable';
         panelClose.className = 'btCloseP clickable';
-	    panelClose.innerHTML = 'X';
-        
+        form.className = 'editorBox';
+        editorTitle.className = 'editorTitle menubar';
+        editorContent.id = 'editorContent';
+        editorContent.className = 'editorContent';
+
+        panelClose.innerHTML = '❌';
         panelClose.addEventListener('click', function(e){
+            container.style.width = '0';
+            container.style.minWidth = '0';
             panel.remove();
             if (document.querySelector('tr.selected')){
                 document.querySelector('tr.selected').classList.remove('selected');
             }
         }, false);
 
-		panel.appendChild(panelClose);
-		panel.appendChild(panelContent);
-
-		container.appendChild(panel);
-		return panelContent;
-	};
-
-    /**
-    * Generate Component : Editor
-    * 
-    */
-    compEditor = function(container, node){
-        container.innerHTML = '';
-        var editorTitle = document.createElement('div');
-        editorTitle.className = 'editorTitle';
         editorTitle.innerHTML = 'JSON Editor';
-
-        var editorContent = document.createElement('div');
-        editorContent.id = 'editorContent';
-        editorContent.className = 'editorContent';
-
-        var editorContentHeader = document.createElement('div');
-        editorContentHeader.className = 'editorContentHeader';
-        editorContent.appendChild(editorContentHeader);
-
-        var nodeName = document.createElement('div');
-        nodeName.innerHTML = 'Node : </br>'+ node._id;
-        editorContentHeader.appendChild(nodeName);
-
-        var area = document.createElement('textarea');
-        area.name = 'editor';
-        var keys = Object.keys(node).sort();
-        var text = '{\n';
-        for (i = 0; i < keys.length ; i++){
-            text += '"'+ keys[i] +'":"' + node[keys[i]] +'"';
-            if (i !== keys.length - 1) {
-                text += ',\n';
-            }
-            else {
-                text += '\n}';
-            }
-        }
-        area.innerHTML = text;
-
-        var updateBt = document.createElement('button');
-        updateBt.innerHTML = 'Update';
+        updateBt.innerHTML = 'Send';
         updateBt.setAttribute('disabled', 'disabled');
+        bts.style.textAlign = 'right';
+        UI_resize_all();
 
-        var form = document.createElement('div');
-        form.className = 'editorBox';
-        
         area.addEventListener('keyup', function(e){
-            var updateN;
-            try {
-                updateN = JSON.parse(area.value);
-                if (!compareObjects(node, updateN)){
-                    updateBt.removeAttribute('disabled');
-                }
-                else {
-                    updateBt.setAttribute('disabled', 'disabled');
-                }
-            } catch (e) {
-                updateBt.setAttribute('disabled', 'disabled');
-                return;
-            }
+            check(area, updateBt, node);
         });
 
         updateBt.addEventListener('click', function(event) {
-            event.preventDefault();
             var updateN = JSON.parse(area.value);
             var spin = document.createElement('div');
             spin.innerHTML = 'X';
             spin.classList.add('spinCss');
             event.target.innerHTML = '';
             event.target.appendChild(spin);
-            damas.update(updateN, function(res) {
+            damas.upsert(updateN, function(res) {
                 if (!res) {
-                    event.target.innerHTML = 'Update';
-                    updateBt.setAttribute('disabled', 'disabled');
-                    alert("something went wrong !");
+                    event.target.innerHTML = 'Send';
+                    //updateBt.setAttribute('disabled', 'disabled');
+                    alert("damas.upsert failed");
                     return;
                 }
                 else {
-                    compEditor(document.querySelector('#panelContent'), res);
+                    update(area, JSON.stringify(res));
+                    check(area, updateBt, res);
                     return;
                 }
             });
             return false;
         });
         
-        var bts = document.createElement('div');
-        bts.style.textAlign = 'right';
-
-        form.appendChild(area);
-        form.appendChild(bts);
-        bts.appendChild(updateBt);
-        container.appendChild(editorTitle);
-        container.appendChild(editorContent);
-        
-        editorContent.appendChild(form);
-
-        area.style.height = window.innerHeight - (editorTitle.offsetHeight + editorContentHeader.offsetHeight + bts.offsetHeight) +'px';
+        area.style.height = window.innerHeight - document.querySelector('#layer0menu').clientHeight -  (editorTitle.offsetHeight + bts.offsetHeight) +'px';
         window.addEventListener('resize', function(event){
-            area.style.height = window.innerHeight - (editorTitle.offsetHeight + editorContentHeader.offsetHeight + bts.offsetHeight) +'px';
+            area.style.height = window.innerHeight - document.querySelector('#layer0menu').clientHeight -  (editorTitle.offsetHeight + bts.offsetHeight) +'px';
+            //area.style.height = container.parentNode.clientHeight - (editorTitle.offsetHeight + bts.offsetHeight) -100 +'px';
         });
     };
-    
-    function compareObjects(a, b) {
-        if (Object.keys(a).length != Object.keys(b).length) { 
+
+    update = function( area, text ) {
+        try {
+            var obj = JSON.parse(text);
+            text = text.replace('{', '{\n');
+            text = text.replace('}', '\n}');
+            text = text.replace(/":/g, '": ');
+            text = text.replace(/,"/g, ',\n"');
+            area.value = text;
+            return true;
+        } catch (e) {
+                area.value = text;
+                return e;
+        }
+    };
+
+    check = function( area, button, node ) {
+        button.innerHTML = 'Send';
+        button.title = '';
+        button.setAttribute('disabled', 'disabled');
+        var obj;
+        try {
+            obj = JSON.parse(area.value);
+        } catch (e) {
+            button.innerHTML = e.name;
+            button.title = e.message;
+            return;
+        }
+        if (!same(node, obj)){
+            button.removeAttribute('disabled');
+        }
+    };
+
+    function same(a, b) {
+        if (Object.keys(a).length !== Object.keys(b).length) {
             return false;
         }
         for (i in a) {
-            if (a[i] != b[i]) {
+            if (a[i] !== b[i]) {
                 return false;
             }
         }

@@ -1,51 +1,65 @@
-/* HEADER */
 
-/* Search */
-.searchForm {
-    display: none;
-    position: relative;
-    width: 80%;
-    margin: 0;
-}
 .searchInput {
-    height: 24px;
-    width: 100%;
-    background-color: #fff;
+    width: 50%;
     border: 1px solid #d4d4d4;
-    border-radius: 3px;
-    line-height: 24px;
-    display: inline-block;
-    padding: 4px 6px;
-    /* margin-bottom: 10px; */
-    vertical-align: middle;
-}
-.searchReset {
-    position: absolute;
-    top: 0;
-    right: 5px;
-    line-height: 24px;
-}
-/* Buttons */
-.searchBt {
-/*
-    position: relative;
-    display: inline-block;
-    margin-left: 9px;
-*/
-}
-.searchBt {
-/*    float: right;*/
-}
-.searchAbout {
-    height: 24px;
 }
 
-@media screen and (min-width: 800px) {
-     /* Search */
-    .searchForm {
-        display: inline-block;
-    }
-    .searchBt {
-        display: none;
-    } 
+table.search {
+	margin-top: 2em;
+}
+
+table.search td.file {
+	cursor: pointer;
+}
+
+td.priority {
+	text-align: center;
+}
+
+td.sync {
+	text-align: center;
+	cursor: default;
+	width: 1em;
+}
+td.sync span {
+	margin: 0 1px;
+}
+.synced {
+	background-color: #ace7ac;
+	background-color: #26dea8;
+}
+.notsynced {
+	background-color: #e0e0e0;
+}
+.sync_error {
+	background-color: #ff4155;
+	color: white;
+}
+.syncError {
+	background-color: #ff4155;
+	color: white;
+}
+.zeroed {
+	background-color: #acace7;
+}
+.synced.outdated,
+.zeroed.outdated {
+	background-color: #ece700;
+}
+.syncing {
+	animation: pulse 1s infinite;
+}
+.syncing.syncError {
+	animation: pulseError 1s infinite;
+}
+
+@keyframes pulse {
+	0% { background-color: #00ace7; }
+	50% { background-color: #e0e0e0; }
+	100% { background-color: #00ace7; }
+}
+@keyframes pulseError {
+	0% { background-color: #00ace7; }
+	50% { background-color: #ff4155; }
+	100% { background-color: #00ace7; }
 }
