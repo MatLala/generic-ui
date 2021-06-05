@@ -75,6 +75,7 @@
 	}
 
 	function draw( container ) {
+					/*
 		var br1 = document.createElement('br');
 		var searchShortcuts = document.createElement('div');
 		container.appendChild(br1);
@@ -119,6 +120,7 @@
 		searchShortcuts.appendChild(a3);
 		searchShortcuts.innerHTML += ' ';
 		searchShortcuts.appendChild(a1);
+		*/
 
 		var searchInput = document.createElement('input');
 		searchInput.className = 'searchInput';
